@@ -231,6 +231,7 @@ public final class ItemSharingScreen extends WynntilsScreen {
                     Component.translatable("screens.wynntils.itemSharing.extended.name"),
                     Models.ItemEncoding.extendedIdentificationEncoding.get(),
                     Texture.ITEM_SHARING_BACKGROUND.width() - 30,
+                    true,
                     (b) -> {
                         if (b == 0) {
                             Models.ItemEncoding.extendedIdentificationEncoding.store(
@@ -252,6 +253,7 @@ public final class ItemSharingScreen extends WynntilsScreen {
                     Component.translatable("screens.wynntils.itemSharing.itemName.name"),
                     Models.ItemEncoding.shareItemName.get(),
                     Texture.ITEM_SHARING_BACKGROUND.width() - 30,
+                    true,
                     (b) -> {
                         if (b == 0) {
                             Models.ItemEncoding.shareItemName.store(!Models.ItemEncoding.shareItemName.get());

@@ -16,11 +16,13 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
+import net.minecraft.Util;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
+import net.minecraft.util.Mth;
 
 public final class FontRenderer {
     private static final FontRenderer INSTANCE = new FontRenderer();
@@ -253,6 +255,109 @@ public final class FontRenderer {
                 verticalAlignment,
                 textShadow,
                 1f);
+    }
+
+    public void renderScrollingString(
+            PoseStack poseStack,
+            StyledText styledText,
+            float x,
+            float y,
+            float renderArea,
+            float scissorX,
+            float scissorY,
+            CustomColor customColor,
+            HorizontalAlignment horizontalAlignment,
+            VerticalAlignment verticalAlignment,
+            TextShadow shadow,
+            float textScale) {
+        int textLength = (int) ((font.width(styledText.getString()) + 1) * textScale);
+        float m;
+
+        if (textLength > renderArea) {
+            m = textLength - renderArea;
+            double currentTimeInSeconds = (double) Util.getMillis() / 1000.0;
+            double e = Math.max((double) m * 0.5, 3.0);
+            double f =
+                    Math.sin(1.5707963267948966 * Math.cos(6.283185307179586 * currentTimeInSeconds / e)) / 2.0 + 0.5;
+            double scrollOffset = Mth.lerp(f, 0.0, m);
+
+            RenderUtils.enableScissor((int) scissorX, (int) scissorY, (int) renderArea, font.lineHeight);
+            renderText(
+                    poseStack,
+                    styledText,
+                    x - (int) scrollOffset,
+                    y,
+                    customColor,
+                    horizontalAlignment,
+                    verticalAlignment,
+                    shadow,
+                    textScale);
+            RenderUtils.disableScissor();
+        } else {
+            renderText(
+                    poseStack,
+                    styledText,
+                    x,
+                    y,
+                    customColor,
+                    horizontalAlignment,
+                    verticalAlignment,
+                    shadow,
+                    textScale);
+        }
+    }
+
+    public void renderScrollingString(
+            PoseStack poseStack,
+            StyledText styledText,
+            float x,
+            float y,
+            float renderArea,
+            float scissorX,
+            float scissorY,
+            CustomColor customColor,
+            HorizontalAlignment horizontalAlignment,
+            VerticalAlignment verticalAlignment,
+            TextShadow shadow) {
+        renderScrollingString(
+                poseStack,
+                styledText,
+                x,
+                y,
+                renderArea,
+                scissorX,
+                scissorY,
+                customColor,
+                horizontalAlignment,
+                verticalAlignment,
+                shadow,
+                1);
+    }
+
+    public void renderScrollingString(
+            PoseStack poseStack,
+            StyledText styledText,
+            float x,
+            float y,
+            float renderArea,
+            CustomColor customColor,
+            HorizontalAlignment horizontalAlignment,
+            VerticalAlignment verticalAlignment,
+            TextShadow shadow,
+            float textScale) {
+        renderScrollingString(
+                poseStack,
+                styledText,
+                x,
+                y,
+                renderArea,
+                x,
+                y,
+                customColor,
+                horizontalAlignment,
+                verticalAlignment,
+                shadow,
+                textScale);
     }
 
     private void renderText(
