@@ -895,7 +895,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
 
     public void setSelected(Configurable selected) {
         if (this.selectedConfigurable == selected) return;
-        
+
         this.selectedConfigurable = selected;
 
         // If there is a search query, scroll the configs list so that matching config

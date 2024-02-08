@@ -220,12 +220,12 @@ public enum Texture {
     PLAYER_LIST_OVERLAY("overlays/player_list_overlay.png", 385, 229),
 
     // Bars
-    BUBBLE_BAR("overlays/bars/bars_bubbles.png", 256, 256),
-    EXPERIENCE_BAR("overlays/bars/bars_exp.png", 256, 256),
-    HEALTH_BAR("overlays/bars/bars_health.png", 256, 256),
-    HEALTH_BAR_OVERFLOW("overlays/bars/bars_health_overflow.png", 256, 256),
-    MANA_BAR("overlays/bars/bars_mana.png", 256, 256),
-    MANA_BAR_OVERFLOW("overlays/bars/bars_mana_overflow.png", 256, 256),
+    BUBBLE_BAR("overlays/bars/bars_bubbles.png", 182, 60),
+    EXPERIENCE_BAR("overlays/bars/bars_exp.png", 182, 60),
+    HEALTH_BAR("overlays/bars/bars_health.png", 81, 164),
+    HEALTH_BAR_OVERFLOW("overlays/bars/bars_health_overflow.png", 81, 164),
+    MANA_BAR("overlays/bars/bars_mana.png", 81, 180),
+    MANA_BAR_OVERFLOW("overlays/bars/bars_mana_overflow.png", 81, 180),
     UNIVERSAL_BAR("overlays/bars/universal_bar.png", 81, 16),
     // endregion
 
@@ -249,7 +249,10 @@ public enum Texture {
     GEAR_VIEWER_BACKGROUND("ui_components/gear_viewer_background.png", 103, 92),
     HIGHLIGHT("ui_components/highlight.png", 256, 256),
     ITEM_SHARING_BACKGROUND("ui_components/item_sharing_background.png", 250, 100),
-    OVERLAY_SELECTION_GUI("ui_components/overlay_selection_gui.png", 195, 256),
+    OVERLAY_BUTTON_BOTTOM("ui_components/overlay_button_bottom.png", 64, 60),
+    OVERLAY_BUTTON_LEFT("ui_components/overlay_button_left.png", 48, 56),
+    OVERLAY_BUTTON_TOP("ui_components/overlay_button_top.png", 128, 60),
+    OVERLAY_SELECTION_GUI("ui_components/overlay_selection_gui.png", 358, 206),
     SCROLL_BACKGROUND("ui_components/scroll_background.png", 294, 198),
     SCROLL_BUTTON("ui_components/scroll_button.png", 7, 17),
     WAYPOINT_MANAGER_BACKGROUND("ui_components/waypoint_manager_background.png", 400, 256),

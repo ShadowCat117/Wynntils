@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.overlays;
@@ -20,6 +20,7 @@ import com.wynntils.mc.event.DisplayResizeEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.screens.overlays.placement.OverlayManagementScreen;
+import com.wynntils.screens.overlays.selection.OverlaySelectionScreen;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import java.lang.reflect.Field;
@@ -216,10 +217,16 @@ public final class OverlayManager extends Manager {
     private void renderOverlays(RenderEvent event, RenderState renderState) {
         boolean testMode = false;
         boolean shouldRender = true;
+        Overlay previewedOverlay = null;
 
         if (McUtils.mc().screen instanceof OverlayManagementScreen screen) {
             testMode = screen.isTestMode();
             shouldRender = false;
+        } else if (McUtils.mc().screen instanceof OverlaySelectionScreen screen) {
+            if (screen.renderingPreview()) {
+                testMode = screen.shouldHideOverlays();
+                previewedOverlay = screen.getSelectedOverlay();
+            }
         }
 
         List<Overlay> crashedOverlays = new LinkedList<>();
@@ -243,10 +250,14 @@ public final class OverlayManager extends Manager {
 
             try {
                 if (testMode) {
+                    if (previewedOverlay != null && overlay != previewedOverlay) continue;
+
                     overlay.renderPreview(
                             event.getPoseStack(), bufferSource, event.getPartialTicks(), event.getWindow());
                 } else {
                     if (shouldRender) {
+                        if (previewedOverlay != null && overlay == previewedOverlay) continue;
+
                         long startTime = System.currentTimeMillis();
                         overlay.render(event.getPoseStack(), bufferSource, event.getPartialTicks(), event.getWindow());
                         logProfilingData(startTime, overlay);

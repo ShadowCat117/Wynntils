@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.overlays.placement;
@@ -100,26 +100,30 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     private double snapOffsetX;
     private double snapOffsetY;
 
-    private OverlayManagementScreen(Overlay overlay) {
+    private final OverlaySelectionScreen previousScreen;
+
+    private OverlayManagementScreen(OverlaySelectionScreen previousScreen, Overlay overlay) {
         super(Component.translatable("screens.wynntils.overlayManagement.name"));
+        this.previousScreen = previousScreen;
         selectedOverlay = overlay;
         fixedSelection = true;
         animationLengthRemaining = ANIMATION_LENGTH;
     }
 
-    private OverlayManagementScreen() {
+    private OverlayManagementScreen(OverlaySelectionScreen previousScreen) {
         super(Component.translatable("screens.wynntils.overlayManagement.name"));
+        this.previousScreen = previousScreen;
         selectedOverlay = null;
         fixedSelection = false;
         animationLengthRemaining = 0;
     }
 
-    public static Screen create() {
-        return new OverlayManagementScreen();
+    public static Screen create(OverlaySelectionScreen previousScreen) {
+        return new OverlayManagementScreen(previousScreen);
     }
 
-    public static Screen create(Overlay overlay) {
-        return new OverlayManagementScreen(overlay);
+    public static Screen create(OverlaySelectionScreen previousScreen, Overlay overlay) {
+        return new OverlayManagementScreen(previousScreen, overlay);
     }
 
     @Override
@@ -379,11 +383,11 @@ public final class OverlayManagementScreen extends WynntilsScreen {
         if (keyCode == GLFW.GLFW_KEY_ENTER) {
             Managers.Config.saveConfig();
             onClose();
-            McUtils.mc().setScreen(OverlaySelectionScreen.create());
+            McUtils.mc().setScreen(previousScreen);
             return true;
         } else if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
             onClose();
-            McUtils.mc().setScreen(OverlaySelectionScreen.create());
+            McUtils.mc().setScreen(previousScreen);
             return true;
         }
 
@@ -746,7 +750,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
         this.addRenderableWidget(new Button.Builder(
                         Component.translatable("screens.wynntils.overlayManagement.closeSettingsScreen"), button -> {
                             onClose();
-                            McUtils.mc().setScreen(OverlaySelectionScreen.create());
+                            McUtils.mc().setScreen(previousScreen);
                         })
                 .pos(this.width / 2 - BUTTON_WIDTH * 2, this.height - 150)
                 .size(BUTTON_WIDTH, BUTTON_HEIGHT)
@@ -765,7 +769,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                         Component.translatable("screens.wynntils.overlayManagement.applySettings"), button -> {
                             Managers.Config.saveConfig();
                             onClose();
-                            McUtils.mc().setScreen(OverlaySelectionScreen.create());
+                            McUtils.mc().setScreen(previousScreen);
                         })
                 .pos(this.width / 2 + BUTTON_WIDTH, this.height - 150)
                 .size(BUTTON_WIDTH, BUTTON_HEIGHT)

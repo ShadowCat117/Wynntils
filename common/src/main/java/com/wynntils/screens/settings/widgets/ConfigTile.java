@@ -7,6 +7,7 @@ package com.wynntils.screens.settings.widgets;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.settings.WynntilsBookSettingsScreen;
 import com.wynntils.utils.colors.CommonColors;
@@ -26,7 +27,8 @@ public class ConfigTile extends WynntilsButton {
     private final float translationX;
     private final float translationY;
     private final ResetButton resetButton;
-    private final WynntilsBookSettingsScreen settingsScreen;
+    private final StyledText displayName;
+    private final TextboxScreen screen;
 
     private AbstractWidget configOptionElement;
 
@@ -35,18 +37,26 @@ public class ConfigTile extends WynntilsButton {
             int y,
             int width,
             int height,
-            WynntilsBookSettingsScreen settingsScreen,
+            TextboxScreen screen,
             Config<?> config,
             float translationX,
             float translationY) {
         super(x, y, width, height, Component.literal(config.getJsonName()));
-        this.settingsScreen = settingsScreen;
+        this.screen = screen;
         this.config = config;
         this.configOptionElement = getWidgetFromConfig(config);
         this.resetButton = new ResetButton(
                 config, () -> configOptionElement = getWidgetFromConfig(config), x + width - 20, getRenderY() + 7);
         this.translationX = translationX;
         this.translationY = translationY;
+
+        // Searching only matches configs on the settings screen
+        if (screen instanceof WynntilsBookSettingsScreen settingsScreen
+                && settingsScreen.configOptionContains(config)) {
+            this.displayName = StyledText.fromString(ChatFormatting.UNDERLINE + config.getDisplayName());
+        } else {
+            this.displayName = StyledText.fromString(config.getDisplayName());
+        }
     }
 
     @Override
@@ -79,10 +89,6 @@ public class ConfigTile extends WynntilsButton {
     }
 
     private void renderDisplayName(PoseStack poseStack) {
-        StyledText displayName = settingsScreen.configOptionContains(config)
-                ? StyledText.fromString(ChatFormatting.UNDERLINE + config.getDisplayName())
-                : StyledText.fromString(config.getDisplayName());
-
         FontRenderer.getInstance()
                 .renderScrollingString(
                         poseStack,
@@ -145,9 +151,9 @@ public class ConfigTile extends WynntilsButton {
         } else if (configOption.isEnum()) {
             return new EnumSettingsButton<>((Config<E>) configOption);
         } else if (configOption.getType().equals(CustomColor.class)) {
-            return new CustomColorSettingsButton((Config<CustomColor>) configOption, settingsScreen);
+            return new CustomColorSettingsButton((Config<CustomColor>) configOption, screen);
         } else {
-            return new TextInputBoxSettingsWidget<>(configOption, settingsScreen);
+            return new TextInputBoxSettingsWidget<>(configOption, screen);
         }
     }
 }
