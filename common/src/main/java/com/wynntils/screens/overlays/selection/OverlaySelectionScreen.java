@@ -84,8 +84,8 @@ public final class OverlaySelectionScreen extends WynntilsScreen implements Text
     private int overlayScrollOffset = 0;
 
     // Overlay display
-    private boolean hideOverlays = false;
     private boolean renderPreview = false;
+    private boolean showOverlays = false;
     private FilterType filterType = FilterType.ALL;
     private Overlay selectedOverlay;
 
@@ -130,13 +130,13 @@ public final class OverlaySelectionScreen extends WynntilsScreen implements Text
                 (int) (this.height - 70 - translationY),
                 20,
                 20,
-                Component.translatable("screens.wynntils.overlaySelection.hideOverlays"),
-                hideOverlays,
+                Component.translatable("screens.wynntils.overlaySelection.showOverlays"),
+                showOverlays,
                 120,
                 true,
-                (b) -> hideOverlays = !hideOverlays,
+                (b) -> showOverlays = !showOverlays,
                 ComponentUtils.wrapTooltips(
-                        List.of(Component.translatable("screens.wynntils.overlaySelection.hideOverlaysTooltip")),
+                        List.of(Component.translatable("screens.wynntils.overlaySelection.showOverlaysTooltip")),
                         150)));
         // endregion
 
@@ -504,8 +504,8 @@ public final class OverlaySelectionScreen extends WynntilsScreen implements Text
         return renderPreview;
     }
 
-    public boolean shouldHideOverlays() {
-        return hideOverlays;
+    public boolean shouldShowOverlays() {
+        return showOverlays;
     }
 
     private void populateConfigs() {

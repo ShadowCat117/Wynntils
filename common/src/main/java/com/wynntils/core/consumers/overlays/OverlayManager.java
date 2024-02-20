@@ -215,17 +215,21 @@ public final class OverlayManager extends Manager {
     }
 
     private void renderOverlays(RenderEvent event, RenderState renderState) {
-        boolean testMode = false;
+        boolean showPreview = false;
+        boolean renderNonSelected = true;
         boolean shouldRender = true;
-        Overlay previewedOverlay = null;
+        Overlay selectedOverlay = null;
 
         if (McUtils.mc().screen instanceof OverlayManagementScreen screen) {
-            testMode = screen.isTestMode();
             shouldRender = false;
+            showPreview = screen.showPreview();
+            renderNonSelected = screen.shouldRenderAllOverlays();
+            selectedOverlay = screen.getSelectedOverlay();
         } else if (McUtils.mc().screen instanceof OverlaySelectionScreen screen) {
             if (screen.renderingPreview()) {
-                testMode = screen.shouldHideOverlays();
-                previewedOverlay = screen.getSelectedOverlay();
+                showPreview = true;
+                renderNonSelected = screen.shouldShowOverlays();
+                selectedOverlay = screen.getSelectedOverlay();
             }
         }
 
@@ -249,19 +253,15 @@ public final class OverlayManager extends Manager {
             }
 
             try {
-                if (testMode) {
-                    if (previewedOverlay != null && overlay != previewedOverlay) continue;
+                if (showPreview) {
+                    if (selectedOverlay != null && overlay != selectedOverlay && !renderNonSelected) continue;
 
                     overlay.renderPreview(
                             event.getPoseStack(), bufferSource, event.getPartialTicks(), event.getWindow());
-                } else {
-                    if (shouldRender) {
-                        if (previewedOverlay != null && overlay == previewedOverlay) continue;
-
-                        long startTime = System.currentTimeMillis();
-                        overlay.render(event.getPoseStack(), bufferSource, event.getPartialTicks(), event.getWindow());
-                        logProfilingData(startTime, overlay);
-                    }
+                } else if (shouldRender) {
+                    long startTime = System.currentTimeMillis();
+                    overlay.render(event.getPoseStack(), bufferSource, event.getPartialTicks(), event.getWindow());
+                    logProfilingData(startTime, overlay);
                 }
             } catch (Throwable t) {
                 RenderUtils.disableScissor();
