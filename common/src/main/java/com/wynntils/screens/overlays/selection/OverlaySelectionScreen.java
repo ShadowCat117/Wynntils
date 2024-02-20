@@ -176,10 +176,22 @@ public final class OverlaySelectionScreen extends WynntilsScreen implements Text
             renderTooltips(guiGraphics, mouseX, mouseY);
 
             if (selectedOverlay != null) {
+                String textToRender = selectedOverlay.getTranslatedName();
+
+                if (selectedOverlay instanceof InfoBoxOverlay infoBox) {
+                    if (!infoBox.customName.get().isEmpty()) {
+                        textToRender = infoBox.customName.get();
+                    }
+                } else if (selectedOverlay instanceof CustomBarOverlayBase customBar) {
+                    if (!customBar.customName.get().isEmpty()) {
+                        textToRender = customBar.customName.get();
+                    }
+                }
+
                 FontRenderer.getInstance()
                         .renderAlignedTextInBox(
                                 poseStack,
-                                StyledText.fromString(selectedOverlay.getTranslatedName()),
+                                StyledText.fromString(textToRender),
                                 146,
                                 338,
                                 4,
@@ -635,6 +647,18 @@ public final class OverlaySelectionScreen extends WynntilsScreen implements Text
     }
 
     private boolean searchMatches(Translatable translatable) {
+        // For info boxes and custom bars, we want to search for their custom name if given
+        // if there is no match, then check the translated name
+        if (translatable instanceof InfoBoxOverlay infoBox) {
+            if (StringUtils.partialMatch(infoBox.customName.get(), searchWidget.getTextBoxInput())) {
+                return true;
+            }
+        } else if (translatable instanceof CustomBarOverlayBase customBar) {
+            if (StringUtils.partialMatch(customBar.customName.get(), searchWidget.getTextBoxInput())) {
+                return true;
+            }
+        }
+
         return StringUtils.partialMatch(translatable.getTranslatedName(), searchWidget.getTextBoxInput());
     }
 

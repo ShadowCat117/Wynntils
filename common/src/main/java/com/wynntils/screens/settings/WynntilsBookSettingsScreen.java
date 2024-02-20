@@ -14,6 +14,8 @@ import com.wynntils.core.persisted.Translatable;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.overlays.custombars.CustomBarOverlayBase;
+import com.wynntils.overlays.infobox.InfoBoxOverlay;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.base.widgets.SearchWidget;
@@ -278,10 +280,23 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
                 poseStack, CommonColors.GRAY, 11, 19, Texture.CONFIG_BOOK_BACKGROUND.width() / 2f - 6, 19, 0, 1);
 
         if (selectedConfigurable != null) {
+            String textToRender = selectedConfigurable.getTranslatedName();
+
+            // Show the custom name for info boxes/custom bars if given
+            if (selectedConfigurable instanceof InfoBoxOverlay infoBox) {
+                if (!infoBox.customName.get().isEmpty()) {
+                    textToRender = infoBox.customName.get();
+                }
+            } else if (selectedConfigurable instanceof CustomBarOverlayBase customBar) {
+                if (!customBar.customName.get().isEmpty()) {
+                    textToRender = customBar.customName.get();
+                }
+            }
+
             FontRenderer.getInstance()
                     .renderText(
                             poseStack,
-                            StyledText.fromString(selectedConfigurable.getTranslatedName()),
+                            StyledText.fromString(textToRender),
                             Texture.CONFIG_BOOK_BACKGROUND.width() * 0.75f,
                             McUtils.mc().font.lineHeight + 5,
                             CommonColors.LIGHT_GRAY,
@@ -783,6 +798,18 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
     }
 
     private boolean searchMatches(Translatable translatable) {
+        // For info boxes and custom bars, we want to search for their custom name if given
+        // if there is no match, then check the translated name
+        if (translatable instanceof InfoBoxOverlay infoBox) {
+            if (StringUtils.partialMatch(infoBox.customName.get(), searchWidget.getTextBoxInput())) {
+                return true;
+            }
+        } else if (translatable instanceof CustomBarOverlayBase customBar) {
+            if (StringUtils.partialMatch(customBar.customName.get(), searchWidget.getTextBoxInput())) {
+                return true;
+            }
+        }
+
         return StringUtils.partialMatch(translatable.getTranslatedName(), searchWidget.getTextBoxInput());
     }
 

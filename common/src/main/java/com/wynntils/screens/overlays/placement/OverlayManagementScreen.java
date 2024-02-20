@@ -16,6 +16,8 @@ import com.wynntils.core.consumers.overlays.SectionCoordinates;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.overlays.custombars.CustomBarOverlayBase;
+import com.wynntils.overlays.infobox.InfoBoxOverlay;
 import com.wynntils.screens.base.widgets.WynntilsCheckbox;
 import com.wynntils.screens.overlays.selection.OverlaySelectionScreen;
 import com.wynntils.utils.MathUtils;
@@ -195,10 +197,24 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
                 float renderX = overlay.getRenderX() + xOffset;
                 float renderY = overlay.getRenderY() + yOffset;
+
+                String textToRender = overlay.getTranslatedName();
+
+                // Show the custom name for info boxes/custom bars if given
+                if (overlay instanceof InfoBoxOverlay infoBox) {
+                    if (!infoBox.customName.get().isEmpty()) {
+                        textToRender = infoBox.customName.get();
+                    }
+                } else if (overlay instanceof CustomBarOverlayBase customBar) {
+                    if (!customBar.customName.get().isEmpty()) {
+                        textToRender = customBar.customName.get();
+                    }
+                }
+
                 FontRenderer.getInstance()
                         .renderAlignedTextInBox(
                                 poseStack,
-                                StyledText.fromString(overlay.getTranslatedName()),
+                                StyledText.fromString(textToRender),
                                 renderX,
                                 renderX + overlay.getWidth(),
                                 renderY,

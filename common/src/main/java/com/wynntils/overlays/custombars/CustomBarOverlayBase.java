@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays.custombars;
@@ -12,6 +12,9 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.utils.type.ErrorOr;
 
 public abstract class CustomBarOverlayBase extends BarOverlay {
+    @Persisted(i18nKey = "feature.wynntils.customBarsOverlay.overlay.customBarBase.customName")
+    public final Config<String> customName = new Config<>("");
+
     @Persisted(i18nKey = "feature.wynntils.customBarsOverlay.overlay.customBarBase.textTemplate")
     public final Config<String> textTemplate = new Config<>("");
 

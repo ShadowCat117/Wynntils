@@ -12,6 +12,8 @@ import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.overlays.custombars.CustomBarOverlayBase;
+import com.wynntils.overlays.infobox.InfoBoxOverlay;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.base.widgets.WynntilsCheckbox;
 import com.wynntils.screens.settings.WynntilsBookSettingsScreen;
@@ -52,9 +54,21 @@ public class ConfigurableButton extends WynntilsButton {
         this.translationY = translationY;
 
         boolean enabled = false;
+        String name = configurable.getTranslatedName();
 
         if (configurable instanceof Overlay selectedOverlay) {
             enabled = Managers.Overlay.isEnabled(selectedOverlay);
+
+            // Show the custom name for info boxes/custom bars if given
+            if (selectedOverlay instanceof InfoBoxOverlay infoBox) {
+                if (!infoBox.customName.get().isEmpty()) {
+                    name = infoBox.customName.get();
+                }
+            } else if (selectedOverlay instanceof CustomBarOverlayBase customBar) {
+                if (!customBar.customName.get().isEmpty()) {
+                    name = customBar.customName.get();
+                }
+            }
         } else if (configurable instanceof Feature selectedFeature) {
             enabled = selectedFeature.isEnabled();
         }
@@ -69,7 +83,7 @@ public class ConfigurableButton extends WynntilsButton {
             descriptionTooltip = List.of();
         }
 
-        String text = (configurable instanceof Overlay ? "   " : "") + configurable.getTranslatedName();
+        String text = (configurable instanceof Overlay ? "   " : "") + name;
 
         // Display a counter of how many configs match the current search query after
         // the configurable name.

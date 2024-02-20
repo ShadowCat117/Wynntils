@@ -47,6 +47,8 @@ public class OverlayButton extends WynntilsButton {
     private final List<Component> descriptionTooltip;
     private final Overlay overlay;
 
+    private String textToRender;
+
     public OverlayButton(int x, int y, int width, int height, Overlay overlay, float translationX, float translationY) {
         super(x, y, width, height, Component.literal(overlay.getTranslatedName()));
 
@@ -54,20 +56,27 @@ public class OverlayButton extends WynntilsButton {
         this.translationX = translationX;
         this.translationY = translationY;
 
+        textToRender = overlay.getTranslatedName();
+
         // Display a tooltip with delete instructions for info boxes and custom bars
+        // and use the custom name if given.
         // Also get the ID to be used when deleting
         if (overlay instanceof InfoBoxOverlay infoBoxOverlay) {
+            if (!infoBoxOverlay.customName.get().isEmpty()) {
+                textToRender = infoBoxOverlay.customName.get();
+            }
+
             descriptionTooltip = ComponentUtils.wrapTooltips(
-                    List.of(Component.translatable(
-                            "screens.wynntils.overlaySelection.delete", infoBoxOverlay.getTranslatedName())),
-                    150);
+                    List.of(Component.translatable("screens.wynntils.overlaySelection.delete", textToRender)), 150);
 
             overlayId = infoBoxOverlay.getId();
         } else if (overlay instanceof CustomBarOverlayBase customBarOverlayBase) {
+            if (!customBarOverlayBase.customName.get().isEmpty()) {
+                textToRender = customBarOverlayBase.customName.get();
+            }
+
             descriptionTooltip = ComponentUtils.wrapTooltips(
-                    List.of(Component.translatable(
-                            "screens.wynntils.overlaySelection.delete", customBarOverlayBase.getTranslatedName())),
-                    150);
+                    List.of(Component.translatable("screens.wynntils.overlaySelection.delete", textToRender)), 150);
 
             overlayId = customBarOverlayBase.getId();
         } else {
@@ -89,7 +98,7 @@ public class OverlayButton extends WynntilsButton {
         FontRenderer.getInstance()
                 .renderScrollingString(
                         poseStack,
-                        StyledText.fromString(overlay.getTranslatedName()),
+                        StyledText.fromString(textToRender),
                         getX() + 2,
                         getY() + (height / 2f),
                         width - 4,

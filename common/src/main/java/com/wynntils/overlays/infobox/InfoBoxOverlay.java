@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays.infobox;
@@ -9,6 +9,9 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 
 public class InfoBoxOverlay extends TextOverlay {
+    @Persisted
+    public final Config<String> customName = new Config<>("");
+
     @Persisted
     public final Config<String> content = new Config<>("");
 
