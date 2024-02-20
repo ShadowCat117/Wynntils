@@ -9,6 +9,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.overlays.CustomNamedOverlay;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.persisted.config.OverlayGroupHolder;
 import com.wynntils.core.text.StyledText;
@@ -46,8 +47,7 @@ public class OverlayButton extends WynntilsButton {
     private final int overlayId;
     private final List<Component> descriptionTooltip;
     private final Overlay overlay;
-
-    private String textToRender;
+    private final String textToRender;
 
     public OverlayButton(int x, int y, int width, int height, Overlay overlay, float translationX, float translationY) {
         super(x, y, width, height, Component.literal(overlay.getTranslatedName()));
@@ -56,25 +56,25 @@ public class OverlayButton extends WynntilsButton {
         this.translationX = translationX;
         this.translationY = translationY;
 
-        textToRender = overlay.getTranslatedName();
+        // Use custom name of overlay if present
+        if (overlay instanceof CustomNamedOverlay customNamedOverlay) {
+            if (!customNamedOverlay.getCustomName().get().isEmpty()) {
+                textToRender = customNamedOverlay.getCustomName().get();
+            } else {
+                textToRender = overlay.getTranslatedName();
+            }
+        } else {
+            textToRender = overlay.getTranslatedName();
+        }
 
-        // Display a tooltip with delete instructions for info boxes and custom bars
-        // and use the custom name if given.
+        // Display a tooltip with delete instructions for info boxes and custom bars.
         // Also get the ID to be used when deleting
         if (overlay instanceof InfoBoxOverlay infoBoxOverlay) {
-            if (!infoBoxOverlay.customName.get().isEmpty()) {
-                textToRender = infoBoxOverlay.customName.get();
-            }
-
             descriptionTooltip = ComponentUtils.wrapTooltips(
                     List.of(Component.translatable("screens.wynntils.overlaySelection.delete", textToRender)), 150);
 
             overlayId = infoBoxOverlay.getId();
         } else if (overlay instanceof CustomBarOverlayBase customBarOverlayBase) {
-            if (!customBarOverlayBase.customName.get().isEmpty()) {
-                textToRender = customBarOverlayBase.customName.get();
-            }
-
             descriptionTooltip = ComponentUtils.wrapTooltips(
                     List.of(Component.translatable("screens.wynntils.overlaySelection.delete", textToRender)), 150);
 

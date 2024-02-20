@@ -6,12 +6,13 @@ package com.wynntils.overlays.custombars;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.overlays.BarOverlay;
+import com.wynntils.core.consumers.overlays.CustomNamedOverlay;
 import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.utils.type.ErrorOr;
 
-public abstract class CustomBarOverlayBase extends BarOverlay {
+public abstract class CustomBarOverlayBase extends BarOverlay implements CustomNamedOverlay {
     @Persisted(i18nKey = "feature.wynntils.customBarsOverlay.overlay.customBarBase.customName")
     public final Config<String> customName = new Config<>("");
 
@@ -48,6 +49,11 @@ public abstract class CustomBarOverlayBase extends BarOverlay {
 
         ErrorOr<Boolean> enabledOrError = Managers.Function.tryGetRawValueOfType(enabledTemplate.get(), Boolean.class);
         return !enabledOrError.hasError() && enabledOrError.getValue();
+    }
+
+    @Override
+    public Config<String> getCustomName() {
+        return customName;
     }
 
     protected abstract BarOverlayTemplatePair getActualPreviewTemplate();

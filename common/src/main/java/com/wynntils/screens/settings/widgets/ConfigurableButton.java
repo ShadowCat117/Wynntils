@@ -9,11 +9,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Configurable;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.overlays.CustomNamedOverlay;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.overlays.custombars.CustomBarOverlayBase;
-import com.wynntils.overlays.infobox.InfoBoxOverlay;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.base.widgets.WynntilsCheckbox;
 import com.wynntils.screens.settings.WynntilsBookSettingsScreen;
@@ -60,13 +59,9 @@ public class ConfigurableButton extends WynntilsButton {
             enabled = Managers.Overlay.isEnabled(selectedOverlay);
 
             // Show the custom name for info boxes/custom bars if given
-            if (selectedOverlay instanceof InfoBoxOverlay infoBox) {
-                if (!infoBox.customName.get().isEmpty()) {
-                    name = infoBox.customName.get();
-                }
-            } else if (selectedOverlay instanceof CustomBarOverlayBase customBar) {
-                if (!customBar.customName.get().isEmpty()) {
-                    name = customBar.customName.get();
+            if (selectedOverlay instanceof CustomNamedOverlay customNamedOverlay) {
+                if (!customNamedOverlay.getCustomName().get().isEmpty()) {
+                    name = customNamedOverlay.getCustomName().get();
                 }
             }
         } else if (configurable instanceof Feature selectedFeature) {

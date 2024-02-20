@@ -7,6 +7,7 @@ package com.wynntils.screens.overlays.selection;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.overlays.CustomNamedOverlay;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.persisted.Translatable;
@@ -178,13 +179,9 @@ public final class OverlaySelectionScreen extends WynntilsScreen implements Text
             if (selectedOverlay != null) {
                 String textToRender = selectedOverlay.getTranslatedName();
 
-                if (selectedOverlay instanceof InfoBoxOverlay infoBox) {
-                    if (!infoBox.customName.get().isEmpty()) {
-                        textToRender = infoBox.customName.get();
-                    }
-                } else if (selectedOverlay instanceof CustomBarOverlayBase customBar) {
-                    if (!customBar.customName.get().isEmpty()) {
-                        textToRender = customBar.customName.get();
+                if (selectedOverlay instanceof CustomNamedOverlay customNamedOverlay) {
+                    if (!customNamedOverlay.getCustomName().get().isEmpty()) {
+                        textToRender = customNamedOverlay.getCustomName().get();
                     }
                 }
 
@@ -649,12 +646,8 @@ public final class OverlaySelectionScreen extends WynntilsScreen implements Text
     private boolean searchMatches(Translatable translatable) {
         // For info boxes and custom bars, we want to search for their custom name if given
         // if there is no match, then check the translated name
-        if (translatable instanceof InfoBoxOverlay infoBox) {
-            if (StringUtils.partialMatch(infoBox.customName.get(), searchWidget.getTextBoxInput())) {
-                return true;
-            }
-        } else if (translatable instanceof CustomBarOverlayBase customBar) {
-            if (StringUtils.partialMatch(customBar.customName.get(), searchWidget.getTextBoxInput())) {
+        if (translatable instanceof CustomNamedOverlay customNamedOverlay) {
+            if (StringUtils.partialMatch(customNamedOverlay.getCustomName().get(), searchWidget.getTextBoxInput())) {
                 return true;
             }
         }

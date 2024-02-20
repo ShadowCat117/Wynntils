@@ -4,11 +4,12 @@
  */
 package com.wynntils.overlays.infobox;
 
+import com.wynntils.core.consumers.overlays.CustomNamedOverlay;
 import com.wynntils.core.consumers.overlays.TextOverlay;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 
-public class InfoBoxOverlay extends TextOverlay {
+public class InfoBoxOverlay extends TextOverlay implements CustomNamedOverlay {
     @Persisted
     public final Config<String> customName = new Config<>("");
 
@@ -31,5 +32,10 @@ public class InfoBoxOverlay extends TextOverlay {
         }
 
         return "&cX: {x(my_loc):0}, &9Y: {y(my_loc):0}, &aZ: {z(my_loc):0}";
+    }
+
+    @Override
+    public Config<String> getCustomName() {
+        return customName;
     }
 }
