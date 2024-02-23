@@ -178,6 +178,15 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                     overlay.getWidth(),
                     overlay.getHeight());
 
+            String overlayName = overlay.getTranslatedName();
+
+            // Show the custom name for info boxes/custom bars if given
+            if (overlay instanceof CustomNamedOverlay customNamedOverlay) {
+                if (!customNamedOverlay.getCustomName().get().isEmpty()) {
+                    overlayName = customNamedOverlay.getCustomName().get();
+                }
+            }
+
             // Only display overlay name when not rendering preview of the overlay
             if (!showPreview) {
                 float yOffset =
@@ -197,19 +206,10 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                 float renderX = overlay.getRenderX() + xOffset;
                 float renderY = overlay.getRenderY() + yOffset;
 
-                String textToRender = overlay.getTranslatedName();
-
-                // Show the custom name for info boxes/custom bars if given
-                if (overlay instanceof CustomNamedOverlay customNamedOverlay) {
-                    if (!customNamedOverlay.getCustomName().get().isEmpty()) {
-                        textToRender = customNamedOverlay.getCustomName().get();
-                    }
-                }
-
                 FontRenderer.getInstance()
                         .renderAlignedTextInBox(
                                 poseStack,
-                                StyledText.fromString(textToRender),
+                                StyledText.fromString(overlayName),
                                 renderX,
                                 renderX + overlay.getWidth(),
                                 renderY,
@@ -223,7 +223,6 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
             // If tooltip has yet been rendered then we need to check
             // if an overlay is hovered and display the tooltip for that.
-
             if (!renderedTooltip
                     && showPreview
                     && overlay != selectedOverlay
@@ -232,8 +231,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                 McUtils.mc()
                         .screen
                         .setTooltipForNextRenderPass(Lists.transform(
-                                List.of(Component.literal(overlay.getTranslatedName())),
-                                Component::getVisualOrderText));
+                                List.of(Component.literal(overlayName)), Component::getVisualOrderText));
 
                 renderedTooltip = true;
             } else if (!renderedTooltip
