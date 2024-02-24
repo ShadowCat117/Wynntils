@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.persisted.config;
@@ -149,7 +149,7 @@ public final class ConfigManager extends Manager {
             // read value and update option
             JsonElement configJson = configObject.get(config.getJsonName());
             Object value = Managers.Json.GSON.fromJson(configJson, config.getType());
-            config.restoreValue(value);
+            config.setValueFromObject(value);
         }
 
         // Newly created group overlays need to be enabled
