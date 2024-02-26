@@ -44,11 +44,11 @@ public class ConfigTile extends WynntilsButton {
         super(x, y, width, height, Component.literal(config.getJsonName()));
         this.screen = screen;
         this.config = config;
+        this.translationX = translationX;
+        this.translationY = translationY;
         this.configOptionElement = getWidgetFromConfig(config);
         this.resetButton = new ResetButton(
                 config, () -> configOptionElement = getWidgetFromConfig(config), x + width - 20, getRenderY() + 7);
-        this.translationX = translationX;
-        this.translationY = translationY;
 
         // Searching only matches configs on the settings screen
         if (screen instanceof WynntilsBookSettingsScreen settingsScreen
@@ -96,8 +96,8 @@ public class ConfigTile extends WynntilsButton {
                         getRenderX(),
                         this.getY() + 3,
                         this.width,
-                        getRenderX() + translationX,
-                        this.getY() + 3 + translationY,
+                        translationX,
+                        translationY,
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
@@ -147,9 +147,9 @@ public class ConfigTile extends WynntilsButton {
 
     private <E extends Enum<E>> AbstractWidget getWidgetFromConfig(Config<?> configOption) {
         if (configOption.getType().equals(Boolean.class)) {
-            return new BooleanSettingsButton((Config<Boolean>) configOption);
+            return new BooleanSettingsButton((Config<Boolean>) configOption, getRenderX() + this.translationX, getRenderY() + this.translationY);
         } else if (configOption.isEnum()) {
-            return new EnumSettingsButton<>((Config<E>) configOption);
+            return new EnumSettingsButton<>((Config<E>) configOption, getRenderX() + this.translationX, getRenderY() + this.translationY);
         } else if (configOption.getType().equals(CustomColor.class)) {
             return new CustomColorSettingsButton((Config<CustomColor>) configOption, screen);
         } else {

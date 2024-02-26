@@ -24,10 +24,14 @@ public abstract class GeneralSettingsButton extends WynntilsButton {
     public static final CustomColor BACKGROUND_COLOR = new CustomColor(98, 34, 8);
     public static final CustomColor HOVER_BACKGROUND_COLOR = new CustomColor(158, 52, 16);
     private final List<Component> tooltip;
+    private final float translationX;
+    private final float translationY;
 
-    protected GeneralSettingsButton(int x, int y, int width, int height, Component title, List<Component> tooltip) {
+    protected GeneralSettingsButton(int x, int y, int width, int height, Component title, List<Component> tooltip, float translationX, float translationY) {
         super(x, y, width, height, title);
         this.tooltip = tooltip;
+        this.translationX = translationX;
+        this.translationY = translationY;
     }
 
     @Override
@@ -47,18 +51,21 @@ public abstract class GeneralSettingsButton extends WynntilsButton {
                 3);
 
         FontRenderer.getInstance()
-                .renderAlignedTextInBox(
+                .renderScrollingAlignedTextInBox(
                         poseStack,
                         StyledText.fromComponent(getMessage()),
                         this.getX(),
                         this.getX() + this.width,
                         this.getY(),
                         this.getY() + this.height,
-                        0,
+                        this.width - 2,
+                        translationX,
+                        translationY,
                         getTextColor(),
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,
-                        TextShadow.OUTLINE);
+                        TextShadow.OUTLINE
+                );
 
         if (isHovered) {
             McUtils.mc().screen.setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));

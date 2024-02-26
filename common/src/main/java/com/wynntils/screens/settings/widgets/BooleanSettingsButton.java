@@ -17,14 +17,16 @@ import net.minecraft.network.chat.MutableComponent;
 public class BooleanSettingsButton extends GeneralSettingsButton {
     private final Config<Boolean> config;
 
-    public BooleanSettingsButton(Config<Boolean> config) {
+    public BooleanSettingsButton(Config<Boolean> config, float translationX, float translationY) {
         super(
                 0,
                 7,
                 100,
                 20,
                 getTitle(config),
-                ComponentUtils.wrapTooltips(List.of(Component.literal(config.getDescription())), 150));
+                ComponentUtils.wrapTooltips(List.of(Component.literal(config.getDescription())), 150),
+                translationX,
+                translationY);
         this.config = config;
     }
 
