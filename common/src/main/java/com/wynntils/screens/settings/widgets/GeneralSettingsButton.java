@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.settings.widgets;
@@ -27,7 +27,15 @@ public abstract class GeneralSettingsButton extends WynntilsButton {
     private final float translationX;
     private final float translationY;
 
-    protected GeneralSettingsButton(int x, int y, int width, int height, Component title, List<Component> tooltip, float translationX, float translationY) {
+    protected GeneralSettingsButton(
+            int x,
+            int y,
+            int width,
+            int height,
+            Component title,
+            List<Component> tooltip,
+            float translationX,
+            float translationY) {
         super(x, y, width, height, title);
         this.tooltip = tooltip;
         this.translationX = translationX;
@@ -64,8 +72,7 @@ public abstract class GeneralSettingsButton extends WynntilsButton {
                         getTextColor(),
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,
-                        TextShadow.OUTLINE
-                );
+                        TextShadow.OUTLINE);
 
         if (isHovered) {
             McUtils.mc().screen.setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));

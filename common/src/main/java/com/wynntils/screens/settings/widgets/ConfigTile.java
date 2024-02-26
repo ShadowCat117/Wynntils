@@ -147,9 +147,11 @@ public class ConfigTile extends WynntilsButton {
 
     private <E extends Enum<E>> AbstractWidget getWidgetFromConfig(Config<?> configOption) {
         if (configOption.getType().equals(Boolean.class)) {
-            return new BooleanSettingsButton((Config<Boolean>) configOption, getRenderX() + this.translationX, getRenderY() + this.translationY);
+            return new BooleanSettingsButton(
+                    (Config<Boolean>) configOption, getRenderX() + this.translationX, getRenderY() + this.translationY);
         } else if (configOption.isEnum()) {
-            return new EnumSettingsButton<>((Config<E>) configOption, getRenderX() + this.translationX, getRenderY() + this.translationY);
+            return new EnumSettingsButton<>(
+                    (Config<E>) configOption, getRenderX() + this.translationX, getRenderY() + this.translationY);
         } else if (configOption.getType().equals(CustomColor.class)) {
             return new CustomColorSettingsButton((Config<CustomColor>) configOption, screen);
         } else {
