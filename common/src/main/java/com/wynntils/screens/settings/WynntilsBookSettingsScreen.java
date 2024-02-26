@@ -4,9 +4,6 @@
  */
 package com.wynntils.screens.settings;
 
-import com.google.common.reflect.TypeToken;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonSyntaxException;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Configurable;
@@ -44,9 +41,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -971,65 +966,53 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
     }
 
     private void importSettings(int clicked) {
-        try {
-            String clipboard = McUtils.mc().keyboardHandler.getClipboard();
-            Map<String, Object> configData =
-                    Managers.Json.GSON.fromJson(clipboard, new TypeToken<HashMap<String, Object>>() {}.getType());
+        String clipboard = McUtils.mc().keyboardHandler.getClipboard();
 
-            if (clicked == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-                // Loop through all features and import the settings from the clipboard
-                for (Configurable feature : Managers.Feature.getFeatures()) {
-                    importSettingsForFeature(feature, configData);
-                }
+        if (clicked == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+            List<Configurable> configsToImport = Managers.Feature.getFeatures().stream()
+                    .map(feature -> (Configurable) feature)
+                    .collect(Collectors.toList());
 
-                // Loop through all overlays and import the settings from the clipboard
-                for (Configurable overlay : Managers.Overlay.getOverlays()) {
-                    importSettingsForFeature(overlay, configData);
-                }
+            configsToImport.addAll(Managers.Overlay.getOverlays().stream()
+                    .filter(overlay -> !configsToImport.contains(Managers.Overlay.getOverlayParent(overlay)))
+                    .toList());
 
-                McUtils.sendMessageToClient(Component.translatable("screens.wynntils.settingsScreen.import.all")
+            boolean imported = Managers.Config.importConfig(clipboard, configsToImport);
+
+            if (imported) {
+                McUtils.sendMessageToClient(Component.translatable("screens.wynntils.settingsScreen.importedAll")
                         .withStyle(ChatFormatting.GREEN));
+            } else {
+                McUtils.sendMessageToClient(Component.translatable("screens.wynntils.settingsScreen.import.failed")
+                        .withStyle(ChatFormatting.RED));
+            }
+        } else if (clicked == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            if (selectedConfigurable != null) {
+                boolean imported = Managers.Config.importConfig(clipboard, List.of(selectedConfigurable));
 
-            } else if (clicked == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-                if (selectedConfigurable != null) {
-                    // Import the settings for the selected configurable from the clipboard
-                    importSettingsForFeature(selectedConfigurable, configData);
-
+                if (imported) {
                     McUtils.sendMessageToClient(Component.translatable(
                                     "screens.wynntils.settingsScreen.imported",
                                     selectedConfigurable.getTranslatedName())
                             .withStyle(ChatFormatting.GREEN));
                 } else {
-                    McUtils.sendMessageToClient(Component.translatable("screens.wynntils.settingsScreen.needToSelect")
+                    McUtils.sendMessageToClient(Component.translatable("screens.wynntils.settingsScreen.import.failed")
                             .withStyle(ChatFormatting.RED));
                 }
-            }
-
-            // Repopulate the configurables and configs after importing
-            populateConfigurables();
-            populateConfigs();
-        } catch (JsonSyntaxException ex) {
-            McUtils.sendMessageToClient(Component.translatable("screens.wynntils.settingsScreen.import.failed")
-                    .withStyle(ChatFormatting.RED));
-        }
-    }
-
-    private void importSettingsForFeature(Configurable feature, Map<String, Object> configData) {
-        // Loop through the visible configs only as they are the only configs to be imported
-        for (Config<?> configOption : feature.getVisibleConfigOptions()) {
-            String configOptionName = configOption.getJsonName();
-
-            // If the clipboard data contains this config option then it can be imported
-            if (configData.containsKey(configOptionName)) {
-                Object configObject = configData.get(configOptionName);
-                JsonElement configJson = Managers.Json.GSON.toJsonTree(configObject);
-                Object value = Managers.Json.GSON.fromJson(configJson, configOption.getType());
-                configOption.setValueFromObject(value);
+            } else {
+                McUtils.sendMessageToClient(Component.translatable("screens.wynntils.settingsScreen.needToSelect")
+                        .withStyle(ChatFormatting.RED));
             }
         }
+
+        // Repopulate the configurables and configs after importing
+        populateConfigurables();
+        populateConfigs();
     }
 
     private void exportSettings(int clicked) {
+        String exportedSettings = "";
+
         if (clicked == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             // Get all features and overlays into a list
             List<Configurable> featuresToExport = Managers.Feature.getFeatures().stream()
@@ -1040,13 +1023,13 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
                     .filter(overlay -> !featuresToExport.contains(Managers.Overlay.getOverlayParent(overlay)))
                     .toList());
 
-            exportSettingsToClipboard(featuresToExport);
+            exportedSettings = Managers.Config.exportConfig(featuresToExport);
 
             McUtils.sendMessageToClient(Component.translatable("screens.wynntils.settingsScreen.exportedAll")
                     .withStyle(ChatFormatting.GREEN));
         } else if (clicked == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             if (selectedConfigurable != null) {
-                exportSettingsToClipboard(List.of(selectedConfigurable));
+                exportedSettings = Managers.Config.exportConfig(List.of(selectedConfigurable));
 
                 McUtils.sendMessageToClient(Component.translatable(
                                 "screens.wynntils.settingsScreen.exported", selectedConfigurable.getTranslatedName())
@@ -1056,31 +1039,8 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
                         .withStyle(ChatFormatting.RED));
             }
         }
-    }
-
-    private void exportSettingsToClipboard(List<Configurable> featuresToExport) {
-        Map<String, Object> configData = new HashMap<>();
-
-        // Loop through all features to be exported
-        for (Configurable feature : featuresToExport) {
-            List<Config<?>> visibleConfigOptions = feature.getVisibleConfigOptions();
-
-            // Loop through visible config options, as we don't want this to export
-            // hidden configs since they should be exportable in their
-            // own features, like favorites and waypoints
-            for (Config<?> configOption : visibleConfigOptions) {
-                String configOptionName = configOption.getJsonName();
-                Object configOptionValue = configOption.get();
-
-                // Save the config option to the map
-                configData.put(configOptionName, configOptionValue);
-            }
-        }
-
-        // Get the json string of the exported settings
-        String jsonString = Managers.Json.GSON.toJson(configData);
 
         // Save to clipboard
-        McUtils.mc().keyboardHandler.setClipboard(jsonString);
+        McUtils.mc().keyboardHandler.setClipboard(exportedSettings);
     }
 }
