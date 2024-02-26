@@ -8,7 +8,7 @@ import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.overlays.Corner;
-import com.wynntils.core.consumers.overlays.CustomNamedOverlay;
+import com.wynntils.core.consumers.overlays.CustomNameProperty;
 import com.wynntils.core.consumers.overlays.Edge;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
@@ -181,9 +181,9 @@ public final class OverlayManagementScreen extends WynntilsScreen {
             String overlayName = overlay.getTranslatedName();
 
             // Show the custom name for info boxes/custom bars if given
-            if (overlay instanceof CustomNamedOverlay customNamedOverlay) {
-                if (!customNamedOverlay.getCustomName().get().isEmpty()) {
-                    overlayName = customNamedOverlay.getCustomName().get();
+            if (overlay instanceof CustomNameProperty customNameProperty) {
+                if (!customNameProperty.getCustomName().get().isEmpty()) {
+                    overlayName = customNameProperty.getCustomName().get();
                 }
             }
 

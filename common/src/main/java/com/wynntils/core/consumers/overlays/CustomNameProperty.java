@@ -6,6 +6,6 @@ package com.wynntils.core.consumers.overlays;
 
 import com.wynntils.core.persisted.config.Config;
 
-public interface CustomNamedOverlay {
+public interface CustomNameProperty {
     Config<String> getCustomName();
 }

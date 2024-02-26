@@ -6,13 +6,13 @@ package com.wynntils.overlays.custombars;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.overlays.BarOverlay;
-import com.wynntils.core.consumers.overlays.CustomNamedOverlay;
+import com.wynntils.core.consumers.overlays.CustomNameProperty;
 import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.utils.type.ErrorOr;
 
-public abstract class CustomBarOverlayBase extends BarOverlay implements CustomNamedOverlay {
+public abstract class CustomBarOverlayBase extends BarOverlay implements CustomNameProperty {
     @Persisted(i18nKey = "feature.wynntils.customBarsOverlay.overlay.customBarBase.customName")
     public final Config<String> customName = new Config<>("");
 

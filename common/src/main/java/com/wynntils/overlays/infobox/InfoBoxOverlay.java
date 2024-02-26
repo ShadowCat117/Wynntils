@@ -4,12 +4,12 @@
  */
 package com.wynntils.overlays.infobox;
 
-import com.wynntils.core.consumers.overlays.CustomNamedOverlay;
+import com.wynntils.core.consumers.overlays.CustomNameProperty;
 import com.wynntils.core.consumers.overlays.TextOverlay;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 
-public class InfoBoxOverlay extends TextOverlay implements CustomNamedOverlay {
+public class InfoBoxOverlay extends TextOverlay implements CustomNameProperty {
     @Persisted
     public final Config<String> customName = new Config<>("");
 

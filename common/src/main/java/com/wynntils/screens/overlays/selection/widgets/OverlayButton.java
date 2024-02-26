@@ -9,7 +9,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
-import com.wynntils.core.consumers.overlays.CustomNamedOverlay;
+import com.wynntils.core.consumers.overlays.CustomNameProperty;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.persisted.config.OverlayGroupHolder;
 import com.wynntils.core.text.StyledText;
@@ -57,9 +57,9 @@ public class OverlayButton extends WynntilsButton {
         this.translationY = translationY;
 
         // Use custom name of overlay if present
-        if (overlay instanceof CustomNamedOverlay customNamedOverlay) {
-            if (!customNamedOverlay.getCustomName().get().isEmpty()) {
-                textToRender = customNamedOverlay.getCustomName().get();
+        if (overlay instanceof CustomNameProperty customNameProperty) {
+            if (!customNameProperty.getCustomName().get().isEmpty()) {
+                textToRender = customNameProperty.getCustomName().get();
             } else {
                 textToRender = overlay.getTranslatedName();
             }

@@ -9,7 +9,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Configurable;
 import com.wynntils.core.consumers.features.Feature;
-import com.wynntils.core.consumers.overlays.CustomNamedOverlay;
+import com.wynntils.core.consumers.overlays.CustomNameProperty;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
@@ -59,9 +59,9 @@ public class ConfigurableButton extends WynntilsButton {
             enabled = Managers.Overlay.isEnabled(selectedOverlay);
 
             // Show the custom name for info boxes/custom bars if given
-            if (selectedOverlay instanceof CustomNamedOverlay customNamedOverlay) {
-                if (!customNamedOverlay.getCustomName().get().isEmpty()) {
-                    name = customNamedOverlay.getCustomName().get();
+            if (selectedOverlay instanceof CustomNameProperty customNameProperty) {
+                if (!customNameProperty.getCustomName().get().isEmpty()) {
+                    name = customNameProperty.getCustomName().get();
                 }
             }
         } else if (configurable instanceof Feature selectedFeature) {

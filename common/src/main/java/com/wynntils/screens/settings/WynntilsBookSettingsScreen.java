@@ -11,7 +11,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Configurable;
 import com.wynntils.core.consumers.features.Feature;
-import com.wynntils.core.consumers.overlays.CustomNamedOverlay;
+import com.wynntils.core.consumers.overlays.CustomNameProperty;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.persisted.Translatable;
@@ -287,9 +287,9 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
             String textToRender = selectedConfigurable.getTranslatedName();
 
             // Show the custom name for info boxes/custom bars if given
-            if (selectedConfigurable instanceof CustomNamedOverlay customNamedOverlay) {
-                if (!customNamedOverlay.getCustomName().get().isEmpty()) {
-                    textToRender = customNamedOverlay.getCustomName().get();
+            if (selectedConfigurable instanceof CustomNameProperty customNameProperty) {
+                if (!customNameProperty.getCustomName().get().isEmpty()) {
+                    textToRender = customNameProperty.getCustomName().get();
                 }
             }
 
@@ -800,8 +800,8 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
     private boolean searchMatches(Translatable translatable) {
         // For info boxes and custom bars, we want to search for their custom name if given
         // if there is no match, then check the translated name
-        if (translatable instanceof CustomNamedOverlay customNamedOverlay) {
-            if (StringUtils.partialMatch(customNamedOverlay.getCustomName().get(), searchWidget.getTextBoxInput())) {
+        if (translatable instanceof CustomNameProperty customNameProperty) {
+            if (StringUtils.partialMatch(customNameProperty.getCustomName().get(), searchWidget.getTextBoxInput())) {
                 return true;
             }
         }
