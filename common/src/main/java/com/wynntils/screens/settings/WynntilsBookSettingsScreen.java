@@ -77,6 +77,8 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
     // UI size, positions, etc
     private boolean draggingConfigurableScroll = false;
     private boolean draggingConfigScroll = false;
+    private double currentUnusedConfigurableScroll = 0;
+    private double currentUnusedConfigScroll = 0;
     private float configurableScrollRenderY;
     private float configScrollRenderY;
     private float translationX;
@@ -474,10 +476,36 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
         if (mouseY <= translationY) {
             scrollCategorories((int) scrollValue);
         } else if (adjustedMouseX <= Texture.CONFIG_BOOK_BACKGROUND.width() / 2f) {
-            scrollConfigurables((int) scrollValue);
+            if (Math.abs(deltaY) == 1.0) {
+                scrollConfigurables((int) -deltaY);
+                return true;
+            }
+
+            // Account for scrollpad
+            currentUnusedConfigurableScroll -= deltaY / 5d;
+
+            if (Math.abs(currentUnusedConfigurableScroll) < 1) return true;
+
+            int scroll = (int) (currentUnusedConfigurableScroll);
+            currentUnusedConfigurableScroll = currentUnusedConfigurableScroll % 1;
+
+            scrollConfigurables(scroll);
         } else if (selectedConfigurable != null
                 && selectedConfigurable.getVisibleConfigOptions().size() > CONFIGS_PER_PAGE) {
-            scrollConfigs((int) scrollValue);
+            if (Math.abs(scrollValue) == 1.0) {
+                scrollConfigs((int) -deltaY);
+                return true;
+            }
+
+            // Account for scrollpad
+            currentUnusedConfigScroll -= deltaY / 5d;
+
+            if (Math.abs(currentUnusedConfigScroll) < 1) return true;
+
+            int scroll = (int) (currentUnusedConfigScroll);
+            currentUnusedConfigScroll = currentUnusedConfigScroll % 1;
+
+            scrollConfigs(scroll);
         }
 
         return true;

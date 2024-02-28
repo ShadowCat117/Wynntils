@@ -77,6 +77,8 @@ public final class OverlaySelectionScreen extends WynntilsScreen implements Text
     // UI size, positions, etc
     private boolean draggingOverlayScroll = false;
     private boolean draggingConfigScroll = false;
+    private double currentUnusedOverlayScroll = 0;
+    private double currentUnusedConfigScroll = 0;
     private float configScrollY;
     private float overlayScrollY;
     private float translationX;
@@ -379,15 +381,39 @@ public final class OverlaySelectionScreen extends WynntilsScreen implements Text
         double adjustedMouseX = mouseX - translationX;
 
         if (!renderPreview) {
-            double scrollValue = -Math.signum(deltaY);
-
             // When the mouse is to the left of the config area, scroll overlays.
             // Otherwise scroll the configs
             if (adjustedMouseX < 145) {
-                scrollOverlays((int) scrollValue);
+                if (Math.abs(deltaY) == 1.0) {
+                    scrollOverlays((int) -deltaY);
+                    return true;
+                }
+
+                // Account for scrollpad
+                currentUnusedOverlayScroll -= deltaY / 5d;
+
+                if (Math.abs(currentUnusedOverlayScroll) < 1) return true;
+
+                int scroll = (int) (currentUnusedOverlayScroll);
+                currentUnusedOverlayScroll = currentUnusedOverlayScroll % 1;
+
+                scrollOverlays(scroll);
             } else if (selectedOverlay != null
                     && selectedOverlay.getVisibleConfigOptions().size() > CONFIGS_PER_PAGE) {
-                scrollConfigs((int) scrollValue);
+                if (Math.abs(deltaY) == 1.0) {
+                    scrollConfigs((int) -deltaY);
+                    return true;
+                }
+
+                // Account for scrollpad
+                currentUnusedConfigScroll -= deltaY / 5d;
+
+                if (Math.abs(currentUnusedConfigScroll) < 1) return true;
+
+                int scroll = (int) (currentUnusedConfigScroll);
+                currentUnusedConfigScroll = currentUnusedConfigScroll % 1;
+
+                scrollConfigs(scroll);
             }
         }
 
