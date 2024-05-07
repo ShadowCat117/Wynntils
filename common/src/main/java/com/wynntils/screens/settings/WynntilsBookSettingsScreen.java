@@ -59,7 +59,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
     // Constants
     private static final int CONFIGURABLES_PER_PAGE = 17;
     private static final int CONFIGS_PER_PAGE = 4;
-    private static final int MAX_DISPLAYED_CATEGORIES = 7;
+    private static final int MAX_DISPLAYED_CATEGORIES = 10;
 
     // Collections
     private final List<Category> sortedCategories;
@@ -209,10 +209,10 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
         // endregion
 
         // region Category tags
-        int xPos = 18;
+        int xPos = (int) (Texture.TAG_RED.width() * 0.85);
 
         allCategoriesButton = this.addRenderableWidget(new SettingsCategoryTabButton(
-                18,
+                xPos,
                 (int) -(Texture.TAG_RED.height() * 0.75f),
                 Texture.TAG_RED.width(),
                 Texture.TAG_RED.height(),
@@ -224,7 +224,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
             selectedCategoryButton = allCategoriesButton;
         }
 
-        xPos += Texture.TAG_RED.width() + Texture.TAG_RED.width() * 0.75;
+        xPos += Texture.TAG_RED.width() * 2 + 1;
 
         this.addRenderableWidget(new SettingsPageTabButton(
                 xPos,
@@ -235,7 +235,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
                 List.of(Component.translatable("screens.wynntils.settingsScreen.previous")),
                 false));
 
-        xPos += (Texture.TAG_RED.width() + Texture.TAG_RED.width() * 0.75) * (MAX_DISPLAYED_CATEGORIES + 1);
+        xPos += (Texture.TAG_RED.width() * 1.25) * (MAX_DISPLAYED_CATEGORIES + 1) - Texture.TAG_RED.width() * 0.25;
 
         this.addRenderableWidget(new SettingsPageTabButton(
                 xPos,
@@ -649,12 +649,12 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
             this.removeWidget(widget);
         }
 
-        int xPos = (int) (18 + Texture.TAG_RED.width() + Texture.TAG_RED.width() * 0.75);
+        int xPos = (int) (Texture.TAG_RED.width() * 2.85 + 1);
 
         categoryButtons = new ArrayList<>();
 
         for (int i = 0; i < MAX_DISPLAYED_CATEGORIES; i++) {
-            xPos += Texture.TAG_RED.width() + Texture.TAG_RED.width() * 0.75;
+            xPos += Texture.TAG_RED.width() + Texture.TAG_RED.width() * 0.25;
 
             int categoryIndex;
 
