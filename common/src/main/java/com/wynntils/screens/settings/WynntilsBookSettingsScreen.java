@@ -97,7 +97,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
 
         searchWidget = new SearchWidget(
                 60,
-                Texture.CONFIG_BOOK_BACKGROUND.height() + 5,
+                Texture.CONFIG_BOOK_BACKGROUND.height() + 6,
                 100,
                 20,
                 (s) -> {
@@ -146,7 +146,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
                                         .withStyle(ChatFormatting.GRAY)),
                         150),
                 Texture.TAG_BLUE,
-                Texture.ADD_ICON));
+                Texture.IMPORT_SETTINGS_ICON));
 
         yPos += 15 + Texture.TAG_BLUE.height() / 2;
 
@@ -166,7 +166,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
                                         .withStyle(ChatFormatting.GRAY)),
                         150),
                 Texture.TAG_BLUE,
-                Texture.SHARE_ICON));
+                Texture.EXPORT_SETTINGS_ICON));
 
         yPos += 15 + Texture.TAG_BLUE.height() / 2;
 
@@ -187,7 +187,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
                                         .withStyle(ChatFormatting.GRAY)),
                         150),
                 Texture.TAG_BLUE,
-                Texture.SAVE));
+                Texture.APPLY_SETTINGS_ICON));
 
         yPos += 15 + Texture.TAG_BLUE.height() / 2;
 
@@ -205,7 +205,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
                                         .withStyle(ChatFormatting.GRAY)),
                         150),
                 Texture.TAG_BLUE,
-                Texture.CLOSE));
+                Texture.DISCARD_SETTINGS_ICON));
         // endregion
 
         // region Category tags
@@ -837,7 +837,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
     }
 
     private void renderSearchBar(PoseStack poseStack) {
-        RenderUtils.drawTexturedRect(poseStack, Texture.TAG_SEARCH, 30, Texture.CONFIG_BOOK_BACKGROUND.height() - 2);
+        RenderUtils.drawTexturedRect(poseStack, Texture.TAG_SEARCH, 30, Texture.CONFIG_BOOK_BACKGROUND.height() - 5);
     }
 
     private void renderTags(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
