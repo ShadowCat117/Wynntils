@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.mixin;
@@ -9,6 +9,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
+import com.wynntils.mc.event.HudRenderEvent;
 import com.wynntils.mc.event.RenderEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -21,6 +22,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Gui.class)
@@ -166,5 +169,297 @@ public abstract class GuiMixin {
         if (event.isCanceled()) {
             ci.cancel();
         }
+    }
+
+    @ModifyArg(
+            method = "Lnet/minecraft/client/gui/Gui;render(Lnet/minecraft/client/gui/GuiGraphics;F)V",
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;III)I"),
+            index = 2)
+    private int modifyActionBarXOffset(int value) {
+        if (!MixinHelper.onWynncraft()) return value;
+
+        HudRenderEvent hudRenderEvent =
+                new HudRenderEvent(RenderEvent.ElementType.ACTION_BAR, HudRenderEvent.RenderOffset.X);
+        MixinHelper.post(hudRenderEvent);
+
+        return value + hudRenderEvent.getOffset();
+    }
+
+    @ModifyArg(
+            method = "Lnet/minecraft/client/gui/Gui;render(Lnet/minecraft/client/gui/GuiGraphics;F)V",
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;III)I"),
+            index = 3)
+    private int modifyActionBarYOffset(int value) {
+        if (!MixinHelper.onWynncraft()) return value;
+
+        HudRenderEvent hudRenderEvent =
+                new HudRenderEvent(RenderEvent.ElementType.ACTION_BAR, HudRenderEvent.RenderOffset.Y);
+        MixinHelper.post(hudRenderEvent);
+
+        return value + hudRenderEvent.getOffset();
+    }
+
+    @Inject(
+            method = "Lnet/minecraft/client/gui/Gui;renderSelectedItemName(Lnet/minecraft/client/gui/GuiGraphics;)V",
+            at = @At("HEAD"),
+            cancellable = true)
+    private void onRenderSelectedItemNamePre(GuiGraphics guiGraphics, CallbackInfo ci) {
+        if (!MixinHelper.onWynncraft()) return;
+
+        RenderEvent.Pre event =
+                new RenderEvent.Pre(guiGraphics, 0, this.minecraft.getWindow(), RenderEvent.ElementType.HELD_ITEM_NAME);
+        MixinHelper.post(event);
+
+        if (event.isCanceled()) {
+            ci.cancel();
+        }
+    }
+
+    @ModifyVariable(
+            method = "Lnet/minecraft/client/gui/Gui;renderSelectedItemName(Lnet/minecraft/client/gui/GuiGraphics;)V",
+            at = @At("STORE"),
+            ordinal = 1)
+    private int modifyHeldItemNameXOffset(int value) {
+        if (!MixinHelper.onWynncraft()) return value;
+
+        HudRenderEvent hudRenderEvent =
+                new HudRenderEvent(RenderEvent.ElementType.HELD_ITEM_NAME, HudRenderEvent.RenderOffset.X);
+        MixinHelper.post(hudRenderEvent);
+
+        return value + hudRenderEvent.getOffset();
+    }
+
+    @ModifyVariable(
+            method = "Lnet/minecraft/client/gui/Gui;renderSelectedItemName(Lnet/minecraft/client/gui/GuiGraphics;)V",
+            at = @At("STORE"),
+            ordinal = 2)
+    private int modifyHeldItemNameYOffset(int value) {
+        if (!MixinHelper.onWynncraft()) return value;
+
+        HudRenderEvent hudRenderEvent =
+                new HudRenderEvent(RenderEvent.ElementType.HELD_ITEM_NAME, HudRenderEvent.RenderOffset.Y);
+        MixinHelper.post(hudRenderEvent);
+
+        return value + hudRenderEvent.getOffset();
+    }
+
+    @Inject(
+            method = "Lnet/minecraft/client/gui/Gui;renderHotbar(FLnet/minecraft/client/gui/GuiGraphics;)V",
+            at = @At("HEAD"),
+            cancellable = true)
+    private void onRenderHotbarPre(float partialTick, GuiGraphics guiGraphics, CallbackInfo ci) {
+        if (!MixinHelper.onWynncraft()) return;
+
+        RenderEvent.Pre event =
+                new RenderEvent.Pre(guiGraphics, 0, this.minecraft.getWindow(), RenderEvent.ElementType.HOTBAR);
+        MixinHelper.post(event);
+
+        if (event.isCanceled()) {
+            ci.cancel();
+        }
+    }
+
+    @ModifyArg(
+            method = "Lnet/minecraft/client/gui/Gui;renderHotbar(FLnet/minecraft/client/gui/GuiGraphics;)V",
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/client/gui/GuiGraphics;blitSprite(Lnet/minecraft/resources/ResourceLocation;IIII)V"),
+            index = 1)
+    private int modifyHotbarXOffset(int value) {
+        if (!MixinHelper.onWynncraft()) return value;
+
+        HudRenderEvent hudRenderEvent =
+                new HudRenderEvent(RenderEvent.ElementType.HOTBAR, HudRenderEvent.RenderOffset.X);
+        MixinHelper.post(hudRenderEvent);
+
+        return value + hudRenderEvent.getOffset();
+    }
+
+    @ModifyArg(
+            method = "Lnet/minecraft/client/gui/Gui;renderHotbar(FLnet/minecraft/client/gui/GuiGraphics;)V",
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/client/gui/GuiGraphics;blitSprite(Lnet/minecraft/resources/ResourceLocation;IIII)V"),
+            index = 2)
+    private int modifyHotbarYOffset(int value) {
+        if (!MixinHelper.onWynncraft()) return value;
+
+        HudRenderEvent hudRenderEvent =
+                new HudRenderEvent(RenderEvent.ElementType.HOTBAR, HudRenderEvent.RenderOffset.Y);
+        MixinHelper.post(hudRenderEvent);
+
+        return value + hudRenderEvent.getOffset();
+    }
+
+    @ModifyArg(
+            method = "Lnet/minecraft/client/gui/Gui;renderHotbar(FLnet/minecraft/client/gui/GuiGraphics;)V",
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/client/gui/Gui;renderSlot(Lnet/minecraft/client/gui/GuiGraphics;IIFLnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;I)V"),
+            index = 1)
+    private int modifyHotbarItemXOffset(int value) {
+        if (!MixinHelper.onWynncraft()) return value;
+
+        HudRenderEvent hudRenderEvent =
+                new HudRenderEvent(RenderEvent.ElementType.HOTBAR, HudRenderEvent.RenderOffset.X);
+        MixinHelper.post(hudRenderEvent);
+
+        return value + hudRenderEvent.getOffset();
+    }
+
+    @ModifyArg(
+            method = "Lnet/minecraft/client/gui/Gui;renderHotbar(FLnet/minecraft/client/gui/GuiGraphics;)V",
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/client/gui/Gui;renderSlot(Lnet/minecraft/client/gui/GuiGraphics;IIFLnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;I)V"),
+            index = 2)
+    private int modifyHotbarItemYOffset(int value) {
+        if (!MixinHelper.onWynncraft()) return value;
+
+        HudRenderEvent hudRenderEvent =
+                new HudRenderEvent(RenderEvent.ElementType.HOTBAR, HudRenderEvent.RenderOffset.Y);
+        MixinHelper.post(hudRenderEvent);
+
+        return value + hudRenderEvent.getOffset();
+    }
+
+    @Inject(
+            method = "Lnet/minecraft/client/gui/Gui;renderExperienceBar(Lnet/minecraft/client/gui/GuiGraphics;I)V",
+            at = @At("HEAD"),
+            cancellable = true)
+    private void onRenderXpBarPre(GuiGraphics guiGraphics, int x, CallbackInfo ci) {
+        if (!MixinHelper.onWynncraft()) return;
+
+        RenderEvent.Pre event =
+                new RenderEvent.Pre(guiGraphics, 0, this.minecraft.getWindow(), RenderEvent.ElementType.XP_BAR);
+        MixinHelper.post(event);
+
+        if (event.isCanceled()) {
+            ci.cancel();
+        }
+    }
+
+    @ModifyArg(
+            method = "Lnet/minecraft/client/gui/Gui;renderExperienceBar(Lnet/minecraft/client/gui/GuiGraphics;I)V",
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/client/gui/GuiGraphics;blitSprite(Lnet/minecraft/resources/ResourceLocation;IIII)V"),
+            index = 1)
+    private int modifyExperienceBarBackgroundXOffset(int value) {
+        if (!MixinHelper.onWynncraft()) return value;
+
+        HudRenderEvent hudRenderEvent =
+                new HudRenderEvent(RenderEvent.ElementType.XP_BAR, HudRenderEvent.RenderOffset.X);
+        MixinHelper.post(hudRenderEvent);
+
+        return value + hudRenderEvent.getOffset();
+    }
+
+    @ModifyArg(
+            method = "Lnet/minecraft/client/gui/Gui;renderExperienceBar(Lnet/minecraft/client/gui/GuiGraphics;I)V",
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/client/gui/GuiGraphics;blitSprite(Lnet/minecraft/resources/ResourceLocation;IIII)V"),
+            index = 2)
+    private int modifyExperienceBarBackgroundYOffset(int value) {
+        if (!MixinHelper.onWynncraft()) return value;
+
+        HudRenderEvent hudRenderEvent =
+                new HudRenderEvent(RenderEvent.ElementType.XP_BAR, HudRenderEvent.RenderOffset.Y);
+        MixinHelper.post(hudRenderEvent);
+
+        return value + hudRenderEvent.getOffset();
+    }
+
+    @ModifyArg(
+            method = "Lnet/minecraft/client/gui/Gui;renderExperienceBar(Lnet/minecraft/client/gui/GuiGraphics;I)V",
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/client/gui/GuiGraphics;blitSprite(Lnet/minecraft/resources/ResourceLocation;IIIIIIII)V"),
+            index = 5)
+    private int modifyExperienceBarForegroundXOffset(int value) {
+        if (!MixinHelper.onWynncraft()) return value;
+
+        HudRenderEvent hudRenderEvent =
+                new HudRenderEvent(RenderEvent.ElementType.XP_BAR, HudRenderEvent.RenderOffset.X);
+        MixinHelper.post(hudRenderEvent);
+
+        return value + hudRenderEvent.getOffset();
+    }
+
+    @ModifyArg(
+            method = "Lnet/minecraft/client/gui/Gui;renderExperienceBar(Lnet/minecraft/client/gui/GuiGraphics;I)V",
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/client/gui/GuiGraphics;blitSprite(Lnet/minecraft/resources/ResourceLocation;IIIIIIII)V"),
+            index = 6)
+    private int modifyExperienceBarForegroundYOffset(int value) {
+        if (!MixinHelper.onWynncraft()) return value;
+
+        HudRenderEvent hudRenderEvent =
+                new HudRenderEvent(RenderEvent.ElementType.XP_BAR, HudRenderEvent.RenderOffset.Y);
+        MixinHelper.post(hudRenderEvent);
+
+        return value + hudRenderEvent.getOffset();
+    }
+
+    @ModifyArg(
+            method = "Lnet/minecraft/client/gui/Gui;renderExperienceBar(Lnet/minecraft/client/gui/GuiGraphics;I)V",
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Ljava/lang/String;IIIZ)I"),
+            index = 2)
+    private int modifyExperienceBarTextXOffset(int value) {
+        if (!MixinHelper.onWynncraft()) return value;
+
+        HudRenderEvent hudRenderEvent =
+                new HudRenderEvent(RenderEvent.ElementType.XP_BAR, HudRenderEvent.RenderOffset.X);
+        MixinHelper.post(hudRenderEvent);
+
+        return value + hudRenderEvent.getOffset();
+    }
+
+    @ModifyArg(
+            method = "Lnet/minecraft/client/gui/Gui;renderExperienceBar(Lnet/minecraft/client/gui/GuiGraphics;I)V",
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Ljava/lang/String;IIIZ)I"),
+            index = 3)
+    private int modifyExperienceBarTextYOffset(int value) {
+        if (!MixinHelper.onWynncraft()) return value;
+
+        HudRenderEvent hudRenderEvent =
+                new HudRenderEvent(RenderEvent.ElementType.XP_BAR, HudRenderEvent.RenderOffset.Y);
+        MixinHelper.post(hudRenderEvent);
+
+        return value + hudRenderEvent.getOffset();
     }
 }
