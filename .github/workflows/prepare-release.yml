@@ -1,0 +1,24 @@
+name: Prepare Release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  create-release-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.PRIVATE_TOKEN }}
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.PRIVATE_TOKEN }}
+          branch: prepare-release
+          base: main
+          title: "chore: Prepare new release"
+          labels: |
+            release
+          commit-message: "chore: Prepare new release"
