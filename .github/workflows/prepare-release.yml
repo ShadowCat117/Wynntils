@@ -12,6 +12,11 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.PRIVATE_TOKEN }}
 
+      - name: Clear changelog
+        run: |
+          echo -n "" > CHANGELOG.md
+          git add CHANGELOG.md
+
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
@@ -22,3 +27,4 @@ jobs:
           labels: |
             release
           commit-message: "chore: Prepare new release"
+          delete-branch: true
