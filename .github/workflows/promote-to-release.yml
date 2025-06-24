@@ -27,13 +27,6 @@ jobs:
             git config user.name "github-actions[bot]"
             git config user.email "github-actions[bot]@users.noreply.github.com"
 
-        - name: Fetch release branch
-          run: git fetch origin release:release
-
-        - name: Create new branch from main
-          run: |
-            git checkout -b release-update
-
         - name: Reset Changelog
           run: |
             echo "" > CHANGELOG.md
