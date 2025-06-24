@@ -16,22 +16,36 @@ jobs:
     name: Promote main to release
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+        - name: Checkout main branch
+          uses: actions/checkout@v4
+          with:
+            ref: main
+            fetch-depth: 0
 
-      - name: Reset changelog
-        run: |
-          touch CHANGELOG.md
-          echo -n "" > CHANGELOG.md
-          git add CHANGELOG.md
+        - name: Set up Git
+          run: |
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v6
-        with:
-          token: ${{ secrets.PRIVATE_TOKEN }}
-          committer: 'TempWynntilsBot <admin@tempwynntils.com>'
-          branch: promote-to-release
-          base: release
-          title: "chore: Create changelog for release"
-          commit-message: "chore: Create changelog"
-          delete-branch: true
+        - name: Fetch release branch
+          run: git fetch origin release:release
+
+        - name: Create new branch from main
+          run: |
+            git checkout -b release-update
+
+        - name: Reset Changelog
+          run: |
+            echo "" > CHANGELOG.md
+            git add CHANGELOG.md
+            git commit -m "chore: Reset Changelog"
+
+        - name: Create Pull Request into release
+          uses: peter-evans/create-pull-request@v6
+          with:
+            token: ${{ secrets.GITHUB_TOKEN }}
+            base: release
+            branch: release-update
+            title: "chore: Create changelog for release"
+            commit-message: "chore: Create changelog for release"
+            delete-branch: true
