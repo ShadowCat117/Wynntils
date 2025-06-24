@@ -1,3 +1,4 @@
+
 name: Promote to Release
 
 on:
@@ -17,20 +18,20 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          ref: main
 
-      - name: Create empty CHANGELOG.md
-        run: touch CHANGELOG.md
+      - name: Reset changelog
+        run: |
+          touch CHANGELOG.md
+          echo -n "" > CHANGELOG.md
+          git add CHANGELOG.md
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.PRIVATE_TOKEN }}
           committer: 'TempWynntilsBot <admin@tempwynntils.com>'
-          commit-message: "chore: Create changelog"
-          title: "chore: Create changelog"
-          body: "temp"
           branch: promote-to-release
           base: release
+          title: "chore: Create changelog for release"
+          commit-message: "chore: Create changelog"
+          delete-branch: true
