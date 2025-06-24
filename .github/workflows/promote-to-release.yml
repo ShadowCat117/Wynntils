@@ -17,11 +17,21 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Merge main into release
-        uses: mtanzi/action-automerge@v1
-        id: merge
         with:
-          github_token: ${{ secrets.PRIVATE_TOKEN }}
-          source: 'main'
-          target: 'release'
+          fetch-depth: 0
+
+      - name: Create empty CHANGELOG.md
+        run: touch CHANGELOG.md
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.PRIVATE_TOKEN }}
+          committer: 'TempWynntilsBot <admin@tempwynntils.com>'
+          commit-message: "chore: Create changelog"
+          title: "chore: Create changelog for release"
+          body: "Edit the changelog"
+          branch: promote-to-release
+          base: release
+          add-paths: |
+            CHANGELOG.md
