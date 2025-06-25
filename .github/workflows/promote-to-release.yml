@@ -27,6 +27,7 @@ jobs:
           target: 'release'
 
   reset-changelog:
+    needs: promote-release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout release branch
