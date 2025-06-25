@@ -26,11 +26,9 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Create release-update branch
-        run: git checkout -b release-update
-
-      - name: Add empty CHANGELOG.md
+      - name: Create release-update changes
         run: |
+          git checkout -b release-update
           echo "" > CHANGELOG.md
           git add CHANGELOG.md
           git commit -m "chore: Reset Changelog"
@@ -41,7 +39,8 @@ jobs:
           token: ${{ secrets.PRIVATE_TOKEN }}
           base: release
           branch: release-update
-          branch-suffix: timestamp
           title: "chore: Create changelog for release"
           commit-message: "chore: Create changelog for release"
           delete-branch: true
+          committer: "github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
+          author: "github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
