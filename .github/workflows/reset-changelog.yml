@@ -1,4 +1,4 @@
-name: Create Changelog PR
+name: Reset Changelog After Release Merge
 
 on:
   push:
@@ -6,45 +6,30 @@ on:
       - release
 
 jobs:
-  create-changelog-pr:
-    name: Create Changelog PR
+  reset-changelog:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout release branch
         uses: actions/checkout@v4
         with:
+          token: ${{ secrets.PRIVATE_TOKEN }}
           ref: release
-          fetch-depth: 0
 
-      - name: Set up Git identity
+      - name: Clear CHANGELOG.md
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-      - name: Create temporary changelog branch
-        run: |
-          git checkout -b changelog-temp
           echo "" > CHANGELOG.md
-          git add CHANGELOG.md
-          git commit -m "chore: Reset changelog" --author="github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
-
-      - name: Push changelog branch
-        env:
-          GITHUB_TOKEN: ${{ secrets.PRIVATE_TOKEN }}
-        run: |
-          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
-          git push -f origin changelog-temp
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.PRIVATE_TOKEN }}
-          title: "chore: Prepare changelog for release"
-          body: "This PR resets or creates an empty changelog after merging into release."
-          base: release
-          branch: changelog-temp
           commit-message: "chore: Reset changelog"
-          delete-branch: true
-          author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
-          committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+          title: "chore: Reset changelog"
+          body: |
+            This PR resets the `CHANGELOG.md` file after a release merge.
+            It is automatically generated and targets the `release` branch.
+          branch: reset-changelog
+          base: release
+          labels: auto-generated
+          committer: WynntilsBot <admin@wynntils.com>
