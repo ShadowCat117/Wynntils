@@ -1,17 +1,13 @@
 name: Reset Changelog After Release Merge
 
 on:
-  pull_request:
-    types: [closed]
+  push:
     branches:
       - release
 
 jobs:
   reset-changelog:
-    if: >
-      github.event.pull_request.merged == true &&
-      !contains(github.event.pull_request.labels.*.name, 'auto-generated') &&
-      !contains(github.event.pull_request.changed_files, 'CHANGELOG.md')
+    if: ${{ !contains(join(github.event.commits.*.modified, ','), 'CHANGELOG.md') }}
     runs-on: ubuntu-latest
 
     steps:
@@ -22,8 +18,7 @@ jobs:
           ref: release
 
       - name: Clear CHANGELOG.md
-        run: |
-          echo "" > CHANGELOG.md
+        run: echo "" > CHANGELOG.md
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
