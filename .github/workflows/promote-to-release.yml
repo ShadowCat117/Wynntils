@@ -15,32 +15,13 @@ jobs:
     name: Promote main to release
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout main branch
+      - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Merge main into release
+        uses: mtanzi/action-automerge@v1
+        id: merge
         with:
-          ref: main
-          fetch-depth: 0
-
-      - name: Set up Git
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: Create release-update changes
-        run: |
-          git checkout -b release-update
-          echo "" > CHANGELOG.md
-          git add CHANGELOG.md
-          git commit -m "chore: Reset Changelog"
-
-      - name: Create Pull Request into release
-        uses: peter-evans/create-pull-request@v6
-        with:
-          token: ${{ secrets.PRIVATE_TOKEN }}
-          base: release
-          branch: release-update
-          title: "chore: Create changelog for release"
-          commit-message: "chore: Create changelog for release"
-          delete-branch: true
-          committer: "github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
-          author: "github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
+          github_token: ${{ secrets.PRIVATE_TOKEN }}
+          source: 'main'
+          target: 'release'
