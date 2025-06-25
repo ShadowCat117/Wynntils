@@ -17,8 +17,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.PRIVATE_TOKEN }}
 
       - name: Merge main into release
         uses: mtanzi/action-automerge@v1
@@ -28,13 +26,28 @@ jobs:
           source: 'main'
           target: 'release'
 
-      - name: Reset CHANGELOG.md
-        run: |
-          git config --global user.name "WynntilsBot"
-          git config --global user.email "admin@wynntils.com"
-          git fetch origin release
-          git checkout release
-          echo "" > CHANGELOG.md
-          git add CHANGELOG.md
-          git commit -m "chore: Reset changelog"
-          git push origin release
+  reset-changelog:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout release branch
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PRIVATE_TOKEN }}
+          ref: release
+
+      - name: Clear CHANGELOG.md
+        run: echo "" > CHANGELOG.md
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.PRIVATE_TOKEN }}
+          commit-message: "chore: Reset changelog"
+          title: "chore: Reset changelog"
+          body: |
+            This PR resets the `CHANGELOG.md` file after a release merge.
+            It is automatically generated and targets the `release` branch.
+          branch: reset-changelog
+          base: release
+          labels: auto-generated
+          committer: WynntilsBot <admin@wynntils.com>
