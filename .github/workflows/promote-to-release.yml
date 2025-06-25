@@ -17,6 +17,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PRIVATE_TOKEN }}
 
       - name: Merge main into release
         uses: mtanzi/action-automerge@v1
@@ -25,3 +27,14 @@ jobs:
           github_token: ${{ secrets.PRIVATE_TOKEN }}
           source: 'main'
           target: 'release'
+
+      - name: Reset CHANGELOG.md
+        run: |
+          git config --global user.name "WynntilsBot"
+          git config --global user.email "admin@wynntils.com"
+          git fetch origin release
+          git checkout release
+          echo "" > CHANGELOG.md
+          git add CHANGELOG.md
+          git commit -m "chore: Reset changelog"
+          git push origin release
