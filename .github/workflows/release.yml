@@ -9,11 +9,12 @@ on:
 
 jobs:
   changelog:
-    name: Generate Tag (but not changelog)
+    name: Generate Tag and Changelog (no commit)
     runs-on: ubuntu-latest
     outputs:
       tag: ${{ steps.changelog.outputs.tag }}
       skipped: ${{ steps.changelog.outputs.skipped }}
+      changelog: ${{ steps.changelog.outputs.changelog }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -23,16 +24,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 16
-      - run: |
-          npm install conventional-changelog-conventionalcommits@7.0.2
-          npm install conventional-recommended-bump@9.0.0
 
-      - name: Set up version.json
-        run: echo "{"version":$(git describe --tags --abbrev=0)}" > version.json
-
-      - name: Generate version tag (no changelog)
+      - name: Generate version tag and changelog (no file update)
         id: changelog
-        uses: TriPSs/conventional-changelog-action@v5.2.1
+        uses: TriPSs/conventional-changelog-action@v6
         with:
           github-token: ${{ secrets.PRIVATE_TOKEN }}
           git-user-name: 'WynntilsBot'
@@ -40,18 +35,13 @@ jobs:
           pre-commit: ./.github/.pre-commit.js
           config-file-path: ./.github/.config.js
           version-file: ./version.json
-          skip-version-file: true
+          skip-version-file: true    # Don't update version.json or build.gradle
           skip-git-pull: true
-          skip-commit: true
-          skip-tag: false
+          skip-commit: true          # Don't commit any changelog or version changes
+          skip-tag: false            # Tag the release (creates git tag)
           pre-release: false
-          release-count: 0
-
-      - name: Upload version information
-        uses: actions/upload-artifact@v4
-        with:
-          name: build
-          path: build.gradle
+          release-count: 0           # Generate changelog for all releases
+          output-file: false         # Don't write to CHANGELOG.md file
 
   build:
     name: Build
@@ -106,25 +96,17 @@ jobs:
           token: ${{ secrets.PRIVATE_TOKEN }}
           ref: release
 
-      - name: Download build
+      - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
           name: build
-
-      - name: Read CHANGELOG.md
-        id: changelogfile
-        run: |
-          body=$(cat CHANGELOG.md)
-          echo "changelog<<EOF" >> $GITHUB_OUTPUT
-          echo "$body" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Create GitHub release
         id: release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ needs.changelog.outputs.tag }}
-          body: ${{ steps.changelogfile.outputs.changelog }}
+          body: ${{ needs.changelog.outputs.changelog }}
           draft: false
           prerelease: false
           files: |
