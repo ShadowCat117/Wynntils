@@ -107,6 +107,7 @@ jobs:
         id: release
         uses: softprops/action-gh-release@v2
         with:
+          token: ${{ secrets.PRIVATE_TOKEN }}
           tag_name: ${{ needs.changelog.outputs.tag }}
           body: ${{ needs.changelog.outputs.changelog }}
           draft: false
