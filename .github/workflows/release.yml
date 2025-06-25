@@ -42,9 +42,10 @@ jobs:
           version-file: ./version.json
           skip-version-file: true
           skip-git-pull: true
+          skip-commit: true
+          skip-tag: false
           pre-release: false
           release-count: 0
-          skip-changelog: true
 
       - name: Upload version information
         uses: actions/upload-artifact@v4
