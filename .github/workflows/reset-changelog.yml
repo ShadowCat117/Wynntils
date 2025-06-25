@@ -1,12 +1,17 @@
 name: Reset Changelog After Release Merge
 
 on:
-  push:
+  pull_request:
+    types: [closed]
     branches:
       - release
 
 jobs:
   reset-changelog:
+    if: >
+      github.event.pull_request.merged == true &&
+      !contains(github.event.pull_request.labels.*.name, 'auto-generated') &&
+      !contains(github.event.pull_request.changed_files, 'CHANGELOG.md')
     runs-on: ubuntu-latest
 
     steps:
