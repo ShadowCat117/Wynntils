@@ -1,0 +1,45 @@
+name: Create Changelog PR
+
+on:
+  push:
+    branches:
+      - release
+
+jobs:
+  create-changelog-pr:
+    name: Create Changelog PR
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout release branch
+        uses: actions/checkout@v4
+        with:
+          ref: release
+          fetch-depth: 0
+
+      - name: Create temporary changelog branch
+        run: |
+          git checkout -b changelog-temp
+          echo "" > CHANGELOG.md
+          git add CHANGELOG.md
+          git commit -m "chore: Reset changelog" --author="github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
+
+      - name: Push changelog branch
+        env:
+          GITHUB_TOKEN: ${{ secrets.PRIVATE_TOKEN }}
+        run: |
+          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
+          git push -f origin changelog-temp
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.PRIVATE_TOKEN }}
+          title: "chore: Prepare changelog for release"
+          body: "This PR resets or creates an empty changelog after merging into release."
+          base: release
+          branch: changelog-temp
+          commit-message: "chore: Reset changelog"
+          delete-branch: true
+          author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+          committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
