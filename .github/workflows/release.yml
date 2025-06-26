@@ -173,10 +173,31 @@ jobs:
           embed-title: ${{ format('Wynntils {0}', needs.set-version.outputs.tag) }}
           embed-url: https://github.com/Wynntils/Wynntils/releases/tag/${{ needs.set-version.outputs.tag }}
           embed-description: |
-            # [${{ steps.versions.outputs.current }}](https://github.com/Wynntils/Wynntils/compare/${{ steps.versions.outputs.previous }}...${{ steps.versions.outputs.current }}) (${{ steps.date.outputs.today }})
+            ## [${{ steps.versions.outputs.current }}](https://github.com/Wynntils/Wynntils/compare/${{ steps.versions.outputs.previous }}...${{ steps.versions.outputs.current }}) (${{ steps.date.outputs.today }})
       
             [View Release Notes](https://discord.com/channels/394189072635133952/493174334475468800)
       
             **Download Links**
             ${{ steps.artifact_links.outputs.links }}
           embed-timestamp: ${{ steps.date.outputs.long }}
+
+      - name: Post changelog on Discord
+        env:
+          WEBHOOK_URL: ${{ secrets.DISCORD_RELEASE_NOTES_WEBHOOK_URL }}
+        run: |
+          # Read changelog
+          CHANGELOG=$(<CHANGELOG.md)
+      
+          post_chunk() {
+            CHUNK="$1"
+            curl -s -X POST -H "Content-Type: application/json" \
+              -d "{\"content\": $(jq -aRs . <<< \"$CHUNK\")}" "$WEBHOOK_URL"
+          }
+      
+          while [ ${#CHANGELOG} -gt 0 ]; do
+            PART="${CHANGELOG:0:2000}"
+            CUTOFF=$(echo "$PART" | awk 'BEGIN{last=0} {last+=length($0)+1} END{print last}')
+            CHUNK="${CHANGELOG:0:$CUTOFF}"
+            post_chunk "$CHUNK"
+            CHANGELOG="${CHANGELOG:$CUTOFF}"
+          done
