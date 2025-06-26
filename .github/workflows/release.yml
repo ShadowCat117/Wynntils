@@ -155,12 +155,15 @@ jobs:
 
           FILES=$(find . -path "*/build/libs/*-fabric+MC-*.jar" -or -path "*/build/libs/*-neoforge+MC-*.jar")
 
-          echo "links=" >> $GITHUB_OUTPUT
-          for f in $FILES; do
-            NAME=$(basename "$f")
-            URL="$BASE_URL/${NAME//+/%2B}"
-            echo "- [$NAME]($URL)" >> $GITHUB_OUTPUT
-          done
+          {
+            echo "links<<EOF"
+            for f in $FILES; do
+              NAME=$(basename "$f")
+              URL="$BASE_URL/${NAME//+/%2B}"
+              echo "- [$NAME]($URL)"
+            done
+            echo "EOF"
+          } >> $GITHUB_OUTPUT
 
       - name: Post release on Discord
         uses: tsickert/discord-webhook@v6.0.0
