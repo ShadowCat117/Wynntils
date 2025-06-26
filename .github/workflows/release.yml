@@ -170,10 +170,12 @@ jobs:
         with:
           webhook-url: ${{ secrets.DISCORD_BUILDS_WEBHOOK_URL }}
           embed-color: "9498256"
-          embed-title: Wynntils ${{ needs.set-version.outputs.tag }}
-          embed-url: ${{ steps.release.outputs.url }}
+          embed-title: ${{ format('Wynntils {0}', needs.set-version.outputs.tag) }}
           embed-description: |
-            [Click here to see release notes](https://discord.com/channels/150059149762027520/493174334475468800)
-
+            [${{ steps.versions.outputs.current }}](https://github.com/Wynntils/Wynntils/compare/${{ steps.versions.outputs.previous }}...${{ steps.versions.outputs.current }}) (${{ steps.date.outputs.today }})
+      
+            [View Release Notes](https://discord.com/channels/394189072635133952/493174334475468800)
+      
+            **Download Links**
             ${{ steps.artifact_links.outputs.links }}
           embed-timestamp: ${{ steps.date.outputs.long }}
