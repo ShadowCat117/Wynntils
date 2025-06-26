@@ -185,13 +185,12 @@ jobs:
         env:
           WEBHOOK_URL: ${{ secrets.DISCORD_RELEASE_NOTES_WEBHOOK_URL }}
         run: |
-          # Read changelog
-          CHANGELOG=$(<CHANGELOG.md)
+          CHANGELOG="# Wynntils ${{ needs.set-version.outputs.tag }} Changelog\n\n$(<CHANGELOG.md)"
       
           post_chunk() {
             CHUNK="$1"
             curl -s -X POST -H "Content-Type: application/json" \
-              -d "{\"content\": $(jq -aRs . <<< \"$CHUNK\")}" "$WEBHOOK_URL"
+              -d "$(jq -Rs '{content: .}' <<< "$CHUNK")" "$WEBHOOK_URL"
           }
       
           while [ ${#CHANGELOG} -gt 0 ]; do
