@@ -185,7 +185,7 @@ jobs:
         env:
           WEBHOOK_URL: ${{ secrets.DISCORD_RELEASE_NOTES_WEBHOOK_URL }}
         run: |
-          CHANGELOG="# Wynntils ${{ needs.set-version.outputs.tag }} Changelog\n\n$(<CHANGELOG.md)"
+          CHANGELOG="# Wynntils ${{ needs.set-version.outputs.tag }} Changelog"$'\n\n'"$(<CHANGELOG.md)"
       
           post_chunk() {
             CHUNK="$1"
