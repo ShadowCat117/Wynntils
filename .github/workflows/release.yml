@@ -47,6 +47,12 @@ jobs:
           release-count: 0
           output-file: false
 
+      - name: Upload version information
+        uses: actions/upload-artifact@v4
+        with:
+          name: build
+          path: build.gradle
+
   build:
     name: Build
     needs: [changelog]
@@ -59,6 +65,10 @@ jobs:
         with:
           path: .gradle
           key: ${{ runner.os }}-gradle--${{ hashFiles('**/settings.gradle', '**/gradle.properties') }}
+
+      - uses: actions/download-artifact@v4 # Download version information from changelog
+        with:
+          name: build
 
       - name: Set up JDK 21
         uses: actions/setup-java@v4
