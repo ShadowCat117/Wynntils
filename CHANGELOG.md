@@ -1,1 +1,1 @@
-# Incredible Wynntils 4.0.0 release (in theory)
+# Added Discord webhook for releases
