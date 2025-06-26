@@ -41,12 +41,11 @@ jobs:
           pre-commit: ./.github/.pre-commit.js
           config-file-path: ./.github/.config.js
           version-file: ./version.json
-          skip-version-file: true    # Don't update version.json or build.gradle
+          skip-version-file: true
           skip-git-pull: true
-          skip-tag: false            # Tag the release (creates git tag)
           pre-release: false
-          release-count: 0           # Generate changelog for all releases
-          output-file: false         # Don't write to CHANGELOG.md file
+          release-count: 0
+          output-file: false
 
   build:
     name: Build
