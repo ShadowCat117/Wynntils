@@ -26,7 +26,7 @@ jobs:
           source: 'main'
           target: 'release'
 
-  reset-changelog:
+  clear-changelog:
     needs: promote-release
     runs-on: ubuntu-latest
     steps:
@@ -36,19 +36,21 @@ jobs:
           token: ${{ secrets.PRIVATE_TOKEN }}
           ref: release
 
-      - name: Clear CHANGELOG.md
+      - name: Clear Changelog File
         run: echo "" > CHANGELOG.md
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.PRIVATE_TOKEN }}
-          commit-message: "chore: Reset changelog"
-          title: "chore: Reset changelog"
+          commit-message: "chore: Clear changelog"
+          title: "chore: Set changelog for new release"
           body: |
-            This PR resets the `CHANGELOG.md` file after a release merge.
+            This PR resets the `CHANGELOG.md` file to prepare a new release.
+            Edit the file with the relevant release notes for the release.
+            
             It is automatically generated and targets the `release` branch.
-          branch: reset-changelog
+          branch: set-changelog
           base: release
           labels: auto-generated
           committer: WynntilsBot <admin@wynntils.com>
