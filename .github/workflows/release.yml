@@ -67,7 +67,7 @@ jobs:
           path: .gradle
           key: ${{ runner.os }}-gradle--${{ hashFiles('**/settings.gradle', '**/gradle.properties') }}
 
-      - uses: actions/download-artifact@v4 # Download version information from changelog
+      - uses: actions/download-artifact@v4
         with:
           name: build
 
@@ -112,10 +112,23 @@ jobs:
         with:
           name: build
 
-      - name: Read entire CHANGELOG.md
-        id: read_changelog
+      - name: Get previous and current versions
+        id: versions
+        run: |
+          PREV_TAG=$(git describe --tags --abbrev=0 HEAD^)
+          echo "previous=$PREV_TAG" >> $GITHUB_OUTPUT
+          echo "current=${{ needs.set-version.outputs.tag }}" >> $GITHUB_OUTPUT
+
+      - name: Get current date
+        id: date
+        run: echo "today=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+
+      - name: Build GitHub release body
+        id: build_release_body
         run: |
           echo "content<<EOF" >> $GITHUB_OUTPUT
+          echo "## [${{ steps.versions.outputs.current }}](https://github.com/Wynntils/Wynntils/compare/${{ steps.versions.outputs.previous }}...${{ steps.versions.outputs.current }}) (${{ steps.date.outputs.today }})" >> $GITHUB_OUTPUT
+          echo "" >> $GITHUB_OUTPUT
           cat CHANGELOG.md >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
@@ -125,7 +138,7 @@ jobs:
         with:
           token: ${{ secrets.PRIVATE_TOKEN }}
           tag_name: ${{ needs.set-version.outputs.tag }}
-          body: ${{ steps.read_changelog.outputs.content }}
+          body: ${{ steps.build_release_body.outputs.content }}
           draft: false
           prerelease: false
           files: |
