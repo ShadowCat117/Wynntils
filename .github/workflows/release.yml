@@ -43,7 +43,6 @@ jobs:
           version-file: ./version.json
           skip-version-file: true    # Don't update version.json or build.gradle
           skip-git-pull: true
-          skip-commit: true          # Don't commit any changelog or version changes
           skip-tag: false            # Tag the release (creates git tag)
           pre-release: false
           release-count: 0           # Generate changelog for all releases
