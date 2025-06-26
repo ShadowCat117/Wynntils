@@ -1,1 +1,1 @@
-# New changelog
+# An amazing new release
