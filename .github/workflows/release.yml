@@ -179,31 +179,47 @@ jobs:
           embed-timestamp: ${{ steps.date.outputs.long }}
 
       - name: Post changelog on Discord
-        uses: tsickert/discord-webhook@v6.0.0
-        with:
-          webhook-url: ${{ secrets.DISCORD_RELEASE_NOTES_WEBHOOK_URL }}
-          run: |
-            VERSION="${{ needs.set-version.outputs.tag }}"
-            TITLE="## Wynntils ${VERSION} Changelog"
-            CHANGELOG="$(cat CHANGELOG.md)"
+        env:
+          WEBHOOK_URL: ${{ secrets.DISCORD_RELEASE_NOTES_WEBHOOK_URL }}
+        run: |
+          VERSION="${{ needs.set-version.outputs.tag }}"
+          TITLE="# Wynntils ${VERSION} Changelog"
 
-            FULL="${TITLE}\n\n${CHANGELOG}"
+          # Combine title and changelog with proper newlines
+          FULL_CHANGELOG="$TITLE"$'\n\n'"$(cat CHANGELOG.md)"
 
-            chunk=""
-            count=0
-            while IFS= read -r line; do
-              next_chunk="${chunk}${line}\n"
-              if (( ${#next_chunk} > 1900 )); then
-                echo "$chunk" | tsickert-discord-webhook -u "$WEBHOOK_URL"
-                chunk="${line}\n"
-              else
-                chunk="$next_chunk"
-              fi
-            done <<< "$FULL"
+          # Function to post each chunk
+          post_chunk() {
+            jq -Rs '{content: .}' <<< "$1" | \
+              curl -s -X POST -H "Content-Type: application/json" \
+              -d @- "$WEBHOOK_URL"
+          }
 
-            if [[ -n "$chunk" ]]; then
-              echo "$chunk" | tsickert-discord-webhook -u "$WEBHOOK_URL"
+          # Split changelog by newline into array
+          mapfile -t lines <<< "$FULL_CHANGELOG"
+
+          chunk=""
+          chunk_bytes=0
+          max_bytes=1900
+
+          for line in "${lines[@]}"; do
+            # +1 for newline character
+            line_bytes=$(printf "%s\n" "$line" | wc -c)
+
+            if (( chunk_bytes + line_bytes > max_bytes )); then
+              post_chunk "$chunk"
+              chunk=""
+              chunk_bytes=0
             fi
+
+            chunk+=$'\n'"$line"
+            ((chunk_bytes += line_bytes))
+          done
+
+          # Post final chunk if exists
+          if [[ -n "$chunk" ]]; then
+            post_chunk "$chunk"
+          fi
 
   release-external:
     name: Release to Modrinth and CurseForge
