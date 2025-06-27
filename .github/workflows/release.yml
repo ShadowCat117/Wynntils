@@ -174,9 +174,7 @@ jobs:
           embed-url: https://github.com/Wynntils/Wynntils/releases/tag/${{ needs.set-version.outputs.tag }}
           embed-description: |
             ## [${{ steps.versions.outputs.current }}](https://github.com/Wynntils/Wynntils/compare/${{ steps.versions.outputs.previous }}...${{ steps.versions.outputs.current }}) (${{ steps.date.outputs.today }})
-      
-            [View Release Notes](https://discord.com/channels/394189072635133952/493174334475468800)
-      
+           
             **Download Links**
             ${{ steps.artifact_links.outputs.links }}
           embed-timestamp: ${{ steps.date.outputs.long }}
