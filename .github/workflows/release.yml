@@ -197,7 +197,7 @@ jobs:
           }
 
           # Split changelog by newline into array
-          IFS=$'\n' read -rd '' -a lines <<< "$FULL_CHANGELOG"
+          mapfile -t lines <<< "$FULL_CHANGELOG"
 
           chunk=""
           chunk_bytes=0
