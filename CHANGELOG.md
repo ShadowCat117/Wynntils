@@ -1,4 +1,3 @@
-
 Bomb Bell Overlay
 - Added group bombs option to group bombs of same type together, default enabled
 - Added max bombs option to limit the number of bombs displayed. If grouping is enabled it applies per bomb type, otherwise it applies to all, default 5
