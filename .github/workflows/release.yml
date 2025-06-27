@@ -184,7 +184,7 @@ jobs:
           WEBHOOK_URL: ${{ secrets.DISCORD_RELEASE_NOTES_WEBHOOK_URL }}
         run: |
           VERSION="${{ needs.set-version.outputs.tag }}"
-          TITLE="## Wynntils ${VERSION} Changelog"
+          TITLE="# Wynntils ${VERSION} Changelog"
 
           # Combine title and changelog with proper newlines
           FULL_CHANGELOG="$TITLE"$'\n\n'"$(cat CHANGELOG.md)"
