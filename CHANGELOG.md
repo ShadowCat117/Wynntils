@@ -87,3 +87,5 @@ Fixes
 - Fixed rendering issues with duplicate cosmetic highlight
 - Fixed rendering issues with item record
 - Added lootrun overlays to the overlays category on settings screen
+
+Extra line
