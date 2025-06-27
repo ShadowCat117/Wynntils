@@ -184,27 +184,40 @@ jobs:
           WEBHOOK_URL: ${{ secrets.DISCORD_RELEASE_NOTES_WEBHOOK_URL }}
         run: |
           VERSION="${{ needs.set-version.outputs.tag }}"
-          TITLE="# Wynntils ${VERSION} Changelog"
+          TITLE="## Wynntils ${VERSION} Changelog"
 
-          FULL_CHANGELOG="$TITLE\n\n$(cat CHANGELOG.md)"
+          # Combine title and changelog with proper newlines
+          FULL_CHANGELOG="$TITLE"$'\n\n'"$(cat CHANGELOG.md)"
 
+          # Function to post each chunk
           post_chunk() {
             jq -Rs '{content: .}' <<< "$1" | \
               curl -s -X POST -H "Content-Type: application/json" \
               -d @- "$WEBHOOK_URL"
           }
 
-          split_and_post() {
-            local text="$1"
-            local max_bytes=1900
-            while [[ -n "$text" ]]; do
-              local chunk=$(echo "$text" | head -c $max_bytes)
-              local cutoff=$(echo "$chunk" | awk 'BEGIN{last=0} {last+=length($0)+1} END{print last}')
-              chunk="${text:0:$cutoff}"
+          # Split changelog by newline into array
+          IFS=$'\n' read -rd '' -a lines <<< "$FULL_CHANGELOG"
+
+          chunk=""
+          chunk_bytes=0
+          max_bytes=1900
+
+          for line in "${lines[@]}"; do
+            # +1 for newline character
+            line_bytes=$(printf "%s\n" "$line" | wc -c)
+
+            if (( chunk_bytes + line_bytes > max_bytes )); then
               post_chunk "$chunk"
-              text="${text:$cutoff}"
-            done
-          }
+              chunk=""
+              chunk_bytes=0
+            fi
 
-          split_and_post "$FULL_CHANGELOG"
+            chunk+=$'\n'"$line"
+            ((chunk_bytes += line_bytes))
+          done
 
+          # Post final chunk if exists
+          if [[ -n "$chunk" ]]; then
+            post_chunk "$chunk"
+          fi
