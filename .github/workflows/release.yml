@@ -24,7 +24,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 16
-
       - run: |
           npm install conventional-changelog-conventionalcommits@7.0.2
           npm install conventional-recommended-bump@9.0.0
@@ -56,7 +55,7 @@ jobs:
 
   build:
     name: Build
-    needs: [set-version] # Build needs the new version number
+    needs: [ set-version ] # Build needs the new version number
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -98,7 +97,7 @@ jobs:
     name: Release to GitHub
     if: ${{ needs.set-version.outputs.skipped != 'true' }}
     runs-on: ubuntu-latest
-    needs: [build, set-version]
+    needs: [ build, set-version ]
     steps:
       - name: Checkout release branch
         uses: actions/checkout@v4
