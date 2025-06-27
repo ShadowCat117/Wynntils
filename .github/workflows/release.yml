@@ -165,6 +165,20 @@ jobs:
             echo "EOF"
           } >> $GITHUB_OUTPUT
 
+      - name: Post release on Discord
+        uses: tsickert/discord-webhook@v6.0.0
+        with:
+          webhook-url: ${{ secrets.DISCORD_BUILDS_WEBHOOK_URL }}
+          embed-color: "9498256"
+          embed-title: ${{ format('Wynntils {0}', needs.set-version.outputs.tag) }}
+          embed-url: https://github.com/Wynntils/Wynntils/releases/tag/${{ needs.set-version.outputs.tag }}
+          embed-description: |
+            ## [${{ steps.versions.outputs.current }}](https://github.com/Wynntils/Wynntils/compare/${{ steps.versions.outputs.previous }}...${{ steps.versions.outputs.current }}) (${{ steps.date.outputs.today }})
+           
+            **Download Links**
+            ${{ steps.artifact_links.outputs.links }}
+          embed-timestamp: ${{ steps.date.outputs.long }}
+
       - name: Post changelog on Discord
         env:
           WEBHOOK_URL: ${{ secrets.DISCORD_RELEASE_NOTES_WEBHOOK_URL }}
@@ -172,21 +186,25 @@ jobs:
           VERSION="${{ needs.set-version.outputs.tag }}"
           TITLE="# Wynntils ${VERSION} Changelog"
 
-          # Safely read CHANGELOG.md and prepend the title
-          CHANGELOG_CONTENT="$(cat CHANGELOG.md)"
-          FULL_CHANGELOG="$TITLE"$'\n\n'"$CHANGELOG_CONTENT"
+          FULL_CHANGELOG="$TITLE\n\n$(cat CHANGELOG.md)"
 
           post_chunk() {
-            local chunk="$1"
-            curl -s -X POST -H "Content-Type: application/json" \
-              -d "$(jq -n --arg content "$chunk" '{content: $content}')" \
-              "$WEBHOOK_URL"
+            jq -Rs '{content: .}' <<< "$1" | \
+              curl -s -X POST -H "Content-Type: application/json" \
+              -d @- "$WEBHOOK_URL"
           }
 
-          while [ "${#FULL_CHANGELOG}" -gt 0 ]; do
-            PART="${FULL_CHANGELOG:0:2000}"
-            CUTOFF=$(echo "$PART" | awk 'BEGIN{last=0} {last+=length($0)+1} END{print last}')
-            CHUNK="${FULL_CHANGELOG:0:$CUTOFF}"
-            post_chunk "$CHUNK"
-            FULL_CHANGELOG="${FULL_CHANGELOG:$CUTOFF}"
-          done
+          split_and_post() {
+            local text="$1"
+            local max_bytes=1900
+            while [[ -n "$text" ]]; do
+              local chunk=$(echo "$text" | head -c $max_bytes)
+              local cutoff=$(echo "$chunk" | awk 'BEGIN{last=0} {last+=length($0)+1} END{print last}')
+              chunk="${text:0:$cutoff}"
+              post_chunk "$chunk"
+              text="${text:$cutoff}"
+            done
+          }
+
+          split_and_post "$FULL_CHANGELOG"
+
