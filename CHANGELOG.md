@@ -76,6 +76,9 @@ Functions
 - Color Functions
 	- `from_hex` returns a color from the given hex string
 		- `hex` required string argument, the hex code of the desired color
+- Profession Functions
+  - `profession_xp` or `prof_xp` returns the a CappedValue for the XP progress through current level for the given profession
+    - `profession` required string argument, the name of the profession to get XP progress for
 
 Item Filters
 - Filters containing the word `defence` will now accept the `defense` spelling as well
@@ -87,5 +90,3 @@ Fixes
 - Fixed rendering issues with duplicate cosmetic highlight
 - Fixed rendering issues with item record
 - Added lootrun overlays to the overlays category on settings screen
-
-Extra line
