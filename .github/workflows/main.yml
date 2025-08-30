@@ -1,0 +1,22 @@
+name: Discord Test
+
+on:
+  workflow_dispatch: # lets you trigger it manually from the Actions tab
+
+jobs:
+  test-discord:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send test embed to Discord
+        uses: tsickert/discord-webhook@v6.0.0
+        with:
+          webhook-url: "https://discord.com/api/webhooks/1411403225206096045/YmYcY1gQF66z30QDmzK4mYQPWZQa70LqRLMuJbp4MZUBpM1VLvzYjBBbOBqujiJOrF1A"
+          content: "<@&1070683775949885531>"
+          embed-color: "16711680"
+          embed-title: "Test Workflow Trigger"
+          embed-url: "https://github.com/Wynntils/Wynntils"
+          embed-description: |
+            This is a **manual test** of the Discord webhook.
+            
+            It should ping the role and show this embed.
+          embed-timestamp: ${{ github.event.head_commit.timestamp || github.run_started_at }}
