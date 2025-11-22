@@ -43,6 +43,7 @@ jobs:
           version-file: ./version.json
           skip-version-file: true
           skip-git-pull: true
+          skip-bump: true
           pre-release: true
           pre-release-identifier: beta
           release-count: 5
