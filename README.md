@@ -1,3 +1,4 @@
+beta test 1
 Wynntils
 ========
 [![Discord](https://discordapp.com/api/guilds/394189072635133952/widget.png)](https://discord.gg/ve49m9J)
