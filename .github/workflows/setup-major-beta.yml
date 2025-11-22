@@ -29,19 +29,25 @@ jobs:
           NEXT="${MAJOR}.${MINOR}.${PATCH}-beta.0"
           echo "next=$NEXT" >> $GITHUB_OUTPUT
 
-      - name: Create development branch
-        run: git checkout -B development
+      - name: Create development branch from main
+        run: |
+          git checkout -B development
+          git push -f origin development
 
-      - name: Update version.json
-        run: echo "{\"version\":\"v${{ steps.version.outputs.next }}\"}" > version.json
+      - name: Create beta branch from development
+        run: |
+          git checkout -B beta
 
-      - name: Update build.gradle
-        run: sed -i "s/^version = .*/version = \"${{ steps.version.outputs.next }}\"/" build.gradle
+      - name: Write version to beta only
+        run: |
+          echo "{version:v${{ steps.version.outputs.next }}}" > version.json
+          sed -i "s/^version = .*/version = \"${{ steps.version.outputs.next }}\"/" build.gradle
 
-      - name: Commit changes
+      - name: Commit version bump on beta
         run: |
           git config user.name "WynntilsBot"
           git config user.email "admin@wynntils.com"
           git add version.json build.gradle
           git commit -m "chore: Setup major beta at v${{ steps.version.outputs.next }}"
-          git push -f origin development
+          git push -f origin beta
+
