@@ -21,32 +21,31 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.PRIVATE_TOKEN }}
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 16
-      - run: |
-          npm install conventional-changelog-conventionalcommits@7.0.2
-          npm install conventional-recommended-bump@9.0.0
+      - name: Determine next beta version
+        id: next
+        run: |
+          # Get latest tag
+          PREV=$(git describe --tags --abbrev=0)
 
-      - name: Set up version.json
-        run: echo "{"version":$(git describe --tags --abbrev=0)}" > version.json
+          # Strip leading v
+          BASE="${PREV#v}"
 
-      - name: Generate version tag
-        id: version
-        uses: TriPSs/conventional-changelog-action@v6
-        with:
-          github-token: ${{ secrets.PRIVATE_TOKEN }}
-          git-user-name: 'WynntilsBot'
-          git-user-email: 'admin@wynntils.com'
-          pre-commit: ./.github/.pre-commit.js
-          config-file-path: ./.github/.config.js
-          version-file: ./version.json
-          skip-version-file: true
-          skip-git-pull: true
-          pre-release: true
-          pre-release-identifier: beta
-          release-count: 5
-          output-file: false
+          # Remove existing -beta.N
+          BASE_NO_BETA=$(echo "$BASE" | sed 's/-beta\..*//')
+
+          # Extract numeric beta count or assume 0
+          if [[ "$BASE" =~ -beta\.([0-9]+) ]]; then
+            CURRENT_NUM="${BASH_REMATCH[1]}"
+          else
+            CURRENT_NUM=-1
+          fi
+
+          NEXT_NUM=$((CURRENT_NUM + 1))
+
+          NEXT="${BASE_NO_BETA}-beta.${NEXT_NUM}"
+
+          echo "prev=$PREV" >> $GITHUB_OUTPUT
+          echo "tag=$NEXT" >> $GITHUB_OUTPUT
 
       - name: Upload version information
         uses: actions/upload-artifact@v4
@@ -108,17 +107,16 @@ jobs:
           token: ${{ secrets.PRIVATE_TOKEN }}
           ref: beta
 
-      - name: Download build artifacts
+      - name: Tag release manually
+        run: |
+          TAG="v${{ needs.set-version.outputs.tag }}"
+          git tag -a "$TAG" -m "$TAG"
+          git push origin "$TAG"
+
+      - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
           name: build
-
-      - name: Get previous and current versions
-        id: versions
-        run: |
-          PREV_TAG=$(git describe --tags --abbrev=0 HEAD^)
-          echo "previous=$PREV_TAG" >> $GITHUB_OUTPUT
-          echo "current=${{ needs.set-version.outputs.tag }}" >> $GITHUB_OUTPUT
 
       - name: Get current date
         id: date
