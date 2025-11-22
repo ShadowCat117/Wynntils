@@ -223,7 +223,7 @@ jobs:
 
   release-external:
     name: Release to Modrinth and CurseForge
-    if: ${{ needs.set-version.outputs.skipped != 'true' }}
+    if: false
     strategy:
       matrix:
         modloader: [fabric, neoforge]

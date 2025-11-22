@@ -1,0 +1,71 @@
+name: Setup Minor Beta
+
+on:
+  workflow_dispatch:
+
+jobs:
+  setup-minor-beta:
+    runs-on: ubuntu-latest
+
+    steps:
+      # ----- STEP 1: Create development from main -----
+      - name: Checkout main to create development
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.PRIVATE_TOKEN }}
+          ref: main
+
+      - name: Create development branch
+        run: |
+          git checkout -B development
+          git push -f origin development
+
+      # ----- STEP 2: Read stable version from release -----
+      - name: Checkout release
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.PRIVATE_TOKEN }}
+          ref: release
+
+      - name: Read release version
+        id: stable
+        run: |
+          CURR=$(grep "^version" build.gradle | sed 's/version = "\(.*\)"/\1/')
+          IFS='.' read MAJOR MINOR PATCH <<< "$CURR"
+          # compute minor bump
+          MINOR=$((MINOR+1))
+          PATCH=0
+          NEXT="${MAJOR}.${MINOR}.${PATCH}-beta.0"
+          echo "next=$NEXT" >> $GITHUB_OUTPUT
+
+      # ----- STEP 3: Update beta branch -----
+      - name: Checkout beta
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.PRIVATE_TOKEN }}
+          ref: beta
+
+      - name: Read current beta version
+        id: betaversion
+        run: |
+          CURBETA=$(grep "^version" build.gradle | sed 's/version = "\(.*\)"/\1/')
+          echo "current=$CURBETA" >> $GITHUB_OUTPUT
+
+      - name: Update version.json and bump build.gradle
+        run: |
+          # Write version.json based on existing beta version
+          echo "{version:v${{ steps.betaversion.outputs.current }}}" > version.json
+
+          # Now bump build.gradle to new beta version
+          sed -i "s/^version = .*/version = \"${{ steps.stable.outputs.next }}\"/" build.gradle
+
+      - name: Commit and push beta
+        run: |
+          git config user.name "WynntilsBot"
+          git config user.email "admin@wynntils.com"
+          git add version.json build.gradle
+          git commit -m "chore: Setup beta ${{ steps.stable.outputs.next }} [skip ci]"
+          git push -f origin beta
