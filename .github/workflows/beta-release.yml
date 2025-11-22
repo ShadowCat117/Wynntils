@@ -28,8 +28,11 @@ jobs:
           npm install conventional-changelog-conventionalcommits@7.0.2
           npm install conventional-recommended-bump@9.0.0
 
-      - name: Set up version.json
-        run: echo "{"version":$(git describe --tags --abbrev=0)}" > version.json
+      - name: Determine current version
+        id: read
+        run: |
+          CURR=$(git describe --tags --abbrev=0)
+          echo "current=$CURR" >> $GITHUB_OUTPUT
 
       - name: Generate version tag
         id: version
@@ -40,9 +43,8 @@ jobs:
           git-user-email: 'admin@wynntils.com'
           pre-commit: ./.github/.pre-commit.js
           config-file-path: ./.github/.config.js
-          version-file: ./version.json
           skip-version-file: true
-          skip-git-pull: true
+          skip-bump: true
           pre-release: true
           pre-release-identifier: beta
           release-count: 5
