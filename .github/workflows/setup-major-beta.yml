@@ -1,0 +1,47 @@
+name: Setup Major Beta
+
+on:
+  workflow_dispatch:
+
+jobs:
+  setup-major-beta:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.PRIVATE_TOKEN }}
+          ref: main
+
+      - name: Calculate next version
+        id: version
+        run: |
+          LATEST=$(git describe --tags --abbrev=0)
+          VER=${LATEST#v}
+          IFS='.' read MAJOR MINOR PATCH <<< "$VER"
+
+          MAJOR=$((MAJOR+1))
+          MINOR=0
+          PATCH=0
+
+          NEXT="${MAJOR}.${MINOR}.${PATCH}-beta.0"
+          echo "next=$NEXT" >> $GITHUB_OUTPUT
+
+      - name: Create development branch
+        run: git checkout -B development
+
+      - name: Update version.json
+        run: echo "{\"version\":\"v${{ steps.version.outputs.next }}\"}" > version.json
+
+      - name: Update build.gradle
+        run: sed -i "s/^version = .*/version = \"${{ steps.version.outputs.next }}\"/" build.gradle
+
+      - name: Commit changes
+        run: |
+          git config user.name "WynntilsBot"
+          git config user.email "admin@wynntils.com"
+          git add version.json build.gradle
+          git commit -m "chore: Setup major beta at v${{ steps.version.outputs.next }}"
+          git push -f origin development
