@@ -274,7 +274,7 @@ public class WynntilsCommand extends Command {
 
     private int status(CommandContext<CommandSourceStack> context) {
         MutableComponent component =
-                Component.literal("Reading status of Wynntils services froma ").withStyle(ChatFormatting.WHITE);
+                Component.literal("Reading status of Wynntils services from ").withStyle(ChatFormatting.WHITE);
         MutableComponent url = Component.literal(Managers.Url.getUrl(UrlId.LINK_WYNNTILS_STATUS))
                 .withStyle(Style.EMPTY
                         .withColor(ChatFormatting.LIGHT_PURPLE)
