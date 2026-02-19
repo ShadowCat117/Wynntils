@@ -76,7 +76,7 @@ public final class ContainerModel extends Model {
     public static final Pattern ABILITY_TREE_PATTERN = Pattern.compile("\uDAFF\uDFEA\uE000");
 
     public static final String CHARACTER_INFO_NAME =
-            "\uDAFF\uDFDC\uE003a";
+            "\uDAFF\uDFDC\uE003b";
     public static final String STORE_MENU_NAME =
             "\uDAFF\uDFF4\uE02C\uDAFF\uDF7C\uF027\uDAFF\uDF52\uDB00\uDC3D.\uDAFF\uDF22\uDB00\uDC40.\uDAFF\uDF2F";
     public static final String GUILD_MENU_NAME = "[a-zA-Z\\s]+: Manage";
