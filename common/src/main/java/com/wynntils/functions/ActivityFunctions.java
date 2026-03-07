@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2025-2026.
+ * Copyright © Wynntils 2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
@@ -8,7 +8,6 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
-import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.type.StyleType;
 import com.wynntils.models.activities.type.ActivityType;
 import com.wynntils.utils.colors.CustomColor;
@@ -56,14 +55,6 @@ public class ActivityFunctions {
         public CustomColor getValue(FunctionArguments arguments) {
             ActivityType type = Models.Activity.getTrackedType();
             return type != null ? type.getColor() : CustomColor.NONE;
-        }
-    }
-
-    public static class ActivityIconFunction extends Function<StyledText> {
-        @Override
-        public StyledText getValue(FunctionArguments arguments) {
-            ActivityType type = Models.Activity.getTrackedType();
-            return type != null ? StyledText.fromPart(type.getIcon()) : StyledText.EMPTY;
         }
     }
 }

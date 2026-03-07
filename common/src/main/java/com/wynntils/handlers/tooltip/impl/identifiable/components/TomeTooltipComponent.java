@@ -20,34 +20,47 @@ import net.minecraft.network.chat.MutableComponent;
 
 public class TomeTooltipComponent extends IdentifiableTooltipComponent<TomeInfo, TomeInstance> {
     @Override
-    public List<Component> buildHeaderTooltip(TomeInfo tomeInfo, TomeInstance tomeInstance, boolean hideUnidentified) {
-        List<Component> header = new ArrayList<>();
+    public List<Component> buildBaseStatsTooltip(
+            TomeInfo tomeInfo, TomeInstance tomeInstance, boolean hideUnidentified, int maximumWidth) {
+        List<Component> baseStats = new ArrayList<>();
 
-        // name
         String prefix = tomeInstance == null && !hideUnidentified ? "Unidentified " : "";
-        header.add(Component.literal(prefix + tomeInfo.name())
+        baseStats.add(Component.literal(prefix + tomeInfo.name())
                 .withStyle(tomeInfo.tier().getChatFormatting()));
-        header.add(Component.empty());
+        baseStats.add(Component.empty());
 
-        // requirements
+        return baseStats;
+    }
+
+    @Override
+    public List<Component> buildRequirementsTooltip(
+            TomeInfo tomeInfo, TomeInstance tomeInstance, boolean hideUnidentified, int maximumWidth) {
+        List<Component> requirementsLines = new ArrayList<>();
+
         TomeRequirements requirements = tomeInfo.requirements();
         int level = requirements.level();
         if (level != 0) {
             boolean fulfilled = Models.CombatXp.getCombatLevel().current() >= level;
-            header.add(buildRequirementLine("Combat Lv. Min: " + level, fulfilled));
-            header.add(Component.empty());
+            requirementsLines.add(buildRequirementLine("Combat Lv. Min: " + level, fulfilled));
+            requirementsLines.add(Component.empty());
         }
 
-        return header;
+        return requirementsLines;
     }
 
     @Override
-    public List<Component> buildFooterTooltip(TomeInfo tomeInfo, TomeInstance tomeInstance, boolean showItemType) {
+    public List<Component> buildExtraInfoTooltip(
+            TomeInfo tomeInfo, TomeInstance tomeInstance, boolean hideUnidentified, int maximumWidth) {
+        return List.of();
+    }
+
+    @Override
+    public List<Component> buildFooterTooltip(
+            TomeInfo tomeInfo, TomeInstance tomeInstance, boolean showItemType, int maximumWidth) {
         List<Component> footer = new ArrayList<>();
 
         footer.add(Component.empty());
 
-        // tier & rerolls
         GearTier gearTier = tomeInfo.tier();
         MutableComponent itemTypeName = showItemType ? Component.literal("Tome") : Component.literal("Raid Reward");
         MutableComponent tier = Component.literal(gearTier.getName())
@@ -59,7 +72,6 @@ public class TomeTooltipComponent extends IdentifiableTooltipComponent<TomeInfo,
         }
         footer.add(tier);
 
-        // restrictions (untradable, quest item)
         if (tomeInfo.metaInfo().restrictions() != GearRestrictions.NONE) {
             footer.add(Component.literal(StringUtils.capitalizeFirst(
                             tomeInfo.metaInfo().restrictions().getDescription()))

@@ -15,14 +15,20 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.HiddenConfig;
+import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.type.StyleType;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.mc.event.DropHeldItemEvent;
 import com.wynntils.models.containers.type.FullscreenContainerProperty;
 import com.wynntils.models.items.items.game.MultiHealthPotionItem;
+import com.wynntils.models.items.properties.GearTypeItemProperty;
+import com.wynntils.utils.mc.KeyboardUtils;
+import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -30,16 +36,20 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomModelData;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.INVENTORY)
 public class ItemLockFeature extends Feature {
+    private static final String INTERACT_MODEL_DATA_KEY = "interact";
+
     @RegisterKeyBind
     private final KeyBind lockSlotKeyBind = KeyBindDefinition.LOCK_SLOT.create(this::tryChangeLockStateOnHoveredSlot);
 
@@ -82,11 +92,35 @@ public class ItemLockFeature extends Feature {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onInventoryClickEvent(ContainerClickEvent event) {
+        if (KeyboardUtils.isShiftDown()) {
+            List<StyledText> lore = LoreUtils.getLore(event.getItemStack());
+
+            for (StyledText line : lore) {
+                System.out.println(line.getString());
+
+                if (KeyboardUtils.isControlDown()) {
+                    System.out.println(line.getString(StyleType.COMPLETE));
+                }
+            }
+
+            event.setCanceled(true);
+        }
+
         // Don't lock fullscreen container slots
         if (!(McUtils.screen() instanceof AbstractContainerScreen<?> abstractContainerScreen)
                 || Models.Container.getCurrentContainer() instanceof FullscreenContainerProperty) return;
         if (!blockAllActionsOnLockedItems.get() && event.getClickType() != ClickType.THROW) return;
         if (Models.Housing.isInEditMode()) return;
+
+        if (event.getClickType() == ClickType.SWAP
+                && Models.Item.asWynnItemProperty(event.getItemStack(), GearTypeItemProperty.class)
+                        .isPresent()) {
+            return;
+        } else if (event.getClickType() == ClickType.PICKUP) {
+            CustomModelData modelData = event.getItemStack().get(DataComponents.CUSTOM_MODEL_DATA);
+
+            if (modelData != null && modelData.strings().contains(INTERACT_MODEL_DATA_KEY)) return;
+        }
 
         // We have to match slot.index here, because the event slot number is an index as well
         Optional<Slot> slotOptional = abstractContainerScreen.getMenu().slots.stream()

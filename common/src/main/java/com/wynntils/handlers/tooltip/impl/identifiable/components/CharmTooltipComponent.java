@@ -20,33 +20,45 @@ import net.minecraft.network.chat.MutableComponent;
 
 public class CharmTooltipComponent extends IdentifiableTooltipComponent<CharmInfo, CharmInstance> {
     @Override
-    public List<Component> buildHeaderTooltip(
-            CharmInfo charmInfo, CharmInstance charmInstance, boolean hideUnidentified) {
-        List<Component> header = new ArrayList<>();
+    public List<Component> buildBaseStatsTooltip(
+            CharmInfo charmInfo, CharmInstance charmInstance, boolean hideUnidentified, int maximumWidth) {
+        List<Component> baseStats = new ArrayList<>();
 
-        // name
         String prefix = charmInstance == null && !hideUnidentified ? "Unidentified " : "";
-        header.add(Component.literal(prefix + charmInfo.name())
+        baseStats.add(Component.literal(prefix + charmInfo.name())
                 .withStyle(charmInfo.tier().getChatFormatting()));
 
-        // Keep in inventory to gain bonus
-        header.add(Component.literal("Keep in inventory to gain bonus").withStyle(ChatFormatting.GRAY));
-        header.add(Component.empty());
+        baseStats.add(Component.literal("Keep in inventory to gain bonus").withStyle(ChatFormatting.GRAY));
+        baseStats.add(Component.empty());
 
-        // requirements
+        return baseStats;
+    }
+
+    @Override
+    public List<Component> buildRequirementsTooltip(
+            CharmInfo charmInfo, CharmInstance charmInstance, boolean hideUnidentified, int maximumWidth) {
+        List<Component> requirementsLines = new ArrayList<>();
+
         CharmRequirements requirements = charmInfo.requirements();
         int level = requirements.level();
         if (level != 0) {
             boolean fulfilled = Models.CombatXp.getCombatLevel().current() >= level;
-            header.add(buildRequirementLine("Combat Lv. Min: " + level, fulfilled));
-            header.add(Component.empty());
+            requirementsLines.add(buildRequirementLine("Combat Lv. Min: " + level, fulfilled));
+            requirementsLines.add(Component.empty());
         }
 
-        return header;
+        return requirementsLines;
     }
 
     @Override
-    public List<Component> buildFooterTooltip(CharmInfo charmInfo, CharmInstance charmInstance, boolean showItemType) {
+    public List<Component> buildExtraInfoTooltip(
+            CharmInfo charmInfo, CharmInstance charmInstance, boolean hideUnidentified, int maximumWidth) {
+        return List.of();
+    }
+
+    @Override
+    public List<Component> buildFooterTooltip(
+            CharmInfo charmInfo, CharmInstance charmInstance, boolean showItemType, int maximumWidth) {
         List<Component> footer = new ArrayList<>();
 
         footer.add(Component.empty());
@@ -63,7 +75,6 @@ public class CharmTooltipComponent extends IdentifiableTooltipComponent<CharmInf
         }
         footer.add(tier);
 
-        // restrictions (untradable, quest item)
         if (charmInfo.metaInfo().restrictions() != GearRestrictions.NONE) {
             footer.add(Component.literal(StringUtils.capitalizeFirst(
                             charmInfo.metaInfo().restrictions().getDescription()))

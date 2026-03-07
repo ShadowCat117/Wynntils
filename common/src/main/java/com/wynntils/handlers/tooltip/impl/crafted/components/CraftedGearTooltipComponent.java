@@ -37,8 +37,7 @@ public class CraftedGearTooltipComponent extends CraftedTooltipComponent<Crafted
         // name
         header.add(Component.literal(craftedItem.getName())
                 .withStyle(ChatFormatting.DARK_AQUA)
-                .append(Component.literal(" [" + craftedItem.getEffectStrength() + "%]")
-                        .withStyle(ChatFormatting.AQUA)));
+                .append(Component.literal(" [100%]").withStyle(ChatFormatting.AQUA)));
 
         // attack speed
         if (craftedItem.getAttackSpeed().isPresent())
@@ -69,6 +68,14 @@ public class CraftedGearTooltipComponent extends CraftedTooltipComponent<Crafted
             }
 
             header.add(Component.literal(""));
+        }
+
+        // dps
+        int dps = craftedItem.getDps();
+        if (dps != 0) {
+            MutableComponent dpsComp = Component.literal(" Average DPS: ").withStyle(ChatFormatting.DARK_GRAY);
+            dpsComp.append(Component.literal(String.valueOf(dps)).withStyle(ChatFormatting.GRAY));
+            header.add(dpsComp);
         }
 
         // health

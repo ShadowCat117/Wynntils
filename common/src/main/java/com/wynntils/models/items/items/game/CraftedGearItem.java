@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.items.game;
@@ -17,6 +17,7 @@ import com.wynntils.models.items.properties.DurableItemProperty;
 import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.models.items.properties.GearTypeItemProperty;
 import com.wynntils.models.items.properties.LeveledItemProperty;
+import com.wynntils.models.items.properties.PagedItemProperty;
 import com.wynntils.models.items.properties.PowderedItemProperty;
 import com.wynntils.models.items.properties.RequirementItemProperty;
 import com.wynntils.models.stats.type.DamageType;
@@ -37,11 +38,12 @@ public class CraftedGearItem extends GameItem
                 PowderedItemProperty,
                 CraftedItemProperty,
                 ClassableItemProperty,
-                RequirementItemProperty {
+                RequirementItemProperty,
+                PagedItemProperty {
     private final String name;
-    private final int effectStrength;
     private final GearType gearType;
     private final GearAttackSpeed attackSpeed;
+    private final int dps;
     private final int health;
     private final List<Pair<DamageType, RangedValue>> damages;
     private final List<Pair<Element, Integer>> defences;
@@ -52,12 +54,13 @@ public class CraftedGearItem extends GameItem
     private final int powderSlots;
     private final boolean requirementsMet;
     private final CappedValue durability;
+    private final int currentPage;
 
     public CraftedGearItem(
             String name,
-            int effectStrength,
             GearType gearType,
             GearAttackSpeed attackSpeed,
+            int dps,
             int health,
             List<Pair<DamageType, RangedValue>> damages,
             List<Pair<Element, Integer>> defences,
@@ -67,11 +70,12 @@ public class CraftedGearItem extends GameItem
             List<Powder> powders,
             int powderSlots,
             boolean requirementsMet,
-            CappedValue durability) {
+            CappedValue durability,
+            int currentPage) {
         this.name = name;
-        this.effectStrength = effectStrength;
         this.gearType = gearType;
         this.attackSpeed = attackSpeed;
+        this.dps = dps;
         this.health = health;
         this.damages = damages;
         this.defences = defences;
@@ -82,15 +86,12 @@ public class CraftedGearItem extends GameItem
         this.powderSlots = powderSlots;
         this.requirementsMet = requirementsMet;
         this.durability = durability;
+        this.currentPage = currentPage;
     }
 
     @Override
     public String getName() {
         return name;
-    }
-
-    public int getEffectStrength() {
-        return effectStrength;
     }
 
     @Override
@@ -100,6 +101,10 @@ public class CraftedGearItem extends GameItem
 
     public Optional<GearAttackSpeed> getAttackSpeed() {
         return Optional.ofNullable(attackSpeed);
+    }
+
+    public int getDps() {
+        return dps;
     }
 
     public int getHealth() {
@@ -169,10 +174,14 @@ public class CraftedGearItem extends GameItem
     }
 
     @Override
+    public int currentPage() {
+        return currentPage;
+    }
+
+    @Override
     public String toString() {
         return "CraftedGearItem{" + "name='"
-                + name + '\'' + ", effectStrength="
-                + effectStrength + ", gearType="
+                + name + '\'' + ", gearType="
                 + gearType + ", attackSpeed="
                 + attackSpeed + ", health="
                 + health + ", damages="

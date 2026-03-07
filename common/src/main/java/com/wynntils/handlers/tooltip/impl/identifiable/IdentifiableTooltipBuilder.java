@@ -7,6 +7,8 @@ package com.wynntils.handlers.tooltip.impl.identifiable;
 import com.wynntils.core.components.Services;
 import com.wynntils.handlers.tooltip.TooltipBuilder;
 import com.wynntils.handlers.tooltip.type.TooltipIdentificationDecorator;
+import com.wynntils.handlers.tooltip.type.TooltipPage;
+import com.wynntils.handlers.tooltip.type.TooltipSegment;
 import com.wynntils.handlers.tooltip.type.TooltipStyle;
 import com.wynntils.handlers.tooltip.type.TooltipWeightDecorator;
 import com.wynntils.models.character.type.ClassType;
@@ -28,21 +30,51 @@ import net.minecraft.world.item.ItemStack;
  * @param <U> The type of the gear instance
  */
 public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
-    private final IdentifiableItemProperty<T, U> itemInfo;
+    private final IdentifiableItemProperty<T, U> itemProperty;
+
+    private final IdentifiableTooltipComponent<T, U> tooltipComponent;
+    private final T itemInfo;
+    private final U itemInstance;
+    private final boolean hideUnidentified;
+    private final boolean showItemType;
+
+    private final List<Component> parsedBaseStats;
+    private final List<Component> parsedFooter;
 
     private IdentifiableTooltipBuilder(
-            IdentifiableItemProperty<T, U> itemInfo, List<Component> header, List<Component> footer, String source) {
-        super(header, footer, source);
-        this.itemInfo = itemInfo;
+            IdentifiableItemProperty<T, U> itemProperty,
+            IdentifiableTooltipComponent<T, U> tooltipComponent,
+            boolean hideUnidentified,
+            boolean showItemType,
+            String source) {
+        super(source);
+        this.itemProperty = itemProperty;
+        this.tooltipComponent = tooltipComponent;
+        this.itemInfo = itemProperty.getItemInfo();
+        this.itemInstance = itemProperty.getItemInstance().orElse(null);
+        this.hideUnidentified = hideUnidentified;
+        this.showItemType = showItemType;
+        this.parsedBaseStats = null;
+        this.parsedFooter = null;
     }
 
     private IdentifiableTooltipBuilder(
-            IdentifiableItemProperty<T, U> itemInfo, List<Component> header, List<Component> footer) {
-        this(itemInfo, header, footer, "");
+            IdentifiableItemProperty<T, U> itemProperty,
+            List<Component> parsedBaseStats,
+            List<Component> parsedFooter) {
+        super("");
+        this.itemProperty = itemProperty;
+        this.tooltipComponent = null;
+        this.itemInfo = itemProperty.getItemInfo();
+        this.itemInstance = itemProperty.getItemInstance().orElse(null);
+        this.hideUnidentified = false;
+        this.showItemType = false;
+        this.parsedBaseStats = parsedBaseStats;
+        this.parsedFooter = parsedFooter;
     }
 
     /**
-     * Creates a tooltip builder that provides a synthetic header and footer
+     * Creates a tooltip builder that provides synthetic tooltip segments
      */
     public static <T, U> IdentifiableTooltipBuilder<T, U> buildNewItem(
             IdentifiableItemProperty<T, U> identifiableItem,
@@ -50,39 +82,128 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
             boolean hideUnidentified,
             boolean showItemType,
             String source) {
-        T itemInfo = identifiableItem.getItemInfo();
-        U itemInstance = identifiableItem.getItemInstance().orElse(null);
-
-        List<Component> header = tooltipComponent.buildHeaderTooltip(itemInfo, itemInstance, hideUnidentified);
-        List<Component> footer = tooltipComponent.buildFooterTooltip(itemInfo, itemInstance, showItemType);
-        return new IdentifiableTooltipBuilder(identifiableItem, header, footer, source);
+        return new IdentifiableTooltipBuilder<>(
+                identifiableItem, tooltipComponent, hideUnidentified, showItemType, source);
     }
 
     /**
-     * Creates a tooltip builder that parses the header and footer from an existing tooltip
+     * Creates a tooltip builder that parses segments from an existing tooltip
      */
     public static IdentifiableTooltipBuilder fromParsedItemStack(
             ItemStack itemStack, IdentifiableItemProperty itemInfo) {
         List<Component> tooltips = LoreUtils.getTooltipLines(itemStack);
 
         Pair<List<Component>, List<Component>> splitLore = extractHeaderAndFooter(tooltips);
-        List<Component> header = splitLore.a();
-        List<Component> footer = splitLore.b();
-
-        return new IdentifiableTooltipBuilder(itemInfo, header, footer);
+        return new IdentifiableTooltipBuilder(itemInfo, splitLore.a(), splitLore.b());
     }
 
     @Override
-    protected List<Component> getWeightedHeaderLines(
-            List<Component> originalHeader,
+    protected int getMaximumWidth(
+            TooltipPage page,
+            TooltipStyle style,
+            List<Component> identificationLines,
             ItemWeightSource weightSource,
-            TooltipWeightDecorator weightDecorator,
-            TooltipStyle style) {
-        // Only gear will have weightings
-        if (weightSource == ItemWeightSource.NONE
-                || !itemInfo.hasOverallValue()
-                || !(itemInfo.getItemInfo() instanceof GearInfo gearInfo)) {
-            return originalHeader;
+            TooltipWeightDecorator weightDecorator) {
+        if (tooltipComponent == null) {
+            return super.getMaximumWidth(page, style, identificationLines, weightSource, weightDecorator);
+        }
+
+        int maximumWidth = tooltipComponent.getMaximumWidth(
+                itemInfo,
+                itemInstance,
+                style,
+                identificationLines,
+                IdentifiableTooltipComponent.DEFAULT_TOOLTIP_WIDTH);
+
+        List<Component> widthProbeLines = new ArrayList<>();
+        for (TooltipSegment segment : getSegmentOrder(page)) {
+            switch (segment) {
+                case IDENTIFICATIONS -> widthProbeLines.addAll(identificationLines);
+                case WEIGHTINGS -> widthProbeLines.addAll(getWeightingLines(weightSource, weightDecorator, page));
+                case BASE_STATS -> widthProbeLines.addAll(
+                        tooltipComponent.buildBaseStatsTooltip(itemInfo, itemInstance, hideUnidentified, maximumWidth));
+                case REQUIREMENTS -> widthProbeLines.addAll(
+                        tooltipComponent.buildRequirementsTooltip(itemInfo, itemInstance, hideUnidentified, maximumWidth));
+                case EXTRA_INFO -> widthProbeLines.addAll(
+                        tooltipComponent.buildExtraInfoTooltip(itemInfo, itemInstance, hideUnidentified, maximumWidth));
+                case FOOTER -> widthProbeLines.addAll(
+                        tooltipComponent.buildFooterTooltip(itemInfo, itemInstance, showItemType, maximumWidth));
+                case PAGE_TEXT -> {
+                    // handled later by item-specific page text segment builders
+                }
+            }
+        }
+
+        return Math.max(maximumWidth, getMaximumComponentWidth(widthProbeLines));
+    }
+
+    @Override
+    protected List<TooltipSegment> getSegmentOrder(TooltipPage page) {
+        if (tooltipComponent == null) {
+            return switch (page) {
+                case PAGE_1 -> List.of(TooltipSegment.BASE_STATS, TooltipSegment.IDENTIFICATIONS, TooltipSegment.FOOTER);
+                case PAGE_2 -> List.of(TooltipSegment.BASE_STATS, TooltipSegment.FOOTER);
+                case PAGE_3 -> List.of(TooltipSegment.PAGE_TEXT);
+            };
+        }
+
+        return switch (page) {
+            case PAGE_1 -> insertSegmentBefore(
+                    List.of(
+                            TooltipSegment.BASE_STATS,
+                            TooltipSegment.REQUIREMENTS,
+                            TooltipSegment.EXTRA_INFO,
+                            TooltipSegment.IDENTIFICATIONS,
+                            TooltipSegment.FOOTER),
+                    TooltipSegment.IDENTIFICATIONS,
+                    TooltipSegment.WEIGHTINGS);
+            case PAGE_2 -> List.of(TooltipSegment.BASE_STATS, TooltipSegment.EXTRA_INFO, TooltipSegment.FOOTER);
+            case PAGE_3 -> List.of(TooltipSegment.REQUIREMENTS, TooltipSegment.PAGE_TEXT);
+        };
+    }
+
+    @Override
+    protected List<Component> getSegmentLines(
+            TooltipSegment segment,
+            TooltipPage page,
+            int maximumWidth,
+            TooltipStyle style,
+            List<Component> identificationLines,
+            ItemWeightSource weightSource,
+            TooltipWeightDecorator weightDecorator) {
+        if (tooltipComponent == null) {
+            return switch (segment) {
+                case BASE_STATS -> new ArrayList<>(parsedBaseStats);
+                case IDENTIFICATIONS -> new ArrayList<>(identificationLines);
+                case FOOTER -> new ArrayList<>(parsedFooter);
+                case WEIGHTINGS, REQUIREMENTS, EXTRA_INFO, PAGE_TEXT -> List.of();
+            };
+        }
+
+        return switch (segment) {
+            case BASE_STATS -> new ArrayList<>(
+                    tooltipComponent.buildBaseStatsTooltip(itemInfo, itemInstance, hideUnidentified, maximumWidth));
+            case WEIGHTINGS -> getWeightingLines(weightSource, weightDecorator, page);
+            case REQUIREMENTS -> new ArrayList<>(
+                    tooltipComponent.buildRequirementsTooltip(itemInfo, itemInstance, hideUnidentified, maximumWidth));
+            case EXTRA_INFO -> new ArrayList<>(
+                    tooltipComponent.buildExtraInfoTooltip(itemInfo, itemInstance, hideUnidentified, maximumWidth));
+            case IDENTIFICATIONS -> new ArrayList<>(identificationLines);
+            case FOOTER -> new ArrayList<>(
+                    tooltipComponent.buildFooterTooltip(itemInfo, itemInstance, showItemType, maximumWidth));
+            case PAGE_TEXT -> List.of();
+        };
+    }
+
+    private List<Component> getWeightingLines(
+            ItemWeightSource weightSource, TooltipWeightDecorator weightDecorator, TooltipPage page) {
+        // Only gear page 1 has weightings
+        if (page != TooltipPage.PAGE_1
+                || weightSource == ItemWeightSource.NONE
+                || !itemProperty.hasOverallValue()
+                || !(itemProperty.getItemInfo() instanceof GearInfo gearInfo)
+                || weightDecorator == null) {
+            return List.of();
         }
 
         List<ItemWeighting> noriWeightings =
@@ -95,65 +216,47 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
         boolean addWynnpool = (weightSource == ItemWeightSource.WYNNPOOL || weightSource == ItemWeightSource.ALL)
                 && !wynnpoolWeightings.isEmpty();
 
-        int currentIndex = 1;
+        if (!addNori && !addWynnpool) {
+            return List.of();
+        }
 
-        List<Component> weightedHeader = new ArrayList<>(originalHeader);
+        List<Component> weightingLines = new ArrayList<>();
 
         if (addNori) {
-            weightedHeader.add(currentIndex, Services.ItemWeight.NORI_HEADER);
-            currentIndex++;
-            currentIndex = addWeightingLines(weightedHeader, noriWeightings, weightDecorator, currentIndex);
+            weightingLines.add(Services.ItemWeight.NORI_HEADER);
+            addWeightingLines(weightingLines, noriWeightings, weightDecorator);
 
-            if (!weightedHeader.get(currentIndex - 1).equals(Component.empty())) {
-                weightedHeader.add(currentIndex, Component.empty());
-                currentIndex++;
+            if (!weightingLines.isEmpty() && !weightingLines.getLast().equals(Component.empty())) {
+                weightingLines.add(Component.empty());
             }
         }
 
         if (addWynnpool) {
-            weightedHeader.add(currentIndex, Services.ItemWeight.WYNNPOOL_HEADER);
-            currentIndex++;
-            currentIndex = addWeightingLines(weightedHeader, wynnpoolWeightings, weightDecorator, currentIndex);
+            weightingLines.add(Services.ItemWeight.WYNNPOOL_HEADER);
+            addWeightingLines(weightingLines, wynnpoolWeightings, weightDecorator);
 
-            if (!weightedHeader.get(currentIndex - 1).equals(Component.empty())) {
-                weightedHeader.add(currentIndex, Component.empty());
-                currentIndex++;
+            if (!weightingLines.isEmpty() && !weightingLines.getLast().equals(Component.empty())) {
+                weightingLines.add(Component.empty());
             }
         }
 
-        if (addNori || addWynnpool) {
-            if (gearInfo.type().isWeapon() && weightedHeader.get(currentIndex).equals(Component.empty())) {
-                weightedHeader.remove(currentIndex);
-            } else if (gearInfo.type().isWeapon()
-                    && !weightedHeader.get(currentIndex - 1).equals(Component.empty())) {
-                weightedHeader.add(currentIndex, Component.empty());
-            } else if (!gearInfo.type().isWeapon()
-                    && weightedHeader.get(currentIndex - 1).equals(Component.empty())) {
-                weightedHeader.remove(currentIndex - 1);
-            }
-        }
-
-        return weightedHeader;
+        return weightingLines;
     }
 
-    private int addWeightingLines(
-            List<Component> originalHeader,
+    private void addWeightingLines(
+            List<Component> output,
             List<ItemWeighting> weightings,
-            TooltipWeightDecorator weightDecorator,
-            int currentIndex) {
+            TooltipWeightDecorator weightDecorator) {
         for (ItemWeighting weighting : weightings) {
-            for (MutableComponent component : weightDecorator.getLines(weighting, itemInfo)) {
-                originalHeader.add(currentIndex, component);
-                currentIndex++;
+            for (MutableComponent component : weightDecorator.getLines(weighting, itemProperty)) {
+                output.add(component);
             }
         }
-
-        return currentIndex;
     }
 
     @Override
     protected List<Component> getIdentificationLines(
             ClassType currentClass, TooltipStyle style, TooltipIdentificationDecorator decorator) {
-        return TooltipIdentifications.buildTooltip(itemInfo, currentClass, decorator, style);
+        return TooltipIdentifications.buildTooltip(itemProperty, currentClass, decorator, style);
     }
 }

@@ -10,14 +10,17 @@ import com.wynntils.core.components.Models;
 import com.wynntils.features.tooltips.ItemStatInfoFeature;
 import com.wynntils.handlers.tooltip.TooltipBuilder;
 import com.wynntils.handlers.tooltip.type.TooltipIdentificationDecorator;
+import com.wynntils.handlers.tooltip.type.TooltipPage;
 import com.wynntils.handlers.tooltip.type.TooltipStyle;
 import com.wynntils.handlers.tooltip.type.TooltipWeightDecorator;
 import com.wynntils.models.gear.type.ItemWeightSource;
+import com.wynntils.models.items.FakeItemStack;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemData;
 import com.wynntils.models.items.properties.CraftedItemProperty;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.items.properties.ShinyItemProperty;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.wynn.ColorScaleUtils;
 import java.util.ArrayList;
@@ -25,6 +28,8 @@ import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.network.chat.Component;
@@ -32,6 +37,9 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 
 public final class TooltipUtils {
+    private static final Pattern TOOLTIP_PAGE_PATTERN = Pattern.compile("(§#ffea80ff)?\uE000");
+
+
     public static int getTooltipWidth(List<ClientTooltipComponent> lines, Font font) {
         return lines.stream()
                 .map(clientTooltipComponent -> clientTooltipComponent.getWidth(font))
@@ -76,8 +84,10 @@ public final class TooltipUtils {
             ItemStack itemStack, WynnItem wynnItem, IdentifiableItemProperty itemInfo) {
         TooltipBuilder builder = wynnItem.getData()
                 .getOrCalculate(
-                        WynnItemData.TOOLTIP_KEY, () -> Handlers.Tooltip.fromParsedItemStack(itemStack, itemInfo));
+                        WynnItemData.TOOLTIP_KEY,
+                        () -> Handlers.Tooltip.buildNew(itemInfo, false, true));
         if (builder == null) return null;
+        TooltipPage currentPage = getCurrentPage(itemStack);
         ItemStatInfoFeature feature = Managers.Feature.getFeatureInstance(ItemStatInfoFeature.class);
 
         TooltipIdentificationDecorator identificationDecorator =
@@ -96,7 +106,8 @@ public final class TooltipUtils {
                 currentIdentificationStyle,
                 identificationDecorator,
                 feature.itemWeights.get(),
-                weightDecorator));
+                weightDecorator,
+                currentPage));
 
         // Update name depending on overall percentage; this needs to be done every rendering
         // for rainbow/defective effects
@@ -113,8 +124,9 @@ public final class TooltipUtils {
         TooltipBuilder builder = wynnItem.getData()
                 .getOrCalculate(
                         WynnItemData.TOOLTIP_KEY,
-                        () -> Handlers.Tooltip.fromParsedItemStack(itemStack, craftedItemProperty));
+                        () -> Handlers.Tooltip.buildNew(craftedItemProperty, ""));
         if (builder == null) return null;
+        TooltipPage currentPage = getCurrentPage(itemStack);
         ItemStatInfoFeature isif = Managers.Feature.getFeatureInstance(ItemStatInfoFeature.class);
 
         TooltipStyle currentIdentificationStyle = new TooltipStyle(
@@ -125,7 +137,39 @@ public final class TooltipUtils {
                 isif.showMaxValues.get());
 
         return new LinkedList<>(builder.getTooltipLines(
-                Models.Character.getClassType(), currentIdentificationStyle, null, isif.itemWeights.get(), null));
+                Models.Character.getClassType(),
+                currentIdentificationStyle,
+                null,
+                isif.itemWeights.get(),
+                null,
+                currentPage));
+    }
+
+    private static TooltipPage getCurrentPage(ItemStack itemStack) {
+        // Fake item stacks build their lore through this same utility, so reading lore from
+        // them here would recurse indefinitely.
+        if (itemStack instanceof FakeItemStack) {
+            return TooltipPage.PAGE_1;
+        }
+
+        List<Component> tooltipLines = LoreUtils.getTooltipLines(itemStack);
+        if (tooltipLines.isEmpty()) {
+            return TooltipPage.PAGE_1;
+        }
+
+        StyledText styledText = StyledText.fromComponent(tooltipLines.getLast());
+        Matcher matcher = styledText.getMatcher(TOOLTIP_PAGE_PATTERN);
+        int index = 0;
+
+        while (matcher.find()) {
+            if (matcher.group(1) != null) {
+                return TooltipPage.fromIndex(index);
+            }
+
+            index++;
+        }
+
+        return TooltipPage.PAGE_1;
     }
 
     private static void updateItemName(IdentifiableItemProperty itemInfo, boolean isShiny, Deque<Component> tooltips) {

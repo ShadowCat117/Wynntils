@@ -180,6 +180,10 @@ public final class StringUtils {
         }
     }
 
+    public static String toSignedCommaString(int value) {
+        return String.format("%+,d", value);
+    }
+
     public static String convertMarkdownToColorCode(String input) {
         return ChatFormatting.RESET
                 + MARKDOWN_HEADER_PATTERN.matcher(input).replaceFirst(String.valueOf(ChatFormatting.BOLD));

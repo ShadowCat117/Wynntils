@@ -6,6 +6,8 @@ package com.wynntils.handlers.tooltip.impl.crafted;
 
 import com.wynntils.handlers.tooltip.TooltipBuilder;
 import com.wynntils.handlers.tooltip.type.TooltipIdentificationDecorator;
+import com.wynntils.handlers.tooltip.type.TooltipPage;
+import com.wynntils.handlers.tooltip.type.TooltipSegment;
 import com.wynntils.handlers.tooltip.type.TooltipStyle;
 import com.wynntils.handlers.tooltip.type.TooltipWeightDecorator;
 import com.wynntils.models.character.type.ClassType;
@@ -13,6 +15,7 @@ import com.wynntils.models.gear.type.ItemWeightSource;
 import com.wynntils.models.items.properties.CraftedItemProperty;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.Pair;
+import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -20,10 +23,15 @@ import net.minecraft.world.item.ItemStack;
 public final class CraftedTooltipBuilder extends TooltipBuilder {
     private final CraftedItemProperty craftedItem;
 
+    private final List<Component> header;
+    private final List<Component> footer;
+
     private CraftedTooltipBuilder(
             CraftedItemProperty craftedItem, List<Component> header, List<Component> footer, String source) {
-        super(header, footer, source);
+        super(source);
         this.craftedItem = craftedItem;
+        this.header = header;
+        this.footer = footer;
     }
 
     private CraftedTooltipBuilder(CraftedItemProperty craftedItem, List<Component> header, List<Component> footer) {
@@ -48,13 +56,29 @@ public final class CraftedTooltipBuilder extends TooltipBuilder {
     }
 
     @Override
-    protected List<Component> getWeightedHeaderLines(
-            List<Component> originalHeader,
+    protected List<TooltipSegment> getSegmentOrder(TooltipPage page) {
+        return switch (page) {
+            case PAGE_1 -> List.of(TooltipSegment.BASE_STATS, TooltipSegment.IDENTIFICATIONS, TooltipSegment.FOOTER);
+            case PAGE_2 -> List.of(TooltipSegment.BASE_STATS, TooltipSegment.FOOTER);
+            case PAGE_3 -> List.of(TooltipSegment.PAGE_TEXT);
+        };
+    }
+
+    @Override
+    protected List<Component> getSegmentLines(
+            TooltipSegment segment,
+            TooltipPage page,
+            int maximumWidth,
+            TooltipStyle style,
+            List<Component> identificationLines,
             ItemWeightSource weightSource,
-            TooltipWeightDecorator weightDecorator,
-            TooltipStyle style) {
-        // Crafted items do not have weighting
-        return originalHeader;
+            TooltipWeightDecorator weightDecorator) {
+        return switch (segment) {
+            case BASE_STATS -> new ArrayList<>(header);
+            case IDENTIFICATIONS -> new ArrayList<>(identificationLines);
+            case FOOTER -> new ArrayList<>(footer);
+            case WEIGHTINGS, REQUIREMENTS, EXTRA_INFO, PAGE_TEXT -> List.of();
+        };
     }
 
     @Override
