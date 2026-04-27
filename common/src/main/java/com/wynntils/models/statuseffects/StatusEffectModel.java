@@ -47,7 +47,7 @@ public final class StatusEffectModel extends Model {
 
     // Test in StatusEffectModel_STATUS_EFFECT_PATTERN
     private static final Pattern STATUS_EFFECT_PATTERN = Pattern.compile(
-            "(?<prefix>.+?)(§\\w)?\\s?(?<modifier>(\\-|\\+)?([\\-\\.\\d]+))?(?<modifierSuffix>((\\/\\d+s)|%)?)?\\s?(?<name>\\+?['a-zA-Z\\/\\s]+?)\\s(?<timer>§[84a]\\((?<minutes>(\\d{2}|\\*{2})):(?<seconds>(\\d{2}|\\*{2}))\\))");
+            "(?<prefix>.+?)(?:§[0-9a-fk-or])*\\s?(?<modifier>(\\-|\\+)?([\\-\\.\\d,]+))?(?<modifierSuffix>((\\/\\d+s)|%))?\\s?(?<name>\\+?['a-zA-Z\\/\\s]+?)\\s+(?<timer>§[84ac]\\((?<minutes>(\\d{2}|\\*{2})):(?<seconds>(\\d{2}|\\*{2}))\\))");
 
     private static final StyledText STATUS_EFFECTS_TITLE = StyledText.fromString("§d§lStatus Effects");
 
@@ -83,7 +83,7 @@ public final class StatusEffectModel extends Model {
 
         List<StatusEffect> newStatusEffects = new ArrayList<>();
 
-        StyledText[] effects = footer.split("\\s{2}"); // Effects are split up by 2 spaces
+        StyledText[] effects = footer.split("\\n|\\s{2,}"); // Effects are split up by 2 spaces
         for (StyledText effect : effects) {
             StyledText trimmedEffect = effect.trim();
             if (trimmedEffect.isEmpty()) continue;
