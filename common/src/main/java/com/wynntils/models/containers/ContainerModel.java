@@ -82,7 +82,6 @@ public final class ContainerModel extends Model {
 
     public ContainerModel() {
         super(List.of());
-
         registerContainers();
     }
 
