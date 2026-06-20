@@ -29,15 +29,10 @@ public final class MantraBar extends TrackedBar {
         maskOverload.put(ShamanMaskType.HERETIC, Integer.parseInt(match.group("heretic")));
         maskOverload.put(ShamanMaskType.FANATIC, Integer.parseInt(match.group("fanatic")));
 
-        overloadCappedMap.put(
-                ShamanMaskType.LUNATIC,
-                match.group("lunaticCap").equals(String.valueOf(ChatFormatting.GREEN.getChar())));
-        overloadCappedMap.put(
-                ShamanMaskType.HERETIC,
-                match.group("hereticCap").equals(String.valueOf(ChatFormatting.GREEN.getChar())));
-        overloadCappedMap.put(
-                ShamanMaskType.FANATIC,
-                match.group("fanaticCap").equals(String.valueOf(ChatFormatting.GREEN.getChar())));
+        String greenChar = String.valueOf(ChatFormatting.GREEN.toString().charAt(1));
+        overloadCappedMap.put(ShamanMaskType.LUNATIC, match.group("lunaticCap").equals(greenChar));
+        overloadCappedMap.put(ShamanMaskType.HERETIC, match.group("hereticCap").equals(greenChar));
+        overloadCappedMap.put(ShamanMaskType.FANATIC, match.group("fanaticCap").equals(greenChar));
     }
 
     @Override
