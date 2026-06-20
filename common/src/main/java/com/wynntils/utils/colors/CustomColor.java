@@ -76,7 +76,11 @@ public record CustomColor(int r, int g, int b, int a) {
     }
 
     public static CustomColor fromChatFormatting(ChatFormatting cf) {
-        return fromInt(cf.getColor() | 0xFF000000);
+        return fromTextColor(TextColor.fromLegacyFormat(cf));
+    }
+
+    public static CustomColor fromTextColor(TextColor tc) {
+        return fromInt(tc.getValue() | 0xFF000000);
     }
 
     public static CustomColor fromTextColor(TextColor tc) {
