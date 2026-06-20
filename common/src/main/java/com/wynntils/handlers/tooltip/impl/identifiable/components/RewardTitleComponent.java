@@ -63,7 +63,7 @@ final class RewardTitleComponent {
         rarityTypeLine.append(Component.literal("\uDB00\uDC26").withStyle(TooltipStyleSupport.SPACING_STYLE));
         rarityTypeLine.append(BannerBoxFont.buildMessage(
                 gearTier.getName(),
-                CustomColor.fromChatFormatting(gearTier.getChatFormatting()),
+                CustomColor.fromTextColor(gearTier.getTextColor()),
                 CommonColors.BLACK,
                 "\uDB00\uDC02"));
         rarityTypeLine.append(Component.literal("\uDB00\uDC01").withStyle(TooltipStyleSupport.SPACING_STYLE));

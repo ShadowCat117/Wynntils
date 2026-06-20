@@ -49,7 +49,7 @@ public class GuideAspectItemStack extends GuideItemStack {
     public void buildTooltip() {
         this.generatedTooltip = new ArrayList<>();
         this.generatedTooltip.add(Component.literal(aspectInfo.name())
-                .withStyle(aspectInfo.gearTier().getChatFormatting()));
+                .withColor(aspectInfo.gearTier().getTextColor()));
         this.generatedTooltip.add(Component.empty());
 
         this.generatedTooltip.add(Component.empty());
@@ -68,7 +68,7 @@ public class GuideAspectItemStack extends GuideItemStack {
         this.generatedTooltip.add(Component.empty());
         Component rarityLine = BannerBoxFont.buildMessage(
                 aspectInfo.gearTier().getName() + " aspect",
-                CustomColor.fromChatFormatting(aspectInfo.gearTier().getChatFormatting()),
+                CustomColor.fromTextColor(aspectInfo.gearTier().getTextColor()),
                 CommonColors.BLACK,
                 "");
 

@@ -20,6 +20,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.world.item.ItemStack;
 
 /**
@@ -137,7 +138,7 @@ public abstract class IdentifiableTooltipComponent<T, U> extends TooltipStyleSup
 
     protected MutableComponent buildRewardItemNameComponent(
             String itemName,
-            ChatFormatting tierFormatting,
+            TextColor textColor,
             boolean perfectItem,
             boolean defectiveItem,
             boolean hasOverallValue,
@@ -153,7 +154,7 @@ public abstract class IdentifiableTooltipComponent<T, U> extends TooltipStyleSup
             nameComponent = ComponentUtils.makeCrimsonStyle("Defective " + itemName, true);
         } else {
             nameComponent = Component.literal(itemName)
-                    .withStyle(Style.EMPTY.withFont(WYNNCRAFT_LANGUAGE_FONT).withColor(tierFormatting));
+                    .withStyle(Style.EMPTY.withFont(WYNNCRAFT_LANGUAGE_FONT).withColor(textColor));
         }
 
         if (!hasOverallValue || !shouldAppendOverallPercentageInName(feature, perfectTitle, defectiveTitle)) {

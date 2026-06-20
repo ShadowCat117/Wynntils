@@ -73,7 +73,7 @@ public final class GuidePowderItemStack extends GuideItemStack {
                 .append(Component.literal(tierStringBuilder))
                 .append(Component.literal("]").withStyle(ChatFormatting.GRAY)));
         itemLore.add(Component.empty());
-        itemLore.add(Component.literal("Effect on Weapons:").withStyle(element.getDarkColor()));
+        itemLore.add(Component.literal("Effect on Weapons:").withColor(element.getDarkColor()));
         itemLore.add(Component.empty()
                 .append(Component.literal(element.getDarkColor() + "- " + ChatFormatting.GRAY + "+"
                         + powderTierInfo.min() + "-" + powderTierInfo.max() + " " + element.getLightColor()))
@@ -89,7 +89,7 @@ public final class GuidePowderItemStack extends GuideItemStack {
                         .withStyle(Style.EMPTY.withFont(CommonFonts.COMMON_FONT).withColor(element.getLightColor())))
                 .append(Component.literal(element.getLightColor() + " " + elementName)));
         itemLore.add(Component.empty());
-        itemLore.add(Component.literal("Effect on Armour:").withStyle(element.getDarkColor()));
+        itemLore.add(Component.literal("Effect on Armour:").withColor(element.getDarkColor()));
         itemLore.add(Component.literal(
                 element.getDarkColor() + "- " + ChatFormatting.GRAY + "+" + powderTierInfo.health() + " Health"));
         itemLore.add(Component.empty()

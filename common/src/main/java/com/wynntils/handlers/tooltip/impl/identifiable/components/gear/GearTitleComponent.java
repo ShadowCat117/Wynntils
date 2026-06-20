@@ -41,7 +41,7 @@ public final class GearTitleComponent {
         rarityTypeLine.append(Component.literal("\uDB00\uDC26").withStyle(TooltipStyleSupport.SPACING_STYLE));
         rarityTypeLine.append(BannerBoxFont.buildMessage(
                 gearInfo.tier().getName(),
-                CustomColor.fromChatFormatting(gearInfo.tier().getChatFormatting()),
+                CustomColor.fromTextColor(gearInfo.tier().getTextColor()),
                 CommonColors.BLACK,
                 "\uDB00\uDC02"));
         rarityTypeLine.append(Component.literal("\uDB00\uDC01").withStyle(TooltipStyleSupport.SPACING_STYLE));
@@ -136,7 +136,7 @@ public final class GearTitleComponent {
             nameComponent = Component.literal(itemName)
                     .withStyle(Style.EMPTY
                             .withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT)
-                            .withColor(gearInfo.tier().getChatFormatting()));
+                            .withColor(gearInfo.tier().getTextColor()));
         }
 
         return nameComponent;
