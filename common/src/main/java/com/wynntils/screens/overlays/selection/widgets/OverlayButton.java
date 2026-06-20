@@ -107,7 +107,7 @@ public class OverlayButton extends WynntilsButton {
     }
 
     @Override
-    public void renderContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         boolean enabled = Managers.Overlay.isEnabled(overlay);
 
         RenderUtils.drawRect(guiGraphics, getRectColor(enabled).withAlpha(100), getX(), getY(), width, height);
@@ -129,7 +129,7 @@ public class OverlayButton extends WynntilsButton {
                         1.0f);
 
         if (editInput != null) {
-            editInput.render(guiGraphics, mouseX, mouseY, partialTick);
+            editInput.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
 
         // Don't want to display tooltip when the tile is outside the mask from the screen
