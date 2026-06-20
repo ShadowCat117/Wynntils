@@ -25,18 +25,19 @@ public abstract class NeoForgeHudMixin {
     protected Minecraft minecraft;
 
     @Inject(
-            method = "renderHotbar(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/DeltaTracker;)V",
+            method =
+                    "extractHotbar(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/DeltaTracker;)V",
             at = @At("HEAD"))
-    private void onRenderHotbarPre(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+    private void onExtractHotbarPre(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
         MixinHelper.post(
                 new RenderEvent.Pre(guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderElementType.HOTBAR));
     }
 
     @Inject(
-            method = "renderSelectedItemName(Lnet/minecraft/client/gui/GuiGraphicsExtractor;I)V",
+            method = "extractSelectedItemName(Lnet/minecraft/client/gui/GuiGraphicsExtractor;I)V",
             at = @At("HEAD"),
             cancellable = true)
-    private void onRenderSelectedItemNamePre(GuiGraphicsExtractor guiGraphics, int yShift, CallbackInfo ci) {
+    private void onExtractSelectedItemNamePre(GuiGraphicsExtractor guiGraphics, int yShift, CallbackInfo ci) {
         if (!MixinHelper.onWynncraft()) return;
 
         RenderEvent.Pre event = new RenderEvent.Pre(

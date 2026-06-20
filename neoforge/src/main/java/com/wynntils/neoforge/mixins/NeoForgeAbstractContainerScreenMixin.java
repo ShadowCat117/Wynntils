@@ -26,7 +26,7 @@ public abstract class NeoForgeAbstractContainerScreenMixin {
                     @At(
                             value = "INVOKE",
                             target =
-                                    "Lnet/minecraft/client/gui/GuiGraphicsExtractor;renderItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V"),
+                                    "Lnet/minecraft/client/gui/GuiGraphicsExtractor;itemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V"),
             remap = false)
     private void renderSlotPreCount(
             GuiGraphicsExtractor guiGraphics, ItemStack itemstack, Slot slot, String countString, CallbackInfo ci) {
