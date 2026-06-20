@@ -96,7 +96,7 @@ public class TranslationFeature extends Feature {
                         // We failed to get a translation; send the original message so it's not lost
                         messageToSend = originalMessage;
                     }
-                    McUtils.mc().doRunTask(() -> {
+                    McUtils.mc().execute(() -> {
                         // We need this to not trigger any events so don't use McUtils.sendMessageToClient
                         McUtils.getChat().addMessage(messageToSend.getComponent());
                     });
