@@ -98,7 +98,7 @@ public class TranslationFeature extends Feature {
                     }
                     McUtils.mc().doRunTask(() -> {
                         // We need this to not trigger any events so don't use McUtils.sendMessageToClient
-                        McUtils.mc().gui.getChat().addMessage(messageToSend.getComponent());
+                        McUtils.getChat().addMessage(messageToSend.getComponent());
                     });
                 });
         if (!keepOriginal.get()) {

@@ -373,7 +373,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         if (previousScreen.isEmpty()) {
             super.onClose();
         } else {
-            McUtils.mc().setScreen(previousScreen.get());
+            McUtils.setScreen(previousScreen.get());
         }
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.persisted.config;
@@ -208,8 +208,7 @@ public final class ConfigManager extends Manager {
         if (hasPromptedProfile.get()) return;
         if (!event.isFirstJoinWorld()) return;
 
-        McUtils.mc()
-                .getToastManager()
+        McUtils.toastManager()
                 .addToast(new SystemToast(
                         new SystemToast.SystemToastId(10000L),
                         Component.translatable("core.wynntils.profiles.toastTitle"),
