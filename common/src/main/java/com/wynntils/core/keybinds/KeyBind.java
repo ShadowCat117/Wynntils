@@ -26,8 +26,8 @@ public class KeyBind {
         this.onInventoryPress = onInventoryPress;
     }
 
-    public String getName() {
-        return definition.name();
+    public String getKey() {
+        return definition.translationKey();
     }
 
     public KeyMapping getKeyMapping() {
