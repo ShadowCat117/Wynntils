@@ -200,10 +200,10 @@ public final class LootrunCompiler {
                 }
 
                 lastChunkPos = currentChunkPos;
-                sampleByChunk.putIfAbsent(ChunkPos.asLong(currentChunkPos.x, currentChunkPos.z), new ArrayList<>());
+                sampleByChunk.putIfAbsent(ChunkPos.pack(currentChunkPos.x(), currentChunkPos.z()), new ArrayList<>());
                 lastLocationList = new ColoredPath(new ArrayList<>());
                 sampleByChunk
-                        .get(ChunkPos.asLong(currentChunkPos.x, currentChunkPos.z))
+                        .get(ChunkPos.pack(currentChunkPos.x(), currentChunkPos.z()))
                         .add(lastLocationList);
             }
             lastLocationList.points().add(locationsList.points().get(i));
@@ -280,7 +280,8 @@ public final class LootrunCompiler {
     private static Long2ObjectMap<Set<BlockPos>> getChests(Set<BlockPos> chests) {
         Long2ObjectMap<Set<BlockPos>> result = new Long2ObjectOpenHashMap<>();
         for (BlockPos pos : chests) {
-            Set<BlockPos> addTo = result.computeIfAbsent(new ChunkPos(pos).toLong(), (chunk) -> new HashSet<>());
+            Set<BlockPos> addTo =
+                    result.computeIfAbsent(ChunkPos.containing(pos).pack(), (chunk) -> new HashSet<>());
             addTo.add(pos);
         }
         return result;
@@ -289,8 +290,8 @@ public final class LootrunCompiler {
     private static Long2ObjectMap<List<LootrunNote>> getNotes(List<LootrunNote> notes) {
         Long2ObjectMap<List<LootrunNote>> result = new Long2ObjectOpenHashMap<>();
         for (LootrunNote note : notes) {
-            ChunkPos chunk = new ChunkPos(PosUtils.newBlockPos(note.position()));
-            List<LootrunNote> notesChunk = result.computeIfAbsent(chunk.toLong(), (chunkPos) -> new ArrayList<>());
+            ChunkPos chunk = ChunkPos.containing(PosUtils.newBlockPos(note.position()));
+            List<LootrunNote> notesChunk = result.computeIfAbsent(chunk.pack(), (chunkPos) -> new ArrayList<>());
             notesChunk.add(note);
         }
         return result;
