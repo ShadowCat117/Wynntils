@@ -59,14 +59,19 @@ public abstract class MultiPlayerGameModeMixin {
 
     @Inject(
             method =
-                    "handleInventoryMouseClick(IIILnet/minecraft/world/inventory/ClickType;Lnet/minecraft/world/entity/player/Player;)V",
+                    "handleContainerInput(IIILnet/minecraft/world/inventory/ContainerInput;Lnet/minecraft/world/entity/player/Player;)V",
             at = @At("HEAD"),
             cancellable = true)
-    private void handleInventoryMouseClickPre(
-            int containerId, int slotId, int mouseButton, ContainerInput clickType, Player player, CallbackInfo ci) {
+    private void handleContainerInputPre(
+            int containerId,
+            int slotId,
+            int mouseButton,
+            ContainerInput containerInput,
+            Player player,
+            CallbackInfo ci) {
         if (containerId != player.containerMenu.containerId) return;
 
-        ContainerClickEvent event = new ContainerClickEvent(player.containerMenu, slotId, clickType, mouseButton);
+        ContainerClickEvent event = new ContainerClickEvent(player.containerMenu, slotId, containerInput, mouseButton);
         MixinHelper.post(event);
         if (event.isCanceled()) {
             ci.cancel();
@@ -108,7 +113,7 @@ public abstract class MultiPlayerGameModeMixin {
 
     @Inject(
             method =
-                    "interactAt(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/EntityHitResult;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult;",
+                    "interact(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/EntityHitResult;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult;",
             at = @At("HEAD"),
             cancellable = true)
     private void interactAt(
@@ -127,12 +132,16 @@ public abstract class MultiPlayerGameModeMixin {
 
     @Inject(
             method =
-                    "interact(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult;",
+                    "interact(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/EntityHitResult;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult;",
             at = @At("HEAD"),
             cancellable = true)
     private void interact(
-            Player player, Entity target, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
-        PlayerInteractEvent.Interact event = new PlayerInteractEvent.Interact(player, hand, target);
+            Player player,
+            Entity entity,
+            EntityHitResult hit,
+            InteractionHand hand,
+            CallbackInfoReturnable<InteractionResult> cir) {
+        PlayerInteractEvent.Interact event = new PlayerInteractEvent.Interact(player, hand, entity);
         MixinHelper.post(event);
         if (event.isCanceled()) {
             cir.setReturnValue(InteractionResult.FAIL);
