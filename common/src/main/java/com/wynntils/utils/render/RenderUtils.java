@@ -1113,7 +1113,6 @@ public final class RenderUtils {
                 nametag,
                 !entityRenderState.isDiscrete,
                 entityRenderState.lightCoords,
-                entityRenderState.distanceToCameraSq,
                 cameraRenderState);
     }
 
