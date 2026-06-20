@@ -7,7 +7,7 @@ package com.wynntils.screens.guides.charm;
 import com.wynntils.core.components.Services;
 import com.wynntils.screens.guides.widgets.GuideButton;
 import com.wynntils.utils.colors.CustomColor;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.InputWithModifiers;
 import org.lwjgl.glfw.GLFW;
 
@@ -22,7 +22,7 @@ public class CharmGuideButton extends GuideButton {
     }
 
     @Override
-    protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    protected void renderTooltip(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         if (!builtTooltip) {
             charmItemStack.buildTooltip();
             builtTooltip = true;
