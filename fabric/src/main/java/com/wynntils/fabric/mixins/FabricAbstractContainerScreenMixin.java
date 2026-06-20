@@ -31,13 +31,13 @@ public abstract class FabricAbstractContainerScreenMixin {
     // Note: Call site 2 of 3 of ItemTooltipRenderEvent. Check the event class for more info.
     //       See NeoForgeGuiGraphicsMixin#renderTooltipPre for the Forge mixin.
     @WrapOperation(
-            method = "renderTooltip(Lnet/minecraft/client/gui/GuiGraphicsExtractor;II)V",
+            method = "extractTooltip(Lnet/minecraft/client/gui/GuiGraphicsExtractor;II)V",
             at =
                     @At(
                             value = "INVOKE",
                             target =
                                     "Lnet/minecraft/client/gui/GuiGraphicsExtractor;setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/resources/Identifier;)V"))
-    private void renderTooltipPre(
+    private void extractSlotTooltipPre(
             GuiGraphicsExtractor instance,
             Font font,
             List<Component> tooltipLines,
@@ -64,13 +64,14 @@ public abstract class FabricAbstractContainerScreenMixin {
 
     // See the NeoForgeAbstractContainerScreenMixin#renderSlotPreCount for the Forge mixin.
     @Inject(
-            method = "renderSlot(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/world/inventory/Slot;II)V",
+            method =
+                    "extractSlot(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/world/inventory/Slot;II)V",
             at =
                     @At(
                             value = "INVOKE",
                             target =
-                                    "Lnet/minecraft/client/gui/GuiGraphicsExtractor;renderItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V"))
-    private void renderSlotPreCount(
+                                    "Lnet/minecraft/client/gui/GuiGraphicsExtractor;itemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V"))
+    private void extractSlotSlotPreCount(
             GuiGraphicsExtractor guiGraphics, Slot slot, int mouseX, int mouseY, CallbackInfo info) {
         MixinHelper.post(new SlotRenderEvent.CountPre(guiGraphics, (Screen) (Object) this, slot));
     }
