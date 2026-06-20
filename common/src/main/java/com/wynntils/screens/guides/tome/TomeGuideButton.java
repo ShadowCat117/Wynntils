@@ -6,7 +6,7 @@ package com.wynntils.screens.guides.tome;
 
 import com.wynntils.screens.guides.widgets.GuideButton;
 import com.wynntils.utils.colors.CustomColor;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 public class TomeGuideButton extends GuideButton {
     private final GuideTomeItemStack tomeItemStack;
@@ -19,7 +19,7 @@ public class TomeGuideButton extends GuideButton {
     }
 
     @Override
-    protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    protected void renderTooltip(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         if (!builtTooltip) {
             tomeItemStack.buildTooltip();
             builtTooltip = true;
