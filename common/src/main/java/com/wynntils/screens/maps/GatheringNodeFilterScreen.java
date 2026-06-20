@@ -127,8 +127,8 @@ public final class GatheringNodeFilterScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.doRender(guiGraphics, mouseX, mouseY, partialTick);
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.doExtractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         renderScroll(guiGraphics);
 
         FontRenderer.getInstance()
@@ -206,11 +206,12 @@ public final class GatheringNodeFilterScreen extends WynntilsScreen {
         } else {
             RenderUtils.enableScissor(
                     guiGraphics, (int) (getTranslationX() + 10), (int) (getTranslationY() + 16), 322, 181);
-            gatheringNodeFilterWidgets.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
+            gatheringNodeFilterWidgets.forEach(
+                    widget -> widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
             RenderUtils.disableScissor(guiGraphics);
         }
 
-        professionFilterButtons.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
+        professionFilterButtons.forEach(widget -> widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
 
         if (draggingScroll) {
             guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
@@ -226,8 +227,8 @@ public final class GatheringNodeFilterScreen extends WynntilsScreen {
     }
 
     @Override
-    public void renderBackground(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
+    public void extractBackground(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.extractBackground(guiGraphics, mouseX, mouseY, partialTick);
         RenderUtils.drawTexturedRect(
                 guiGraphics, Texture.WAYPOINT_MANAGER_BACKGROUND, getTranslationX(), getTranslationY());
     }

@@ -48,14 +48,14 @@ public abstract class AbstractContainerScreenMixin {
     }
 
     @WrapOperation(
-            method = "renderLabels(Lnet/minecraft/client/gui/GuiGraphicsExtractor;II)V",
+            method = "extractLabels(Lnet/minecraft/client/gui/GuiGraphicsExtractor;II)V",
             at =
                     @At(
                             value = "INVOKE",
                             target =
-                                    "Lnet/minecraft/client/gui/GuiGraphicsExtractor;drawString(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;IIIZ)V",
+                                    "Lnet/minecraft/client/gui/GuiGraphicsExtractor;text(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;IIIZ)V",
                             ordinal = 0))
-    private void renderContainerLabel(
+    private void extractContainerLabel(
             GuiGraphicsExtractor instance,
             Font font,
             Component text,
@@ -74,14 +74,14 @@ public abstract class AbstractContainerScreenMixin {
     }
 
     @WrapOperation(
-            method = "renderLabels(Lnet/minecraft/client/gui/GuiGraphicsExtractor;II)V",
+            method = "extractLabels(Lnet/minecraft/client/gui/GuiGraphicsExtractor;II)V",
             at =
                     @At(
                             value = "INVOKE",
                             target =
-                                    "Lnet/minecraft/client/gui/GuiGraphicsExtractor;drawString(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;IIIZ)V",
+                                    "Lnet/minecraft/client/gui/GuiGraphicsExtractor;text(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;IIIZ)V",
                             ordinal = 1))
-    private void renderInventoryLabel(
+    private void extractInventoryLabel(
             GuiGraphicsExtractor instance,
             Font font,
             Component text,
@@ -100,7 +100,8 @@ public abstract class AbstractContainerScreenMixin {
     }
 
     @Inject(
-            method = "renderSlot(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/world/inventory/Slot;II)V",
+            method =
+                    "renderSlot(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/world/inventory/Slot;II)V",
             at = @At("HEAD"),
             cancellable = true)
     private void renderSlotPre(GuiGraphicsExtractor guiGraphics, Slot slot, int mouseX, int mouseY, CallbackInfo info) {
@@ -113,7 +114,8 @@ public abstract class AbstractContainerScreenMixin {
     }
 
     @Inject(
-            method = "renderSlot(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/world/inventory/Slot;II)V",
+            method =
+                    "renderSlot(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/world/inventory/Slot;II)V",
             at = @At("RETURN"))
     private void renderSlotPost(
             GuiGraphicsExtractor guiGraphics, Slot slot, int mouseX, int mouseY, CallbackInfo info) {

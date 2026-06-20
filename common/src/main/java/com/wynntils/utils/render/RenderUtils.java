@@ -1047,7 +1047,7 @@ public final class RenderUtils {
     }
 
     public static void renderItem(GuiGraphicsExtractor guiGraphics, ItemStack itemStack, int x, int y) {
-        guiGraphics.renderItem(itemStack, x, y);
+        guiGraphics.item(itemStack, x, y);
     }
 
     public static void renderTooltip(
@@ -1091,7 +1091,7 @@ public final class RenderUtils {
                 .collect(Util.toMutableList());
         tooltipImage.ifPresent(
                 tooltipComponent -> list.add(list.isEmpty() ? 0 : 1, ClientTooltipComponent.create(tooltipComponent)));
-        guiGraphics.renderTooltip(font, list, mouseX, mouseY, DefaultTooltipPositioner.INSTANCE, background);
+        guiGraphics.tooltip(font, list, mouseX, mouseY, DefaultTooltipPositioner.INSTANCE, background);
     }
 
     public static void renderCustomNametag(

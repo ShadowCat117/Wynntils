@@ -155,12 +155,12 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         // When not rendering a preview of the selected overlay
         if (!renderPreview) {
             RenderUtils.drawTexturedRect(guiGraphics, Texture.OVERLAY_SELECTION_GUI, offsetX, offsetY);
 
-            searchWidget.render(guiGraphics, mouseX, mouseY, partialTick);
+            searchWidget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
             renderWidgets(guiGraphics, mouseX, mouseY, partialTick);
 
@@ -239,8 +239,8 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                 return;
             }
 
-            renderOverlaysCheckbox.render(guiGraphics, mouseX, mouseY, partialTick);
-            exitPreviewButton.render(guiGraphics, mouseX, mouseY, partialTick);
+            renderOverlaysCheckbox.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            exitPreviewButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
             RenderUtils.drawRectBorders(
                     guiGraphics,
@@ -254,16 +254,16 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
     }
 
     @Override
-    protected void renderBlurredBackground(GuiGraphicsExtractor guiGraphics) {
+    protected void extractBlurredBackground(GuiGraphicsExtractor guiGraphics) {
         if (!renderPreview) {
-            super.renderBlurredBackground(guiGraphics);
+            super.extractBlurredBackground(guiGraphics);
         }
     }
 
     @Override
-    protected void renderMenuBackground(GuiGraphicsExtractor guiGraphics) {
+    protected void extractMenuBackground(GuiGraphicsExtractor guiGraphics) {
         if (!renderPreview) {
-            this.renderMenuBackground(guiGraphics, 0, 0, this.width, this.height);
+            this.extractMenuBackground(guiGraphics, 0, 0, this.width, this.height);
         }
     }
 
@@ -944,13 +944,13 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
 
     private void renderWidgets(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         for (OverlayOptionsButton optionsButton : optionButtons) {
-            optionsButton.render(guiGraphics, mouseX, mouseY, partialTick);
+            optionsButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
 
         RenderUtils.enableScissor(guiGraphics, 6 + offsetX, 28 + offsetY, 122, MAX_OVERLAYS_PER_PAGE * 21 + 2);
 
         for (AbstractWidget widget : overlays) {
-            widget.render(guiGraphics, mouseX, mouseY, partialTick);
+            widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
 
         RenderUtils.disableScissor(guiGraphics);
@@ -958,7 +958,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
         RenderUtils.enableScissor(guiGraphics, 148 + offsetX, 28 + offsetY, 188, CONFIGS_PER_PAGE * 43 - 2);
 
         for (AbstractWidget widget : configs) {
-            widget.render(guiGraphics, mouseX, mouseY, partialTick);
+            widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
 
         RenderUtils.disableScissor(guiGraphics);

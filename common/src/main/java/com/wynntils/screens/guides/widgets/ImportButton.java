@@ -30,7 +30,7 @@ public class ImportButton extends WynntilsButton implements TooltipProvider {
     }
 
     @Override
-    public void renderContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawScalingHoverableTexturedRect(
                 guiGraphics,
                 Texture.ADD_ICON_OFFSET,
