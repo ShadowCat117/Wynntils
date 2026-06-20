@@ -62,6 +62,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.world.item.ItemStack;
 
 /**
@@ -139,10 +140,10 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
     }
 
     @Override
-    protected ChatFormatting getSourceColor() {
+    protected TextColor getSourceColor() {
         return itemInfo instanceof GearTierItemProperty tierItem
-                ? tierItem.getGearTier().getChatFormatting()
-                : ChatFormatting.WHITE;
+                ? tierItem.getGearTier().getTextColor()
+                : TextColor.WHITE;
     }
 
     private List<Component> buildUpdatedTooltip(ClassType currentClass, TooltipOptions options, int minimumWidth) {
@@ -550,7 +551,7 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
         Component title = Component.literal(name)
                 .withStyle(Style.EMPTY
                         .withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT)
-                        .withColor(tier.getChatFormatting()));
+                        .withColor(tier.getTextColor()));
         return new TooltipOptionDecorator(item, options).getTitle(title);
     }
 
@@ -569,10 +570,7 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
                 };
         MutableComponent line = Component.literal("\uDB00\uDC26").withStyle(CommonStyles.SPACE);
         line.append(BannerBoxFont.buildMessage(
-                tier.getName(),
-                CustomColor.fromChatFormatting(tier.getChatFormatting()),
-                CommonColors.BLACK,
-                "\uDB00\uDC02"));
+                tier.getName(), CustomColor.fromTextColor(tier.getTextColor()), CommonColors.BLACK, "\uDB00\uDC02"));
         line.append(Component.literal("\uDB00\uDC01").withStyle(CommonStyles.SPACE));
         line.append(BannerBoxFont.buildMessage(
                 typeName,
