@@ -130,8 +130,7 @@ public final class KeyBindManager extends Manager {
 
     public KeyBindDefinition getKeyBindDefinition(String keybindName) {
         for (KeyBindDefinition definition : KeyBindDefinition.definitions()) {
-            if (definition.name().equals(keybindName)
-                    || definition.translationKey().equals(keybindName)
+            if (definition.translationKey().equals(keybindName)
                     || definition.optionsKey().equals(keybindName)) {
                 return definition;
             }
@@ -271,8 +270,8 @@ public final class KeyBindManager extends Manager {
 
                     WynntilsMod.reportCrash(
                             CrashType.KEYBIND,
-                            keyBind.getName(),
-                            parent.getClass().getName() + "." + keyBind.getName(),
+                            keyBind.getKey(),
+                            parent.getClass().getName() + "." + keyBind.getKey(),
                             "handling",
                             t);
                 }
