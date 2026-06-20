@@ -47,13 +47,14 @@ public class GuideFilterPanel extends AbstractWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(
+            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics, Texture.GUIDE_BACKGROUND, getX(), getY(), getWidth(), getHeight());
 
         RenderUtils.enableScissor(guiGraphics, getX(), getScrollAreaStartY() + 2, 135, getScrollAreaHeight());
         for (AbstractWidget filterWidget : filterWidgets) {
-            filterWidget.render(guiGraphics, mouseX, mouseY, partialTick);
+            filterWidget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
         RenderUtils.disableScissor(guiGraphics);
 

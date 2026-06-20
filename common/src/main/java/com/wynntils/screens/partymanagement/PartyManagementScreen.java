@@ -126,13 +126,13 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
     }
 
     @Override
-    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.doRender(guiGraphics, mouseX, mouseY, partialTick);
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.doExtractRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
         boolean inParty = Models.Party.isInParty();
 
         // Update button states before rendering them
-        createLeaveButton.render(guiGraphics, mouseX, mouseY, partialTick);
+        createLeaveButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         kickOfflineButton.active = inParty
                 && !Models.Party.getOfflineMembers().isEmpty()
                 && Models.Party.isPartyLeader(McUtils.playerName());
@@ -237,7 +237,7 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
                             VerticalAlignment.BOTTOM,
                             TextShadow.NORMAL);
 
-            partyMembersWidgets.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
+            partyMembersWidgets.forEach(widget -> widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
         } else {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
@@ -295,7 +295,7 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
                         VerticalAlignment.BOTTOM,
                         TextShadow.NORMAL);
 
-        suggestedPlayersWidgets.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
+        suggestedPlayersWidgets.forEach(widget -> widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
         // endregion
     }
 

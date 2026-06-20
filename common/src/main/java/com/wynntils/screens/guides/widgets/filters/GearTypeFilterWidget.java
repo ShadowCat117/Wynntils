@@ -42,7 +42,8 @@ public class GearTypeFilterWidget extends GuideFilterWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(
+            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
@@ -55,7 +56,7 @@ public class GearTypeFilterWidget extends GuideFilterWidget {
                         VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
-        gearTypeButtons.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
+        gearTypeButtons.forEach(widget -> widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
     }
 
     @Override
@@ -153,7 +154,8 @@ public class GearTypeFilterWidget extends GuideFilterWidget {
         }
 
         @Override
-        protected void renderWidget(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+        protected void extractWidgetRenderState(
+                GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
             RenderUtils.drawTexturedRect(guiGraphics, texture, getX(), getY());
 
             FontRenderer.getInstance()

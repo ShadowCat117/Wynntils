@@ -69,7 +69,8 @@ public class OverlayOrderWidget extends AbstractWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(
+            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawTexturedRect(guiGraphics, Texture.WIDGET_BACKGROUND_LONG, getX(), getY());
 
         textStyle = textStyle.withBold(isHovered);
@@ -88,8 +89,8 @@ public class OverlayOrderWidget extends AbstractWidget {
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
-        downButton.render(guiGraphics, mouseX, mouseY, partialTick);
-        upButton.render(guiGraphics, mouseX, mouseY, partialTick);
+        downButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+        upButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
         if (this.isHovered) {
             List<Component> tooltipToRender = TOOLTIP;

@@ -16,8 +16,8 @@ public class TextWidget extends WynntilsButton {
     }
 
     @Override
-    public void renderContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
-        guiGraphics.drawString(McUtils.mc().font, getMessage(), this.getX(), this.getY(), CommonColors.WHITE.asInt());
+    public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+        guiGraphics.text(McUtils.mc().font, getMessage(), this.getX(), this.getY(), CommonColors.WHITE.asInt());
     }
 
     @Override
