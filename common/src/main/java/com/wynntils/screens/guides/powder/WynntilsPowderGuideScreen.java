@@ -18,7 +18,7 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
@@ -75,7 +75,7 @@ public final class WynntilsPowderGuideScreen
     }
 
     @Override
-    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         renderBackgroundTexture(guiGraphics);
 
         renderTitle(guiGraphics, I18n.get("screens.wynntils.wynntilsGuides.powder.name"));
@@ -94,7 +94,7 @@ public final class WynntilsPowderGuideScreen
     }
 
     @Override
-    protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    protected void renderTooltip(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         if (hovered instanceof GuidePowderItemStackButton guidePowderItemStack) {
             guidePowderItemStack.getItemStack().queueGuideTooltip(guiGraphics, mouseX, mouseY);
         }
@@ -102,7 +102,7 @@ public final class WynntilsPowderGuideScreen
         super.renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
-    private void renderItemsHeader(GuiGraphics guiGraphics) {
+    private void renderItemsHeader(GuiGraphicsExtractor guiGraphics) {
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,

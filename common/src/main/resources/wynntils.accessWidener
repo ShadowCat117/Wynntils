@@ -1,9 +1,9 @@
 accessWidener v2 official
 
-accessible class net/minecraft/client/gui/GuiGraphics$ScissorStack
+accessible class net/minecraft/client/Options$FieldAccess
+accessible class net/minecraft/client/gui/GuiGraphicsExtractor$ScissorStack
 accessible class net/minecraft/client/gui/components/ChatComponent$DrawingBackgroundGraphicsAccess
 accessible class net/minecraft/client/gui/components/ChatComponent$DrawingFocusedGraphicsAccess
-accessible class net/minecraft/client/Options$FieldAccess
 accessible class net/minecraft/network/protocol/game/ClientboundBossEventPacket$AddOperation
 accessible class net/minecraft/network/protocol/game/ClientboundBossEventPacket$Operation
 accessible class net/minecraft/network/protocol/game/ClientboundBossEventPacket$OperationType
@@ -16,16 +16,16 @@ accessible field net/minecraft/client/Minecraft gui Lnet/minecraft/client/gui/Gu
 accessible field net/minecraft/client/OptionInstance value Ljava/lang/Object;
 accessible field net/minecraft/client/gui/Gui CROSSHAIR_SPRITE Lnet/minecraft/resources/Identifier;
 accessible field net/minecraft/client/gui/Gui chat Lnet/minecraft/client/gui/components/ChatComponent;
-accessible field net/minecraft/client/gui/GuiGraphics guiRenderState Lnet/minecraft/client/gui/render/state/GuiRenderState;
-accessible field net/minecraft/client/gui/GuiGraphics scissorStack Lnet/minecraft/client/gui/GuiGraphics$ScissorStack;
-accessible field net/minecraft/client/gui/GuiGraphics$ScissorStack stack Ljava/util/Deque;
+accessible field net/minecraft/client/gui/GuiGraphicsExtractor guiRenderState Lnet/minecraft/client/renderer/state/gui/GuiRenderState;
+accessible field net/minecraft/client/gui/GuiGraphicsExtractor scissorStack Lnet/minecraft/client/gui/GuiGraphicsExtractor$ScissorStack;
+accessible field net/minecraft/client/gui/GuiGraphicsExtractor$ScissorStack stack Ljava/util/Deque;
 accessible field net/minecraft/client/gui/components/AbstractSelectionList hovered Lnet/minecraft/client/gui/components/AbstractSelectionList$Entry;
 accessible field net/minecraft/client/gui/components/AbstractSliderButton dragging Z
 accessible field net/minecraft/client/gui/components/BossHealthOverlay events Ljava/util/Map;
 accessible field net/minecraft/client/gui/components/ChatComponent allMessages Ljava/util/List;
 accessible field net/minecraft/client/gui/components/ChatComponent trimmedMessages Ljava/util/List;
-accessible field net/minecraft/client/gui/components/ChatComponent$DrawingBackgroundGraphicsAccess graphics Lnet/minecraft/client/gui/GuiGraphics;
-accessible field net/minecraft/client/gui/components/ChatComponent$DrawingFocusedGraphicsAccess graphics Lnet/minecraft/client/gui/GuiGraphics;
+accessible field net/minecraft/client/gui/components/ChatComponent$DrawingBackgroundGraphicsAccess graphics Lnet/minecraft/client/gui/GuiGraphicsExtractor;
+accessible field net/minecraft/client/gui/components/ChatComponent$DrawingFocusedGraphicsAccess graphics Lnet/minecraft/client/gui/GuiGraphicsExtractor;
 accessible field net/minecraft/client/gui/components/PlayerTabOverlay visible Z
 accessible field net/minecraft/client/gui/screens/ChatScreen commandSuggestions Lnet/minecraft/client/gui/components/CommandSuggestions;
 accessible field net/minecraft/client/gui/screens/ChatScreen input Lnet/minecraft/client/gui/components/EditBox;
@@ -78,7 +78,7 @@ accessible method net/minecraft/client/gui/screens/Screen clearWidgets ()V
 accessible method net/minecraft/client/gui/screens/Screen init ()V
 accessible method net/minecraft/client/gui/screens/Screen removeWidget (Lnet/minecraft/client/gui/components/events/GuiEventListener;)V
 accessible method net/minecraft/client/gui/screens/inventory/AbstractContainerScreen getHoveredSlot (DD)Lnet/minecraft/world/inventory/Slot;
-accessible method net/minecraft/client/gui/screens/inventory/AbstractContainerScreen renderTooltip (Lnet/minecraft/client/gui/GuiGraphics;II)V
+accessible method net/minecraft/client/gui/screens/inventory/AbstractContainerScreen renderTooltip (Lnet/minecraft/client/gui/GuiGraphicsExtractor;II)V
 accessible method net/minecraft/client/multiplayer/MultiPlayerGameMode startPrediction (Lnet/minecraft/client/multiplayer/ClientLevel;Lnet/minecraft/client/multiplayer/prediction/PredictiveAction;)V
 accessible method net/minecraft/client/renderer/RenderPipelines register (Lcom/mojang/blaze3d/pipeline/RenderPipeline;)Lcom/mojang/blaze3d/pipeline/RenderPipeline;
 accessible method net/minecraft/client/renderer/rendertype/RenderType create (Ljava/lang/String;Lnet/minecraft/client/renderer/rendertype/RenderSetup;)Lnet/minecraft/client/renderer/rendertype/RenderType;

@@ -24,7 +24,7 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
@@ -64,7 +64,7 @@ public final class WynntilsIngredientGuideScreen
     }
 
     @Override
-    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         renderBackgroundTexture(guiGraphics);
 
         renderTitle(guiGraphics, I18n.get("screens.wynntils.wynntilsGuides.ingredientGuide.name"));
@@ -81,7 +81,7 @@ public final class WynntilsIngredientGuideScreen
     }
 
     @Override
-    protected void renderTitle(GuiGraphics guiGraphics, String titleString) {
+    protected void renderTitle(GuiGraphicsExtractor guiGraphics, String titleString) {
         RenderUtils.drawTexturedRect(guiGraphics, Texture.CONTENT_BOOK_TITLE, offsetX, 30 + offsetY);
 
         FontRenderer.getInstance()
@@ -98,7 +98,7 @@ public final class WynntilsIngredientGuideScreen
     }
 
     @Override
-    protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    protected void renderTooltip(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         if (hovered instanceof GuideIngredientItemStackButton guideGearItemStack) {
             guideGearItemStack.getItemStack().queueGuideTooltip(guiGraphics, mouseX, mouseY);
         }
@@ -106,7 +106,7 @@ public final class WynntilsIngredientGuideScreen
         super.renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
-    private void renderItemsHeader(GuiGraphics guiGraphics) {
+    private void renderItemsHeader(GuiGraphicsExtractor guiGraphics) {
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
