@@ -8,7 +8,7 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.ColorPickerWidget;
 import com.wynntils.utils.colors.CustomColor;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.MouseButtonEvent;
 
 public class CustomColorSettingsButton extends TextInputBoxSettingsWidget<CustomColor> {
@@ -22,7 +22,7 @@ public class CustomColorSettingsButton extends TextInputBoxSettingsWidget<Custom
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
 
         colorPickerWidget.render(guiGraphics, mouseX, mouseY, partialTick);
