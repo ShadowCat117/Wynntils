@@ -90,7 +90,7 @@ public abstract class RewardTooltipComponent<T, I> extends IdentifiableTooltipCo
 
         MutableComponent itemName = buildRewardItemNameComponent(
                 getItemName(itemInfo),
-                tier.getChatFormatting(),
+                tier.getTextColor(),
                 itemInstance != null && isPerfect(itemInstance),
                 itemInstance != null && isDefective(itemInstance),
                 itemInstance != null && hasOverallValue(itemInstance),
@@ -168,7 +168,7 @@ public abstract class RewardTooltipComponent<T, I> extends IdentifiableTooltipCo
         MutableComponent updatedTitleLine = header.get(titleLineIndex).copy();
         MutableComponent styledName = buildRewardItemNameComponent(
                 itemName,
-                getTier(itemInfo).getChatFormatting(),
+                getTier(itemInfo).getTextColor(),
                 itemInstance != null && isPerfect(itemInstance),
                 itemInstance != null && isDefective(itemInstance),
                 itemInstance != null && hasOverallValue(itemInstance),

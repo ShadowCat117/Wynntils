@@ -35,7 +35,7 @@ public class GuideGearItemStackButton extends WynntilsButton {
     @Override
     public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         CustomColor color =
-                CustomColor.fromChatFormatting(itemStack.getGearInfo().tier().getChatFormatting());
+                CustomColor.fromTextColor(itemStack.getGearInfo().tier().getTextColor());
 
         RenderUtils.drawSprite(guiGraphics, Texture.HIGHLIGHT_WYNN, color, getX() - 8, getY() - 8);
 

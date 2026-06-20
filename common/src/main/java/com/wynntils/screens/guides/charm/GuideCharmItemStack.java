@@ -30,7 +30,7 @@ public class GuideCharmItemStack extends GuideItemStack {
 
         this.charmInfo = charmInfo;
         this.name =
-                Component.literal(charmInfo.name()).withStyle(charmInfo.tier().getChatFormatting());
+                Component.literal(charmInfo.name()).withColor(charmInfo.tier().getTextColor());
         this.generatedTooltip = List.of();
     }
 

@@ -9,27 +9,25 @@ import com.wynntils.utils.StringUtils;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Optional;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextColor;
 
 public enum GearTier {
-    NORMAL(ChatFormatting.WHITE, 0, 0.0f),
-    UNIQUE(ChatFormatting.YELLOW, 3, 0.5f),
-    RARE(ChatFormatting.LIGHT_PURPLE, 8, 1.2f),
-    @Deprecated
-    SET(ChatFormatting.GRAY, 8, 1.2f),
-    LEGENDARY(ChatFormatting.AQUA, 12, 4.5f),
-    FABLED(ChatFormatting.RED, 16, 8.0f),
-    MYTHIC(ChatFormatting.DARK_PURPLE, 90, 18.0f),
-    CRAFTED(ChatFormatting.DARK_AQUA, 0, 0.0f);
+    NORMAL(TextColor.WHITE, 0, 0.0f),
+    UNIQUE(TextColor.YELLOW, 3, 0.5f),
+    RARE(TextColor.LIGHT_PURPLE, 8, 1.2f),
+    LEGENDARY(TextColor.AQUA, 12, 4.5f),
+    FABLED(TextColor.RED, 16, 8.0f),
+    MYTHIC(TextColor.DARK_PURPLE, 90, 18.0f),
+    CRAFTED(TextColor.DARK_AQUA, 0, 0.0f);
 
-    private final ChatFormatting chatFormatting;
+    private final TextColor textColor;
     private final int baseCost;
     private final float costMultiplier;
     private final String apiName;
 
-    GearTier(ChatFormatting chatFormatting, int baseCost, float costMultiplier) {
-        this.chatFormatting = chatFormatting;
+    GearTier(TextColor textColor, int baseCost, float costMultiplier) {
+        this.textColor = textColor;
         this.baseCost = baseCost;
         this.costMultiplier = costMultiplier;
         this.apiName = name().toLowerCase(Locale.ROOT);
@@ -46,18 +44,17 @@ public enum GearTier {
     }
 
     public static GearTier fromStyledText(StyledText text) {
-        Optional<ChatFormatting> chatFormatting = Arrays.stream(ChatFormatting.values())
-                .filter(ChatFormatting::isColor)
-                .filter(c -> c.getColor()
+        Optional<TextColor> textColor = (TextColor.NAMED_COLORS.values().stream()
+                .filter(c -> c.getValue()
                         == text.getFirstPart()
                                 .getPartStyle()
                                 .getStyle()
                                 .getColor()
                                 .getValue())
-                .findFirst();
+                .findFirst());
 
-        if (chatFormatting.isPresent()) {
-            return fromChatFormatting(chatFormatting.get());
+        if (textColor.isPresent()) {
+            return fromTextColor(textColor.get());
         }
 
         return null;
@@ -67,15 +64,15 @@ public enum GearTier {
         return fromStyledText(StyledText.fromComponent(component));
     }
 
-    public static GearTier fromChatFormatting(ChatFormatting formatting) {
+    public static GearTier fromTextColor(TextColor textColor) {
         return Arrays.stream(GearTier.values())
-                .filter(t -> t.getChatFormatting() == formatting)
+                .filter(t -> t.getTextColor() == textColor)
                 .findFirst()
                 .orElse(null);
     }
 
-    public ChatFormatting getChatFormatting() {
-        return chatFormatting;
+    public TextColor getTextColor() {
+        return textColor;
     }
 
     public int getGearIdentificationCost(int level) {
