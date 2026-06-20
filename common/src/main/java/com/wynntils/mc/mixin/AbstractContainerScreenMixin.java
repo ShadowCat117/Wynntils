@@ -35,8 +35,8 @@ public abstract class AbstractContainerScreenMixin {
     @Shadow
     public Slot hoveredSlot;
 
-    @Inject(method = "renderContents(Lnet/minecraft/client/gui/GuiGraphicsExtractor;IIF)V", at = @At("RETURN"))
-    private void renderContentsPost(
+    @Inject(method = "extractContents(Lnet/minecraft/client/gui/GuiGraphicsExtractor;IIF)V", at = @At("RETURN"))
+    private void extractContentsPost(
             GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks, CallbackInfo info) {
         MixinHelper.post(new ContainerRenderEvent(
                 (AbstractContainerScreen<?>) (Object) this,
@@ -101,10 +101,11 @@ public abstract class AbstractContainerScreenMixin {
 
     @Inject(
             method =
-                    "renderSlot(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/world/inventory/Slot;II)V",
+                    "extractSlot(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/world/inventory/Slot;II)V",
             at = @At("HEAD"),
             cancellable = true)
-    private void renderSlotPre(GuiGraphicsExtractor guiGraphics, Slot slot, int mouseX, int mouseY, CallbackInfo info) {
+    private void extractSlotPre(
+            GuiGraphicsExtractor guiGraphics, Slot slot, int mouseX, int mouseY, CallbackInfo info) {
         SlotRenderEvent.Pre event = new SlotRenderEvent.Pre(guiGraphics, (Screen) (Object) this, slot);
         MixinHelper.post(event);
 
@@ -115,9 +116,9 @@ public abstract class AbstractContainerScreenMixin {
 
     @Inject(
             method =
-                    "renderSlot(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/world/inventory/Slot;II)V",
+                    "extractSlot(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/world/inventory/Slot;II)V",
             at = @At("RETURN"))
-    private void renderSlotPost(
+    private void extractSlotPost(
             GuiGraphicsExtractor guiGraphics, Slot slot, int mouseX, int mouseY, CallbackInfo info) {
         MixinHelper.post(new SlotRenderEvent.Post(guiGraphics, (Screen) (Object) this, slot));
     }

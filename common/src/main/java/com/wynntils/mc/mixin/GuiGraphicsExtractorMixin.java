@@ -72,11 +72,11 @@ public abstract class GuiGraphicsExtractorMixin {
 
     @ModifyVariable(
             method =
-                    "renderItemCount(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V",
+                    "itemCount(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V",
             at = @At("HEAD"),
             ordinal = 0,
             argsOnly = true)
-    private String renderItemCount(
+    private String itemCountPre(
             String text,
             Font font,
             ItemStack itemStack,
@@ -100,14 +100,14 @@ public abstract class GuiGraphicsExtractorMixin {
     }
 
     @Inject(
-            method = "renderItemCooldown(Lnet/minecraft/world/item/ItemStack;II)V",
+            method = "itemCooldown(Lnet/minecraft/world/item/ItemStack;II)V",
             at =
                     @At(
                             value = "INVOKE",
                             target =
                                     "Lnet/minecraft/client/gui/GuiGraphicsExtractor;fill(Lcom/mojang/blaze3d/pipeline/RenderPipeline;IIIII)V"),
             cancellable = true)
-    private void renderItemCooldown(ItemStack stack, int x, int y, CallbackInfo ci) {
+    private void itemCooldownPre(ItemStack stack, int x, int y, CallbackInfo ci) {
         ItemCooldownRenderEvent event = new ItemCooldownRenderEvent(stack);
         MixinHelper.post(event);
 
@@ -118,7 +118,7 @@ public abstract class GuiGraphicsExtractorMixin {
 
     @WrapOperation(
             method =
-                    "renderItemCount(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V",
+                    "itemCount(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V",
             at =
                     @At(
                             value = "INVOKE",
