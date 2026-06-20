@@ -16,7 +16,7 @@ import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.input.KeyEvent;
@@ -35,9 +35,9 @@ public abstract class AbstractContainerScreenMixin {
     @Shadow
     public Slot hoveredSlot;
 
-    @Inject(method = "renderContents(Lnet/minecraft/client/gui/GuiGraphics;IIF)V", at = @At("RETURN"))
+    @Inject(method = "renderContents(Lnet/minecraft/client/gui/GuiGraphicsExtractor;IIF)V", at = @At("RETURN"))
     private void renderContentsPost(
-            GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks, CallbackInfo info) {
+            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks, CallbackInfo info) {
         MixinHelper.post(new ContainerRenderEvent(
                 (AbstractContainerScreen<?>) (Object) this,
                 guiGraphics,
@@ -48,15 +48,15 @@ public abstract class AbstractContainerScreenMixin {
     }
 
     @WrapOperation(
-            method = "renderLabels(Lnet/minecraft/client/gui/GuiGraphics;II)V",
+            method = "renderLabels(Lnet/minecraft/client/gui/GuiGraphicsExtractor;II)V",
             at =
                     @At(
                             value = "INVOKE",
                             target =
-                                    "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;IIIZ)V",
+                                    "Lnet/minecraft/client/gui/GuiGraphicsExtractor;drawString(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;IIIZ)V",
                             ordinal = 0))
     private void renderContainerLabel(
-            GuiGraphics instance,
+            GuiGraphicsExtractor instance,
             Font font,
             Component text,
             int x,
@@ -74,15 +74,15 @@ public abstract class AbstractContainerScreenMixin {
     }
 
     @WrapOperation(
-            method = "renderLabels(Lnet/minecraft/client/gui/GuiGraphics;II)V",
+            method = "renderLabels(Lnet/minecraft/client/gui/GuiGraphicsExtractor;II)V",
             at =
                     @At(
                             value = "INVOKE",
                             target =
-                                    "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;IIIZ)V",
+                                    "Lnet/minecraft/client/gui/GuiGraphicsExtractor;drawString(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;IIIZ)V",
                             ordinal = 1))
     private void renderInventoryLabel(
-            GuiGraphics instance,
+            GuiGraphicsExtractor instance,
             Font font,
             Component text,
             int x,
@@ -100,10 +100,10 @@ public abstract class AbstractContainerScreenMixin {
     }
 
     @Inject(
-            method = "renderSlot(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/world/inventory/Slot;II)V",
+            method = "renderSlot(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/world/inventory/Slot;II)V",
             at = @At("HEAD"),
             cancellable = true)
-    private void renderSlotPre(GuiGraphics guiGraphics, Slot slot, int mouseX, int mouseY, CallbackInfo info) {
+    private void renderSlotPre(GuiGraphicsExtractor guiGraphics, Slot slot, int mouseX, int mouseY, CallbackInfo info) {
         SlotRenderEvent.Pre event = new SlotRenderEvent.Pre(guiGraphics, (Screen) (Object) this, slot);
         MixinHelper.post(event);
 
@@ -113,9 +113,10 @@ public abstract class AbstractContainerScreenMixin {
     }
 
     @Inject(
-            method = "renderSlot(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/world/inventory/Slot;II)V",
+            method = "renderSlot(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/world/inventory/Slot;II)V",
             at = @At("RETURN"))
-    private void renderSlotPost(GuiGraphics guiGraphics, Slot slot, int mouseX, int mouseY, CallbackInfo info) {
+    private void renderSlotPost(
+            GuiGraphicsExtractor guiGraphics, Slot slot, int mouseX, int mouseY, CallbackInfo info) {
         MixinHelper.post(new SlotRenderEvent.Post(guiGraphics, (Screen) (Object) this, slot));
     }
 

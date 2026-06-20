@@ -4,7 +4,7 @@
  */
 package com.wynntils.mc.event;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
 import net.neoforged.bus.api.Event;
 
@@ -13,18 +13,18 @@ import net.neoforged.bus.api.Event;
  * You can use this event to change the positioner of the tooltip.
  */
 public abstract class TooltipRenderEvent extends Event {
-    private final GuiGraphics guiGraphics;
+    private final GuiGraphicsExtractor guiGraphics;
 
-    protected TooltipRenderEvent(GuiGraphics guiGraphics) {
+    protected TooltipRenderEvent(GuiGraphicsExtractor guiGraphics) {
         this.guiGraphics = guiGraphics;
     }
 
-    public GuiGraphics getGuiGraphics() {
+    public GuiGraphicsExtractor getGuiGraphics() {
         return guiGraphics;
     }
 
     public static class Pre extends TooltipRenderEvent {
-        public Pre(GuiGraphics guiGraphics) {
+        public Pre(GuiGraphicsExtractor guiGraphics) {
             super(guiGraphics);
         }
     }
@@ -32,7 +32,7 @@ public abstract class TooltipRenderEvent extends Event {
     public static class Position extends TooltipRenderEvent {
         private ClientTooltipPositioner positioner;
 
-        public Position(GuiGraphics guiGraphics) {
+        public Position(GuiGraphicsExtractor guiGraphics) {
             super(guiGraphics);
         }
 
@@ -46,7 +46,7 @@ public abstract class TooltipRenderEvent extends Event {
     }
 
     public static class Post extends TooltipRenderEvent {
-        public Post(GuiGraphics guiGraphics) {
+        public Post(GuiGraphicsExtractor guiGraphics) {
             super(guiGraphics);
         }
     }

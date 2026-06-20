@@ -10,7 +10,7 @@ import com.wynntils.services.itemfilter.type.SortInfo;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -25,7 +25,7 @@ public class GuideSortWidget extends AbstractWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void renderWidget(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         guideSortButtonPrimary.render(guiGraphics, mouseX, mouseY, partialTick);
         guideSortButtonSecondary.render(guiGraphics, mouseX, mouseY, partialTick);
     }

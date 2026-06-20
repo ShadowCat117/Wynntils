@@ -39,7 +39,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.Tooltip;
@@ -134,7 +134,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (selectionMode != SelectionMode.NONE) {
             renderAlignmentLines(guiGraphics);
         } else {
@@ -261,10 +261,10 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     }
 
     @Override
-    protected void renderBlurredBackground(GuiGraphics guiGraphics) {}
+    protected void renderBlurredBackground(GuiGraphicsExtractor guiGraphics) {}
 
     @Override
-    protected void renderMenuBackground(GuiGraphics guiGraphics) {}
+    protected void renderMenuBackground(GuiGraphicsExtractor guiGraphics) {}
 
     @Override
     public void tick() {
@@ -726,14 +726,14 @@ public final class OverlayManagementScreen extends WynntilsScreen {
         return new Pair<>(dragX, dragY);
     }
 
-    private void renderSections(GuiGraphics guiGraphics) {
+    private void renderSections(GuiGraphicsExtractor guiGraphics) {
         for (SectionCoordinates section : Managers.Overlay.getSections()) {
             RenderUtils.drawRectBorders(
                     guiGraphics, CommonColors.WHITE, section.x1(), section.y1(), section.x2(), section.y2(), 1);
         }
     }
 
-    private void renderAlignmentLines(GuiGraphics guiGraphics) {
+    private void renderAlignmentLines(GuiGraphicsExtractor guiGraphics) {
         for (Map.Entry<Edge, Float> entry : alignmentLinesToRender.entrySet()) {
             if (entry.getKey().isVerticalLine()) {
                 RenderUtils.drawLine(

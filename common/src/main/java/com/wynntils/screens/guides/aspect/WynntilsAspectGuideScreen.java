@@ -28,7 +28,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
@@ -70,7 +70,7 @@ public final class WynntilsAspectGuideScreen
     }
 
     @Override
-    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         renderBackgroundTexture(guiGraphics);
 
         renderTitle(guiGraphics, I18n.get("screens.wynntils.wynntilsGuides.aspectGuide.name"));
@@ -87,7 +87,7 @@ public final class WynntilsAspectGuideScreen
     }
 
     @Override
-    protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    protected void renderTooltip(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         if (hovered instanceof GuideAspectItemStackButton guideAspectItemStackButton) {
             guideAspectItemStackButton.getItemStack().queueGuideTooltip(guiGraphics, mouseX, mouseY);
         }
@@ -95,7 +95,7 @@ public final class WynntilsAspectGuideScreen
         super.renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
-    private void renderItemsHeader(GuiGraphics guiGraphics) {
+    private void renderItemsHeader(GuiGraphicsExtractor guiGraphics) {
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,

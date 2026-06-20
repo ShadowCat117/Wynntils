@@ -17,7 +17,7 @@ import com.wynntils.utils.render.FontRenderer;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -30,7 +30,7 @@ public abstract class GuideItemStack extends ItemStack {
         Handlers.Item.updateItem(this, annotation, StyledText.fromString(baseName));
     }
 
-    public void queueGuideTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    public void queueGuideTooltip(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         List<Component> tooltipLines = new ArrayList<>(LoreUtils.getTooltipLines(this));
         GearTooltipAlignmentComponent.realignMarkedTooltipLines(tooltipLines);
 

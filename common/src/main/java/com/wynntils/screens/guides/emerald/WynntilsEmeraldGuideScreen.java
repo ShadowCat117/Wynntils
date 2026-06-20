@@ -22,7 +22,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
@@ -81,7 +81,7 @@ public final class WynntilsEmeraldGuideScreen extends WynntilsListScreen<GuideIt
     }
 
     @Override
-    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         renderBackgroundTexture(guiGraphics);
 
         renderTitle(guiGraphics, I18n.get("screens.wynntils.wynntilsGuides.emeralds.name"));
@@ -100,7 +100,7 @@ public final class WynntilsEmeraldGuideScreen extends WynntilsListScreen<GuideIt
     }
 
     @Override
-    protected void renderTitle(GuiGraphics guiGraphics, String titleString) {
+    protected void renderTitle(GuiGraphicsExtractor guiGraphics, String titleString) {
         RenderUtils.drawTexturedRect(guiGraphics, Texture.CONTENT_BOOK_TITLE, offsetX, 30 + offsetY);
 
         FontRenderer.getInstance()
@@ -117,7 +117,7 @@ public final class WynntilsEmeraldGuideScreen extends WynntilsListScreen<GuideIt
     }
 
     @Override
-    protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    protected void renderTooltip(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         if (hovered instanceof GuideEmeraldItemStackButton guideEmeraldItemStack) {
             guideEmeraldItemStack.getItemStack().queueGuideTooltip(guiGraphics, mouseX, mouseY);
         } else if (hovered instanceof GuideEmeraldPouchItemStackButton guideEmeraldPouchItemStack) {
@@ -127,7 +127,7 @@ public final class WynntilsEmeraldGuideScreen extends WynntilsListScreen<GuideIt
         super.renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
-    private void renderItemsHeader(GuiGraphics guiGraphics) {
+    private void renderItemsHeader(GuiGraphicsExtractor guiGraphics) {
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,

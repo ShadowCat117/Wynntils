@@ -41,7 +41,7 @@ import java.util.List;
 import java.util.stream.Stream;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 public class MinimapOverlay extends Overlay {
     private static final int DEFAULT_SIZE = 130;
@@ -114,7 +114,7 @@ public class MinimapOverlay extends Overlay {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
+    public void render(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window) {
         float width = getWidth();
         float height = getHeight();
         float renderX = getRenderX();
@@ -238,7 +238,7 @@ public class MinimapOverlay extends Overlay {
     }
 
     private void renderPois(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             float centerX,
             float centerZ,
             float width,
@@ -425,7 +425,7 @@ public class MinimapOverlay extends Overlay {
     }
 
     private void renderPoi(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             float centerX,
             float centerZ,
             float width,
@@ -472,7 +472,7 @@ public class MinimapOverlay extends Overlay {
     }
 
     private void renderCardinalDirections(
-            GuiGraphics guiGraphics, float width, float height, float centerX, float centerZ) {
+            GuiGraphicsExtractor guiGraphics, float width, float height, float centerX, float centerZ) {
         if (showCompass.get() == CompassRenderType.NONE) return;
 
         float northDX;
@@ -552,7 +552,8 @@ public class MinimapOverlay extends Overlay {
                         new TextRenderTask("W", TextRenderSetting.CENTERED));
     }
 
-    private void renderMapBorder(GuiGraphics guiGraphics, float renderX, float renderY, float width, float height) {
+    private void renderMapBorder(
+            GuiGraphicsExtractor guiGraphics, float renderX, float renderY, float width, float height) {
         Texture texture = borderType.get().texture();
         int grooves = borderType.get().groovesSize();
         BorderInfo borderInfo = maskType.get() == MapMaskType.CIRCLE
