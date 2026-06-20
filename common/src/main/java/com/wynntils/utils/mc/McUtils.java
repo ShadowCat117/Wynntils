@@ -86,11 +86,19 @@ public final class McUtils {
     }
 
     public static Screen screen() {
-        return mc().screen;
+        return mc().gui.screen();
     }
 
     public static void setScreen(Screen screen) {
-        mc().setScreen(screen);
+        mc().gui.setScreen(screen);
+    }
+
+    public static ChatComponent getChat() {
+        return mc().gui.hud.getChat();
+    }
+
+    public static ToastManager toastManager() {
+        return mc().gui.toastManager();
     }
 
     public static ChatComponent getChat() {
@@ -149,7 +157,7 @@ public final class McUtils {
     }
 
     public static void sendMessageToClient(Component component) {
-        mc().getChatListener().handleSystemMessage(component, false);
+        mc().gui.chatListener().handleSystemMessage(component, false);
     }
 
     public static void sendWynntilsPrefixMessage(Component component) {
