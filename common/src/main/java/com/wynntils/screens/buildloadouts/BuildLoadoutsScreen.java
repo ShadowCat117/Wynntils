@@ -237,8 +237,8 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
     }
 
     @Override
-    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.doRender(guiGraphics, mouseX, mouseY, partialTick);
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.doExtractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         // region Loadout headers
         RenderUtils.drawRect(
                 guiGraphics,
@@ -525,7 +525,7 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
                 (int) (dividedHeight * 4) + 1,
                 (int) (dividedWidth * 26) + 1,
                 (int) (dividedHeight * 48) + 1);
-        loadoutWidgets.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
+        loadoutWidgets.forEach(widget -> widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
         RenderUtils.disableScissor(guiGraphics);
         // endregion
 

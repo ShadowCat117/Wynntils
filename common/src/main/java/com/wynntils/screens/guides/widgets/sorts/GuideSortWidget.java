@@ -25,9 +25,10 @@ public class GuideSortWidget extends AbstractWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
-        guideSortButtonPrimary.render(guiGraphics, mouseX, mouseY, partialTick);
-        guideSortButtonSecondary.render(guiGraphics, mouseX, mouseY, partialTick);
+    protected void extractWidgetRenderState(
+            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+        guideSortButtonPrimary.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+        guideSortButtonSecondary.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     @Override

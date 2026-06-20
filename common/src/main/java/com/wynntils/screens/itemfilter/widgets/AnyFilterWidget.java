@@ -32,7 +32,8 @@ public class AnyFilterWidget extends GeneralFilterWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(
+            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         guiGraphics,
@@ -49,7 +50,7 @@ public class AnyFilterWidget extends GeneralFilterWidget {
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
-        removeButton.render(guiGraphics, mouseX, mouseY, partialTick);
+        removeButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     @Override

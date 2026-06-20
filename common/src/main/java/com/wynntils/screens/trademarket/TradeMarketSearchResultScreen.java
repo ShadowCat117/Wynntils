@@ -158,16 +158,16 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
     }
 
     @Override
-    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         updateItems();
 
-        super.doRender(guiGraphics, mouseX, mouseY, partialTick);
+        super.doExtractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         renderScrollButton(guiGraphics);
 
-        renderables.forEach(c -> c.render(guiGraphics, mouseX, mouseY, partialTick));
+        renderables.forEach(c -> c.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
 
         // Render item tooltip
-        super.renderTooltip(guiGraphics, mouseX, mouseY);
+        super.extractTooltip(guiGraphics, mouseX, mouseY);
 
         // Render tooltip for hovered widget
         for (GuiEventListener child : children()) {
@@ -182,8 +182,8 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
     }
 
     @Override
-    protected void renderLabels(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
-        guiGraphics.drawString(
+    protected void extractLabels(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
+        guiGraphics.text(
                 FontRenderer.getInstance().getFont(),
                 this.currentState,
                 this.titleLabelX,
@@ -193,7 +193,7 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
     }
 
     @Override
-    protected void renderBg(GuiGraphicsExtractor guiGraphics, float partialTick, int mouseX, int mouseY) {
+    public void extractBackground(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         int x = (this.width - this.imageWidth) / 2;
         int y = (this.height - this.imageHeight) / 2;
 

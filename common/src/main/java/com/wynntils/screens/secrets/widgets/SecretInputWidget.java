@@ -52,7 +52,7 @@ public class SecretInputWidget extends AbstractWidget {
     }
 
     @Override
-    public void renderWidget(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         FontRenderer.getInstance()
                 .renderScrollingText(
                         guiGraphics,
@@ -65,8 +65,8 @@ public class SecretInputWidget extends AbstractWidget {
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
-        maskedTextInputWidget.render(guiGraphics, mouseX, mouseY, partialTick);
-        openLinkButton.render(guiGraphics, mouseX, mouseY, partialTick);
+        maskedTextInputWidget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+        openLinkButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
         if (isHovered && !openLinkButton.isHovered()) {
             guiGraphics.setTooltipForNextFrame(
