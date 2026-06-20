@@ -35,7 +35,7 @@ public class GuideTomeItemStackButton extends WynntilsButton {
     @Override
     public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         CustomColor color =
-                CustomColor.fromChatFormatting(itemStack.getTomeInfo().tier().getChatFormatting());
+                CustomColor.fromTextColor(itemStack.getTomeInfo().tier().getTextColor());
 
         RenderUtils.drawSprite(guiGraphics, Texture.HIGHLIGHT_WYNN, color, getX() - 8, getY() - 8);
 

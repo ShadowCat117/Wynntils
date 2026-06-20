@@ -41,7 +41,7 @@ public class GuideAspectItemStack extends GuideItemStack {
 
         this.aspectInfo = aspectInfo;
         this.name = Component.literal(aspectInfo.name())
-                .withStyle(aspectInfo.gearTier().getChatFormatting());
+                .withColor(aspectInfo.gearTier().getTextColor());
         this.tier = tier;
 
         buildTooltip();
@@ -64,7 +64,7 @@ public class GuideAspectItemStack extends GuideItemStack {
     public void buildTooltip() {
         this.generatedTooltip = new ArrayList<>();
         this.generatedTooltip.add(Component.literal(aspectInfo.name())
-                .withStyle(aspectInfo.gearTier().getChatFormatting()));
+                .withColor(aspectInfo.gearTier().getTextColor()));
         this.generatedTooltip.add(Component.empty());
 
         // The threshold in the API is cumulative so we need to subtract the previous tiers threshold
@@ -77,12 +77,12 @@ public class GuideAspectItemStack extends GuideItemStack {
         if (tier == aspectInfo.effects().size()) {
             // Max tier
             tierLine = Component.literal("           Tier " + MathUtils.toRoman(tier))
-                    .withStyle(aspectInfo.gearTier().getChatFormatting())
+                    .withColor(aspectInfo.gearTier().getTextColor())
                     .append(Component.literal(" [" + threshold + "] [MAX]").withStyle(ChatFormatting.GRAY));
         } else {
             // Any other tier
             tierLine = Component.literal("     Tier " + MathUtils.toRoman(tier))
-                    .withStyle(aspectInfo.gearTier().getChatFormatting())
+                    .withColor(aspectInfo.gearTier().getTextColor())
                     .append(Component.literal(" / ").withStyle(ChatFormatting.GRAY))
                     .append(Component.literal("Tier " + MathUtils.toRoman(tier + 1))
                             .withStyle(ChatFormatting.GRAY))
@@ -104,7 +104,7 @@ public class GuideAspectItemStack extends GuideItemStack {
         this.generatedTooltip.add(classLine);
         this.generatedTooltip.add(Component.empty());
         Style rarityStyle = Style.EMPTY
-                .withColor(aspectInfo.gearTier().getChatFormatting())
+                .withColor(aspectInfo.gearTier().getTextColor())
                 .withoutShadow()
                 .withFont(RARITY_TAG_FONT);
         Component rarityLine = getRarityTag().withStyle(rarityStyle);

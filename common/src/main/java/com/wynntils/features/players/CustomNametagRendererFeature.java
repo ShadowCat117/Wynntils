@@ -215,12 +215,12 @@ public class CustomNametagRendererFeature extends Feature {
         if (wynnItem instanceof GearItem gearItem) {
             String itemName = gearItem.getItemInfo().name();
             MutableComponent gearComponent = Component.literal(itemName)
-                    .withStyle(gearItem.getItemInfo().tier().getChatFormatting());
+                    .withColor(gearItem.getItemInfo().tier().getTextColor());
 
             if (gearItem.getShinyStat().isPresent()) {
                 gearComponent = Component.literal("⬡ ")
                         .append(Component.literal("Shiny ")
-                                .withStyle(gearItem.getItemInfo().tier().getChatFormatting()))
+                                .withColor(gearItem.getItemInfo().tier().getTextColor()))
                         .append(gearComponent);
             }
 
@@ -236,7 +236,7 @@ public class CustomNametagRendererFeature extends Feature {
             return gearComponent;
         } else if (wynnItem instanceof CraftedGearItem craftedGearItem) {
             return Component.literal(craftedGearItem.getName())
-                    .withStyle(craftedGearItem.getGearTier().getChatFormatting());
+                    .withColor(craftedGearItem.getGearTier().getTextColor());
         }
 
         return null;

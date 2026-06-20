@@ -23,7 +23,7 @@ public class InsulatorItemStack extends AugmentItemStack {
 
     @Override
     public Component getHoverName() {
-        return Component.literal("Corkian Insulator").withStyle(getGearTier().getChatFormatting());
+        return Component.literal("Corkian Insulator").withColor(getGearTier().getTextColor());
     }
 
     @Override

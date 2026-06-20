@@ -29,7 +29,7 @@ public class GuideTomeItemStack extends GuideItemStack {
         super(tomeInfo.metaInfo().material().itemStack(), new TomeItem(tomeInfo, null), tomeInfo.name());
 
         this.tomeInfo = tomeInfo;
-        this.name = Component.literal(tomeInfo.name()).withStyle(tomeInfo.tier().getChatFormatting());
+        this.name = Component.literal(tomeInfo.name()).withColor(tomeInfo.tier().getTextColor());
         this.generatedTooltip = List.of();
     }
 
