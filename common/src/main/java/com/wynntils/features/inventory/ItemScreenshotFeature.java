@@ -4,13 +4,13 @@
  */
 package com.wynntils.features.inventory;
 
+import com.mojang.blaze3d.GpuFormat;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.pipeline.TextureTarget;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.systems.GpuDevice;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.textures.GpuTexture;
-import com.mojang.blaze3d.textures.TextureFormat;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
@@ -25,7 +25,7 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.type.StyleType;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
-import com.wynntils.mc.extension.MinecraftExtension;
+import com.wynntils.mc.extension.GameRendererExtension;
 import com.wynntils.utils.SystemUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
@@ -50,8 +50,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.fog.FogRenderer;
 import net.minecraft.client.renderer.state.gui.GuiRenderState;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.component.DataComponents;
@@ -65,6 +63,7 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.joml.Vector2i;
+import org.joml.Vector4f;
 
 @ConfigCategory(Category.INVENTORY)
 public class ItemScreenshotFeature extends Feature {
@@ -157,28 +156,24 @@ public class ItemScreenshotFeature extends Feature {
      */
     private static CompletableFuture<NativeImage> screenshotTooltip(
             Screen screen, List<ClientTooltipComponent> tooltip, Identifier tooltipStyle, int width, int height) {
-        TextureTarget framebuffer = new TextureTarget("Wynntils Item Screenshot", width * 2, height * 2, true);
+        TextureTarget framebuffer =
+                new TextureTarget("Wynntils Item Screenshot", width * 2, height * 2, true, GpuFormat.RGBA8_UNORM);
         RenderSystem.getDevice()
                 .createCommandEncoder()
-                .clearColorAndDepthTextures(framebuffer.getColorTexture(), 0, framebuffer.getDepthTexture(), 1.0);
+                .clearColorAndDepthTextures(
+                        framebuffer.getColorTexture(), new Vector4f(), framebuffer.getDepthTexture(), 1.0);
 
-        ((MinecraftExtension) McUtils.mc()).setOverridenRenderTarget(framebuffer);
+        ((GameRendererExtension) McUtils.mc().gameRenderer).setOverridenRenderTarget(framebuffer);
         RenderSystem.outputColorTextureOverride = framebuffer.getColorTextureView();
         RenderSystem.outputDepthTextureOverride = framebuffer.getDepthTextureView();
 
         Minecraft mc = McUtils.mc();
 
-        MultiBufferSource.BufferSource bufferSource = mc.renderBuffers().bufferSource();
         GuiRenderState guiRenderState = new GuiRenderState();
 
-        GuiRenderer guiRenderer = new GuiRenderer(
-                guiRenderState,
-                bufferSource,
-                mc.gameRenderer.getSubmitNodeStorage(),
-                mc.gameRenderer.getFeatureRenderDispatcher(),
-                List.of());
+        GuiRenderer guiRenderer = new GuiRenderer(guiRenderState, mc.gameRenderer.featureRenderDispatcher(), List.of());
 
-        GuiGraphicsExtractor guiGraphics = new GuiGraphics(mc, guiRenderState, 0, 0);
+        GuiGraphicsExtractor guiGraphics = new GuiGraphicsExtractor(mc, guiRenderState, 0, 0);
 
         // calculate tooltip size to fit to framebuffer
         float scaleh = (float) screen.height / height;
@@ -186,17 +181,15 @@ public class ItemScreenshotFeature extends Feature {
 
         guiGraphics.pose().pushMatrix();
         guiGraphics.pose().scale(scalew, scaleh);
-        guiGraphics.renderTooltip(mc.font, tooltip, 0, 0, NO_POSITIONER, tooltipStyle);
+        guiGraphics.tooltip(mc.font, tooltip, 0, 0, NO_POSITIONER, tooltipStyle);
         guiGraphics.pose().popMatrix();
 
-        bufferSource.endBatch();
-
-        guiRenderer.render(mc.gameRenderer.fogRenderer.getBuffer(FogRenderer.FogMode.NONE));
+        guiRenderer.render();
         guiRenderer.close();
 
         RenderSystem.outputColorTextureOverride = null;
         RenderSystem.outputDepthTextureOverride = null;
-        ((MinecraftExtension) McUtils.mc()).setOverridenRenderTarget(null);
+        ((GameRendererExtension) McUtils.mc().gameRenderer).setOverridenRenderTarget(null);
         GpuTexture texture = cloneColorAttachment(framebuffer);
 
         framebuffer.destroyBuffers();
@@ -275,7 +268,7 @@ public class ItemScreenshotFeature extends Feature {
                         | GpuTexture.USAGE_COPY_SRC
                         | GpuTexture.USAGE_TEXTURE_BINDING
                         | GpuTexture.USAGE_RENDER_ATTACHMENT,
-                TextureFormat.RGBA8,
+                GpuFormat.RGBA8_UNORM,
                 framebuffer.width,
                 framebuffer.height,
                 1,
