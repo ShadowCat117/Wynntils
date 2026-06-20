@@ -106,7 +106,7 @@ public class EmoteWheelScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (!emoteWheelFeature.openEmoteWheelKeybind.getKeyMapping().isDown() && canInteract) {
             onClose();
             return;
@@ -339,16 +339,16 @@ public class EmoteWheelScreen extends WynntilsScreen {
     }
 
     @Override
-    protected void renderBlurredBackground(GuiGraphicsExtractor guiGraphics) {
+    protected void extractBlurredBackground(GuiGraphicsExtractor guiGraphics) {
         if (!canInteract) {
-            super.renderBlurredBackground(guiGraphics);
+            super.extractBlurredBackground(guiGraphics);
         }
     }
 
     @Override
-    protected void renderMenuBackground(GuiGraphicsExtractor partialTick) {
+    protected void extractMenuBackground(GuiGraphicsExtractor partialTick) {
         if (!canInteract) {
-            super.renderMenuBackground(partialTick);
+            super.extractMenuBackground(partialTick);
         }
     }
 }

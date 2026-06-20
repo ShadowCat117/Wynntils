@@ -134,7 +134,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (selectionMode != SelectionMode.NONE) {
             renderAlignmentLines(guiGraphics);
         } else {
@@ -256,15 +256,15 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
         // Render widgets
         for (Renderable renderable : this.renderables) {
-            renderable.render(guiGraphics, mouseX, mouseY, partialTick);
+            renderable.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
     }
 
     @Override
-    protected void renderBlurredBackground(GuiGraphicsExtractor guiGraphics) {}
+    protected void extractBlurredBackground(GuiGraphicsExtractor guiGraphics) {}
 
     @Override
-    protected void renderMenuBackground(GuiGraphicsExtractor guiGraphics) {}
+    protected void extractMenuBackground(GuiGraphicsExtractor guiGraphics) {}
 
     @Override
     public void tick() {

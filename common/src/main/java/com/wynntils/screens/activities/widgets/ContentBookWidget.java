@@ -109,7 +109,8 @@ public class ContentBookWidget extends AbstractWidget implements TooltipProvider
     }
 
     @Override
-    protected void renderWidget(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(
+            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         final CustomColor gradientColor = activityInfo.status() == ActivityStatus.UNAVAILABLE
                 ? UNAVAILABLE_COLOR
                 : activityInfo.type().getColor();
@@ -122,7 +123,7 @@ public class ContentBookWidget extends AbstractWidget implements TooltipProvider
                 gradientColor,
                 gradientColor.withAlpha(0),
                 RenderDirection.HORIZONTAL);
-        guiGraphics.renderItem(itemStack, getX(), getY());
+        guiGraphics.item(itemStack, getX(), getY());
 
         nameStyle = nameStyle.withBold(this.isHovered || activityInfo.trackingState() == ActivityTrackingState.TRACKED);
 
