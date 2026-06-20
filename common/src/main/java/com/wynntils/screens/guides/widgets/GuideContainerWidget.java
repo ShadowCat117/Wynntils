@@ -203,7 +203,8 @@ public abstract class GuideContainerWidget<T> extends AbstractWidget implements 
     }
 
     @Override
-    protected void renderWidget(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(
+            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics, Texture.GUIDE_BACKGROUND, getX(), getY() + 28, getBackgroundWidth(), getHeight() - 28);
 
@@ -241,28 +242,28 @@ public abstract class GuideContainerWidget<T> extends AbstractWidget implements 
                         TextShadow.OUTLINE);
 
         RenderUtils.enableScissor(guiGraphics, getX(), getY() + 42, getWidth(), getHeight());
-        guideButtons.forEach(guideButton -> guideButton.render(guiGraphics, mouseX, mouseY, partialTick));
+        guideButtons.forEach(guideButton -> guideButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
         RenderUtils.disableScissor(guiGraphics);
 
         renderScroll(guiGraphics, mouseX, mouseY);
 
         if (searchWidget != null) {
-            searchWidget.render(guiGraphics, mouseX, mouseY, partialTick);
+            searchWidget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
 
         if (favoriteFilterButton != null) {
-            favoriteFilterButton.render(guiGraphics, mouseX, mouseY, partialTick);
+            favoriteFilterButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
 
         if (toggleFiltersButton != null) {
-            toggleFiltersButton.render(guiGraphics, mouseX, mouseY, partialTick);
+            toggleFiltersButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
 
         if (filterPanel != null) {
-            filterPanel.render(guiGraphics, mouseX, mouseY, partialTick);
+            filterPanel.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
 
-        favoriteActionButtons.forEach(button -> button.render(guiGraphics, mouseX, mouseY, partialTick));
+        favoriteActionButtons.forEach(button -> button.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
     }
 
     public void updateSearchFromQuickFilters() {

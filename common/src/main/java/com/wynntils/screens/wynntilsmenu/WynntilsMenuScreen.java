@@ -299,7 +299,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
     }
 
     @Override
-    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         renderBackgroundTexture(guiGraphics);
 
         renderTitle(guiGraphics, I18n.get("screens.wynntils.wynntilsMenu.userProfile"));
@@ -435,7 +435,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         final int renderWidth = (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 100);
         final int renderHeight = 70;
 
-        InventoryScreen.renderEntityInInventoryFollowsMouse(
+        InventoryScreen.extractEntityInInventoryFollowsMouse(
                 guiGraphics,
                 posX,
                 posY,
@@ -474,7 +474,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         this.hovered = null;
 
         for (WynntilsMenuButton button : buttons.stream().flatMap(List::stream).toList()) {
-            button.render(guiGraphics, mouseX, mouseY, partialTick);
+            button.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
             if (button.isMouseOver(mouseX, mouseY)) {
                 this.hovered = button;

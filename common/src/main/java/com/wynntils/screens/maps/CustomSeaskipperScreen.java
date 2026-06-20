@@ -162,7 +162,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
     }
 
     @Override
-    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         renderMap(guiGraphics);
 
         RenderUtils.enableScissor(
@@ -211,7 +211,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
         renderScrollButton(guiGraphics);
 
         for (SeaskipperDestinationButton destinationButton : destinationButtons) {
-            destinationButton.render(guiGraphics, mouseX, mouseY, partialTick);
+            destinationButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
 
         if (isPanning) {

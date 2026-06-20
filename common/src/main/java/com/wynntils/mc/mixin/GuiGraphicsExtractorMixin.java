@@ -123,7 +123,7 @@ public abstract class GuiGraphicsExtractorMixin {
                     @At(
                             value = "INVOKE",
                             target =
-                                    "Lnet/minecraft/client/gui/GuiGraphicsExtractor;drawString(Lnet/minecraft/client/gui/Font;Ljava/lang/String;IIIZ)V"))
+                                    "Lnet/minecraft/client/gui/GuiGraphicsExtractor;text(Lnet/minecraft/client/gui/Font;Ljava/lang/String;IIIZ)V"))
     private void changeCountOverlayColor(
             GuiGraphicsExtractor guiGraphics,
             Font font,

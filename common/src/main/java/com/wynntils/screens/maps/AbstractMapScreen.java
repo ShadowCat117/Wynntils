@@ -421,7 +421,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         RenderUtils.drawTexturedRect(guiGraphics, Texture.ZOOM_HANDLE, zoomHandleRenderX, zoomHandleRenderY);
 
         for (Renderable renderable : this.renderables) {
-            renderable.render(guiGraphics, mouseX, mouseY, partialTicks);
+            renderable.extractRenderState(guiGraphics, mouseX, mouseY, partialTicks);
         }
     }
 
@@ -476,7 +476,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
             RenderUtils.drawTexturedRect(
                     guiGraphics, Texture.MAP_BUTTONS_BACKGROUND_MIDDLE, buttonBackgroundX, buttonBackgroundY);
 
-            mapButtons.get(i).render(guiGraphics, mouseX, mouseY, partialTicks);
+            mapButtons.get(i).extractRenderState(guiGraphics, mouseX, mouseY, partialTicks);
 
             buttonBackgroundX += Texture.MAP_BUTTONS_BACKGROUND_MIDDLE.width();
         }

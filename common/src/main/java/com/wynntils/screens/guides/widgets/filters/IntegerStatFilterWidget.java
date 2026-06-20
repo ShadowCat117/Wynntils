@@ -122,7 +122,8 @@ public class IntegerStatFilterWidget<T extends ItemStatProvider<?>> extends Guid
     }
 
     @Override
-    protected void renderWidget(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(
+            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         FontRenderer.getInstance()
                 .renderScrollingText(
                         guiGraphics,
@@ -136,13 +137,13 @@ public class IntegerStatFilterWidget<T extends ItemStatProvider<?>> extends Guid
                         VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
-        enabledCheckbox.render(guiGraphics, mouseX, mouseY, partialTick);
+        enabledCheckbox.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         if (!enabledCheckbox.selected) return;
 
-        modeButton.render(guiGraphics, mouseX, mouseY, partialTick);
+        modeButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         if (filterMode == FilterMode.CUSTOM) {
-            minSlider.render(guiGraphics, mouseX, mouseY, partialTick);
-            maxSlider.render(guiGraphics, mouseX, mouseY, partialTick);
+            minSlider.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            maxSlider.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
     }
 
@@ -340,7 +341,8 @@ public class IntegerStatFilterWidget<T extends ItemStatProvider<?>> extends Guid
         }
 
         @Override
-        protected void renderWidget(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+        protected void extractWidgetRenderState(
+                GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
             RenderUtils.drawRect(
                     guiGraphics,
                     (isHovered ? CommonColors.LIGHT_GRAY : CommonColors.GRAY).withAlpha(0.5f),
