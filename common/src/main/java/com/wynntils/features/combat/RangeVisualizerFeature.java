@@ -16,7 +16,7 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.PlayerRenderEvent;
-import com.wynntils.mc.event.RenderTileLevelLastEvent;
+import com.wynntils.mc.event.SubmitCustomGeometryEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.extension.EntityRenderStateExtension;
 import com.wynntils.models.gambits.type.Gambit;
@@ -96,9 +96,9 @@ public class RangeVisualizerFeature extends Feature {
         });
     }
 
-    // Handles first person rendering for ourself
+    // Handles first person rendering for ourselves
     @SubscribeEvent
-    public void onRenderLevelLast(RenderTileLevelLastEvent event) {
+    public void onSubmitCustomGeometry(SubmitCustomGeometryEvent event) {
         if (!Models.WorldState.onWorld()) return;
         if (!renderInFirstPerson.get()) return;
 
@@ -111,7 +111,7 @@ public class RangeVisualizerFeature extends Feature {
         if (circles == null || circles.isEmpty()) return;
 
         PoseStack poseStack = event.getPoseStack();
-        float partialTick = event.getDeltaTracker().getGameTimeDeltaPartialTick(true);
+        float partialTick = McUtils.mc().getDeltaTracker().getGameTimeDeltaPartialTick(true);
 
         double interpX = player.xo + (player.getX() - player.xo) * partialTick;
         double interpY = player.yo + (player.getY() - player.yo) * partialTick;
@@ -127,7 +127,7 @@ public class RangeVisualizerFeature extends Feature {
             float radius = circle.b();
             int color = circle.a().asInt();
 
-            event.getSubmitNodeStorage()
+            event.getSubmitNodeCollector()
                     .submitCustomGeometry(
                             poseStack,
                             CustomRenderTypes.POSITION_COLOR_QUAD,
