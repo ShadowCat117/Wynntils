@@ -45,7 +45,8 @@ public class UnsavedChangesWidget extends AbstractWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(
+            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawTexturedRect(guiGraphics, Texture.SETTINGS_WARNING_BACKGROUND, getX(), getY());
 
         FontRenderer.getInstance()
@@ -64,8 +65,8 @@ public class UnsavedChangesWidget extends AbstractWidget {
                         TextShadow.NORMAL,
                         1.25f);
 
-        yesButton.render(guiGraphics, mouseX, mouseY, partialTick);
-        noButton.render(guiGraphics, mouseX, mouseY, partialTick);
+        yesButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+        noButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     @Override

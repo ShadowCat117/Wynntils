@@ -235,19 +235,19 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
     }
 
     @Override
-    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.doRender(guiGraphics, mouseX, mouseY, partialTick);
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.doExtractRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
         renderPlayerModel(guiGraphics, mouseX, mouseY);
 
-        this.renderTooltip(guiGraphics, mouseX, mouseY);
+        this.extractTooltip(guiGraphics, mouseX, mouseY);
 
-        interactionButtons.forEach(button -> button.render(guiGraphics, mouseX, mouseY, partialTick));
-        settingsButton.render(guiGraphics, mouseX, mouseY, partialTick);
+        interactionButtons.forEach(button -> button.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
+        settingsButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
         if (infoButton == null) return;
 
-        infoButton.render(guiGraphics, mouseX, mouseY, partialTick);
+        infoButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     private void renderPlayerModel(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
@@ -257,7 +257,7 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
         int renderWidth = Texture.PLAYER_VIEWER_BACKGROUND.width();
         int renderHeight = Texture.PLAYER_VIEWER_BACKGROUND.height();
 
-        InventoryScreen.renderEntityInInventoryFollowsMouse(
+        InventoryScreen.extractEntityInInventoryFollowsMouse(
                 guiGraphics,
                 renderX,
                 renderY,
@@ -271,12 +271,12 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
     }
 
     @Override
-    protected void renderBg(GuiGraphicsExtractor guiGraphics, float partialTick, int mouseX, int mouseY) {
+    public void extractBackground(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawTexturedRect(guiGraphics, Texture.PLAYER_VIEWER_BACKGROUND, this.leftPos, this.topPos);
     }
 
     @Override
-    protected void renderLabels(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
+    protected void extractLabels(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         // we don't want to draw any labels
     }
 
