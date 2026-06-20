@@ -25,7 +25,6 @@ public class TestScreenKeybindSuppression {
     public void createMapping() {
         mapping = new WynntilsKeyMapping(new KeyBindDefinition(
                 "testScreenInput",
-                "Test screen input",
                 KeyBindManager.COMMANDS_CATEGORY,
                 InputConstants.Type.KEYSYM,
                 InputConstants.KEY_L,
