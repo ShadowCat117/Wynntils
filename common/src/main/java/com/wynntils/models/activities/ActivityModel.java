@@ -430,10 +430,9 @@ public final class ActivityModel extends Model {
 
         if (questInfo.nextLocation().isPresent()) {
             McUtils.player().closeContainer();
-            McUtils.mc()
-                    .setScreen(MainMapScreen.create(
-                            questInfo.nextLocation().get().x(),
-                            questInfo.nextLocation().get().z()));
+            McUtils.setScreen(MainMapScreen.create(
+                    questInfo.nextLocation().get().x(),
+                    questInfo.nextLocation().get().z()));
         }
     }
 
@@ -442,10 +441,9 @@ public final class ActivityModel extends Model {
 
         if (caveInfo.getNextLocation().isPresent()) {
             McUtils.player().closeContainer();
-            McUtils.mc()
-                    .setScreen(MainMapScreen.create(
-                            caveInfo.getNextLocation().get().x(),
-                            caveInfo.getNextLocation().get().z()));
+            McUtils.setScreen(MainMapScreen.create(
+                    caveInfo.getNextLocation().get().x(),
+                    caveInfo.getNextLocation().get().z()));
         }
     }
 
