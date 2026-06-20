@@ -53,8 +53,7 @@ public class LoadoutMenuSkillPointWidget extends AbstractWidget implements IconR
                                 StyledText.fromString(String.valueOf(points)),
                                 this.x + 30,
                                 this.y + startY,
-                                CustomColor.fromInt(
-                                        Skill.values()[i].getColorCode().getColor()),
+                                CustomColor.fromChatFormatting(Skill.values()[i].getColorCode()),
                                 HorizontalAlignment.LEFT,
                                 VerticalAlignment.MIDDLE,
                                 TextShadow.NORMAL);
