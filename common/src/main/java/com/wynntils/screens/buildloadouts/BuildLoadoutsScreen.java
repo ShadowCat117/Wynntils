@@ -319,7 +319,7 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         renderBackgroundTexture(guiGraphics);
         // region Backgrounds
         // background for widgets 1
@@ -347,7 +347,7 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
             renderLoadoutMenu(guiGraphics, mouseX, mouseY, partialTick);
         }
 
-        renderables.forEach(renderable -> renderable.render(guiGraphics, mouseX, mouseY, partialTick));
+        renderables.forEach(renderable -> renderable.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
         renderTooltips(guiGraphics, mouseX, mouseY);
     }
 

@@ -379,8 +379,8 @@ public final class WaypointManagementScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.doRender(guiGraphics, mouseX, mouseY, partialTick);
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.doExtractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         renderScroll(guiGraphics);
 
         if (Managers.Feature.getFeatureInstance(MainMapFeature.class)
@@ -443,11 +443,12 @@ public final class WaypointManagementScreen extends WynntilsScreen {
         } else {
             RenderUtils.enableScissor(
                     guiGraphics, (int) (getTranslationX() + 10), (int) (getTranslationY() + 16), 322, 181);
-            waypointManagerWidgets.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
+            waypointManagerWidgets.forEach(
+                    widget -> widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
             RenderUtils.disableScissor(guiGraphics);
         }
 
-        iconButtons.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
+        iconButtons.forEach(widget -> widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
 
         if (draggingScroll) {
             guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
@@ -463,8 +464,8 @@ public final class WaypointManagementScreen extends WynntilsScreen {
     }
 
     @Override
-    public void renderBackground(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
+    public void extractBackground(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.extractBackground(guiGraphics, mouseX, mouseY, partialTick);
 
         RenderUtils.drawTexturedRect(
                 guiGraphics, Texture.WAYPOINT_MANAGER_BACKGROUND, getTranslationX(), getTranslationY());
