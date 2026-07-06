@@ -21,6 +21,7 @@ import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.core.text.type.StyleType;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.mc.event.KeyInputEvent;
+import com.wynntils.mc.extension.ItemStackTemplateExtension;
 import com.wynntils.mc.mixin.accessors.ChatScreenAccessor;
 import com.wynntils.models.items.FakeItemStack;
 import com.wynntils.models.items.WynnItem;
@@ -59,6 +60,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
+import net.minecraft.world.item.Items;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.sdl.SDLScancode;
@@ -287,7 +289,10 @@ public class ChatItemFeature extends Feature {
             style = style.withColor(tierItemProperty.getGearTier().getTextColor());
         }
 
-        ItemStackTemplate itemStackTemplate = ItemStackTemplate.fromNonEmptyStack(buildChatHoverItemStack(wynnItem));
+        ItemStackTemplate itemStackTemplate = new ItemStackTemplate(Items.STONE);
+        FakeItemStack fakeItemStack = buildChatHoverItemStack(wynnItem);
+        ItemStackTemplateExtension itemStackTemplateExtension = (ItemStackTemplateExtension) (Object) itemStackTemplate;
+        itemStackTemplateExtension.setFakeItemStack(fakeItemStack);
         style = style.withHoverEvent(new HoverEvent.ShowItem(itemStackTemplate));
 
         // Add the item name
@@ -301,7 +306,7 @@ public class ChatItemFeature extends Feature {
         return parts;
     }
 
-    private static ItemStack buildChatHoverItemStack(WynnItem wynnItem) {
+    private static FakeItemStack buildChatHoverItemStack(WynnItem wynnItem) {
         if (wynnItem instanceof GearItem gearItem) {
             return new FakeItemStack(gearItem, "From chat");
         }

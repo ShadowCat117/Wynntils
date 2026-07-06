@@ -84,12 +84,12 @@ public class GuideAspectItemStack extends GuideItemStack {
         if (tier == aspectInfo.effects().size()) {
             // Max tier
             tierLine = Component.literal("Tier " + MathUtils.toRoman(tier))
-                    .withStyle(aspectInfo.gearTier().getChatFormatting())
+                    .withColor(aspectInfo.gearTier().getTextColor())
                     .append(Component.literal(" [" + threshold + "] [MAX]").withStyle(ChatFormatting.GRAY));
         } else {
             // Any other tier
             tierLine = Component.literal("Tier " + MathUtils.toRoman(tier))
-                    .withStyle(aspectInfo.gearTier().getChatFormatting())
+                    .withColor(aspectInfo.gearTier().getTextColor())
                     .append(Component.literal(" / ").withStyle(ChatFormatting.GRAY))
                     .append(Component.literal("Tier " + MathUtils.toRoman(tier + 1))
                             .withStyle(ChatFormatting.GRAY))
