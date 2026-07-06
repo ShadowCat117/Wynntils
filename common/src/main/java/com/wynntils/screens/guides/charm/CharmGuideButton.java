@@ -30,7 +30,6 @@ public class CharmGuideButton extends GuideButton {
 
     @Override
     protected CustomColor getColor() {
-        return CustomColor.fromChatFormatting(
-                charmItemStack.getCharmInfo().tier().getChatFormatting());
+        return CustomColor.fromTextColor(charmItemStack.getCharmInfo().tier().getTextColor());
     }
 }
