@@ -5,13 +5,11 @@
 package com.wynntils.mc.mixin;
 
 import com.wynntils.core.events.MixinHelper;
-import com.wynntils.mc.event.PauseMenuInitEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.mc.event.TitleScreenRebuildEvent;
 import com.wynntils.mc.extension.ScreenExtension;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
-import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
 import org.spongepowered.asm.mixin.Mixin;
@@ -39,8 +37,6 @@ public abstract class ScreenMixin implements ScreenExtension {
 
         if (screen instanceof TitleScreen titleScreen) {
             MixinHelper.postAlways(new TitleScreenInitEvent.Post(titleScreen));
-        } else if (screen instanceof PauseScreen pauseMenuScreen) {
-            MixinHelper.post(new PauseMenuInitEvent(pauseMenuScreen));
         }
     }
 
