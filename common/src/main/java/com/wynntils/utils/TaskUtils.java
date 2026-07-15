@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils;
@@ -8,11 +8,19 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
 public final class TaskUtils {
-    private static final ScheduledExecutorService EXECUTOR_SERVICE = Executors.newSingleThreadScheduledExecutor(
-            new ThreadFactoryBuilder().setNameFormat("wynntils-utilities-%d").build());
+    private static final ScheduledExecutorService EXECUTOR_SERVICE =
+            Executors.newSingleThreadScheduledExecutor(daemonThreadFactory("wynntils-utilities-%d"));
+
+    public static ThreadFactory daemonThreadFactory(String nameFormat) {
+        return new ThreadFactoryBuilder()
+                .setNameFormat(nameFormat)
+                .setDaemon(true)
+                .build();
+    }
 
     public static Future<?> runAsync(Runnable r) {
         return EXECUTOR_SERVICE.submit(r);

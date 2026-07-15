@@ -39,6 +39,7 @@ import com.wynntils.services.hades.event.HadesEvent;
 import com.wynntils.services.hades.type.GearShareOptions;
 import com.wynntils.services.hades.type.PlayerStatus;
 import com.wynntils.utils.EncodedByteBuffer;
+import com.wynntils.utils.TaskUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.ErrorOr;
@@ -152,7 +153,8 @@ public final class HadesService extends Service {
 
         WynntilsMod.info("Starting Hades Ping Scheduler Task");
 
-        pingScheduler = Executors.newSingleThreadScheduledExecutor();
+        pingScheduler =
+                Executors.newSingleThreadScheduledExecutor(TaskUtils.daemonThreadFactory("Wynntils-hades-ping-%d"));
         pingScheduler.scheduleAtFixedRate(this::sendPing, 0, MS_PER_PING, TimeUnit.MILLISECONDS);
     }
 

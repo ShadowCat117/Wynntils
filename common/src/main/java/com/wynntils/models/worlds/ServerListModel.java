@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.worlds;
@@ -16,6 +16,7 @@ import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.profile.ServerProfile;
 import com.wynntils.models.worlds.type.ServerRegion;
 import com.wynntils.models.worlds.type.WorldState;
+import com.wynntils.utils.TaskUtils;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -32,7 +33,8 @@ public final class ServerListModel extends Model {
 
     private static final List<String> SERVER_TYPES = List.of("lobby", "GM", "DEV", "WAR", "HB", "YT");
 
-    private final ScheduledExecutorService timerExecutor = new ScheduledThreadPoolExecutor(1);
+    private final ScheduledExecutorService timerExecutor =
+            new ScheduledThreadPoolExecutor(1, TaskUtils.daemonThreadFactory("Wynntils-server-list-%d"));
 
     private Map<String, ServerProfile> availableServers = new HashMap<>();
 

@@ -11,6 +11,7 @@ import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.changelog.ChangelogScreen;
 import com.wynntils.services.athena.type.UpdateResult;
+import com.wynntils.utils.TaskUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
@@ -280,7 +281,7 @@ public final class UpdateScreen extends WynntilsScreen {
         Services.Update.tryUpdate().thenAccept(result -> {
             if (result == UpdateResult.SUCCESSFUL) {
                 completionFinish = System.currentTimeMillis() + 3000L;
-                Executors.newSingleThreadScheduledExecutor()
+                Executors.newSingleThreadScheduledExecutor(TaskUtils.daemonThreadFactory("Wynntils-update-screen-%d"))
                         .schedule(
                                 () -> {
                                     // This has to be done on the main thread

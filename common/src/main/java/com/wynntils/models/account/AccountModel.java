@@ -23,6 +23,7 @@ import com.wynntils.models.players.type.PlayerRank;
 import com.wynntils.models.players.type.wynnplayer.WynnPlayerInfo;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
+import com.wynntils.utils.TaskUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.OptionalBoolean;
@@ -69,7 +70,8 @@ public final class AccountModel extends Model {
 
     private static final int PLAYER_INFO_UPDATE_MS = 60000;
     private ScheduledFuture<?> scheduledFuture;
-    private final ScheduledExecutorService timerExecutor = new ScheduledThreadPoolExecutor(1);
+    private final ScheduledExecutorService timerExecutor =
+            new ScheduledThreadPoolExecutor(1, TaskUtils.daemonThreadFactory("Wynntils-account-%d"));
     private WynnPlayerInfo playerInfo;
     private boolean scanRankInfoPending;
     private boolean scanRankInfoAlreadyScanned;
