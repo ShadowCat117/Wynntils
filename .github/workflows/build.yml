@@ -42,20 +42,8 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v6
 
-      - name: Format with spotless
-        run: ./gradlew spotlessApply
-
-      - name: Delete empty files
-        run: find $(git ls-files -m) -size 0 -delete
-
-      - name: Run remove_unused_i18n.sh
-        run: bash utils/remove_unused_i18n.sh
-
-      - uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_user_name: 'WynntilsBot'
-          commit_user_email: 'admin@wynntils.com'
-          commit_message: 'ci: spotless formatting'
+      - name: Check formatting with Spotless
+        run: ./gradlew spotlessCheck
 
       - name: Build with Gradle
         run: ./gradlew buildDependents -x spotlessCheck -x test
