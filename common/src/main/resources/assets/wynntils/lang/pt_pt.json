@@ -2361,7 +2361,6 @@
   "screens.wynntils.wynntilsActivities.reload.name": "Botão de Recarregar",
   "screens.wynntils.wynntilsCaveBook.name": "Livro de Cavernas de Wynntils",
   "screens.wynntils.wynntilsCaves.description": "Veja e classifique todas as cavernas em um só lugar.",
-  "screens.wynntils.wynntilsCaves.name": "Cavernas",
   "screens.wynntils.wynntilsCaves.screenDescription": "Aqui você pode ver todas as cavernas.",
   "screens.wynntils.wynntilsCaves.tryReload": "Nenhuma caverna encontrada! Tente recarregar as cavernas pressionando o botão no canto superior direito.",
   "screens.wynntils.wynntilsContentBook.sort.alphabetic.description": "As missões estão ordenadas alfabeticamente",

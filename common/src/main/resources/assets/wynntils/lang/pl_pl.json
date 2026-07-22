@@ -2361,7 +2361,6 @@
   "screens.wynntils.wynntilsActivities.reload.name": "Przycisk Przeładuj",
   "screens.wynntils.wynntilsCaveBook.name": "Księga Jaskiń Wynntils",
   "screens.wynntils.wynntilsCaves.description": "Zobacz i posortuj wszystkie jaskinie w jednym miejscu.",
-  "screens.wynntils.wynntilsCaves.name": "Jaskinie",
   "screens.wynntils.wynntilsCaves.screenDescription": "Tutaj możesz zobaczyć wszystkie jaskinie.",
   "screens.wynntils.wynntilsCaves.tryReload": "Nie znaleziono jaskiń! Spróbuj przeładować jaskinie, naciskając przycisk w prawym górnym rogu.",
   "screens.wynntils.wynntilsContentBook.sort.alphabetic.description": "Zadania są posortowane alfabetycznie",

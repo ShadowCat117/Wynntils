@@ -2361,7 +2361,6 @@
   "screens.wynntils.wynntilsActivities.reload.name": "重新加载按钮",
   "screens.wynntils.wynntilsCaveBook.name": "Wynntils 洞穴书",
   "screens.wynntils.wynntilsCaves.description": "在一个地方查看和排序所有洞穴。",
-  "screens.wynntils.wynntilsCaves.name": "洞穴",
   "screens.wynntils.wynntilsCaves.screenDescription": "在这里，您可以看到所有的洞穴。",
   "screens.wynntils.wynntilsCaves.tryReload": "未找到洞穴！尝试按右上角的按钮重新加载洞穴。",
   "screens.wynntils.wynntilsContentBook.sort.alphabetic.description": "任务按字母顺序排序",

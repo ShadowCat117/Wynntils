@@ -2361,7 +2361,6 @@
   "screens.wynntils.wynntilsActivities.reload.name": "Botón de Recarga",
   "screens.wynntils.wynntilsCaveBook.name": "Libro de Cuevas de Wynntils",
   "screens.wynntils.wynntilsCaves.description": "Ve y ordena todas las cuevas en un solo lugar.",
-  "screens.wynntils.wynntilsCaves.name": "Cuevas",
   "screens.wynntils.wynntilsCaves.screenDescription": "Aquí puedes ver todas las cuevas.",
   "screens.wynntils.wynntilsCaves.tryReload": "¡No se encontraron cuevas! Intenta recargar las cuevas presionando el botón en la esquina superior derecha.",
   "screens.wynntils.wynntilsContentBook.sort.alphabetic.description": "Las misiones están ordenadas alfabéticamente",

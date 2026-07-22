@@ -2361,7 +2361,6 @@
   "screens.wynntils.wynntilsActivities.reload.name": "Pulsante di Ricarica",
   "screens.wynntils.wynntilsCaveBook.name": "Libro delle Grotte di Wynntils",
   "screens.wynntils.wynntilsCaves.description": "Vedi e ordina tutte le grotte in un unico posto.",
-  "screens.wynntils.wynntilsCaves.name": "Grotte",
   "screens.wynntils.wynntilsCaves.screenDescription": "Qui puoi vedere tutte le grotte.",
   "screens.wynntils.wynntilsCaves.tryReload": "Nessuna grotta trovata! Prova a ricaricare le grotte premendo il pulsante in alto a destra.",
   "screens.wynntils.wynntilsContentBook.sort.alphabetic.description": "Le missioni sono ordinate alfabeticamente",

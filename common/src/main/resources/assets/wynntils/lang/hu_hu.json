@@ -2361,7 +2361,6 @@
   "screens.wynntils.wynntilsActivities.reload.name": "Újratöltés Gomb",
   "screens.wynntils.wynntilsCaveBook.name": "Wynntils Barlang Könyv",
   "screens.wynntils.wynntilsCaves.description": "Nézze meg és rendezze az összes barlangot egy helyen.",
-  "screens.wynntils.wynntilsCaves.name": "Barlangok",
   "screens.wynntils.wynntilsCaves.screenDescription": "Itt láthatja az összes barlangot.",
   "screens.wynntils.wynntilsCaves.tryReload": "Nincs barlang találat! Próbálja meg újratölteni a barlangokat a jobb felső sarokban található gomb megnyomásával.",
   "screens.wynntils.wynntilsContentBook.sort.alphabetic.description": "A küldetések ábécé sorrendben vannak rendezve",

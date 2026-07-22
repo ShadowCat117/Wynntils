@@ -2361,7 +2361,6 @@
   "screens.wynntils.wynntilsActivities.reload.name": "Herlaad Knop",
   "screens.wynntils.wynntilsCaveBook.name": "Wynntils Grot Boek",
   "screens.wynntils.wynntilsCaves.description": "Bekijk en sorteer alle grotten op één plek.",
-  "screens.wynntils.wynntilsCaves.name": "Grotten",
   "screens.wynntils.wynntilsCaves.screenDescription": "Hier kun je alle grotten zien.",
   "screens.wynntils.wynntilsCaves.tryReload": "Geen grotten gevonden! Probeer de grotten opnieuw te laden door op de knop in de rechterbovenhoek te drukken.",
   "screens.wynntils.wynntilsContentBook.sort.alphabetic.description": "Quests zijn alfabetisch gesorteerd",

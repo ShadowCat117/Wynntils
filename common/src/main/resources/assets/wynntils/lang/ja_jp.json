@@ -2361,7 +2361,6 @@
   "screens.wynntils.wynntilsActivities.reload.name": "リロードボタン",
   "screens.wynntils.wynntilsCaveBook.name": "Wynntils 洞窟の本",
   "screens.wynntils.wynntilsCaves.description": "すべての洞窟を一か所で確認して並べ替えます。",
-  "screens.wynntils.wynntilsCaves.name": "洞窟",
   "screens.wynntils.wynntilsCaves.screenDescription": "ここでは、すべての洞窟を見ることができます。",
   "screens.wynntils.wynntilsCaves.tryReload": "洞窟が見つかりません！右上のボタンを押して洞窟をリロードしてみてください。",
   "screens.wynntils.wynntilsContentBook.sort.alphabetic.description": "クエストはアルファベット順に並べ替えられています",

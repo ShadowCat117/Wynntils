@@ -2391,7 +2391,6 @@
   "screens.wynntils.wynntilsActivities.reload.name": "Ladda om-knapp",
   "screens.wynntils.wynntilsCaveBook.name": "Wynntils Grottbok",
   "screens.wynntils.wynntilsCaves.description": "Se och sortera alla grottor på ett ställe.",
-  "screens.wynntils.wynntilsCaves.name": "Grottor",
   "screens.wynntils.wynntilsCaves.screenDescription": "Här kan du se alla grottor.",
   "screens.wynntils.wynntilsCaves.tryReload": "Inga grottor hittades! Försök ladda om grottor genom att trycka på knappen i det övre högra hörnet.",
   "screens.wynntils.wynntilsContentBook.sort.alphabetic.description": "Uppdrag sorteras alfabetiskt",
