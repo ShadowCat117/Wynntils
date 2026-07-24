@@ -5,34 +5,53 @@
 package com.wynntils.screens.guides.widgets.filters;
 
 import com.wynntils.core.components.Services;
-import com.wynntils.screens.guides.WynntilsGuideScreen;
+import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.fonts.CommonFonts;
+import com.wynntils.screens.guides.widgets.GuideContainerWidget;
 import com.wynntils.services.itemfilter.filters.RangedStatFilters;
 import com.wynntils.services.itemfilter.statproviders.QualityTierStatProvider;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.services.itemfilter.type.StatProviderAndFilterPair;
+import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.TextShadow;
+import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 
 public class QualityTierFilterWidget extends GuideFilterWidget {
     private final List<QualityTierButton> qualityTierButtons = new ArrayList<>();
     private QualityTierStatProvider provider;
 
-    public QualityTierFilterWidget(int x, int y, WynntilsGuideScreen guideScreen, ItemSearchQuery searchQuery) {
-        super(x, y, 76, 16, guideScreen);
+    public QualityTierFilterWidget(GuideContainerWidget<?> containerWidget, ItemSearchQuery searchQuery) {
+        super(50, containerWidget);
 
-        qualityTierButtons.add(new QualityTierButton(x, y, 0, Texture.TIER_0_FILTER_ICON, searchQuery));
-        qualityTierButtons.add(new QualityTierButton(x + 20, y, 1, Texture.TIER_1_FILTER_ICON, searchQuery));
-        qualityTierButtons.add(new QualityTierButton(x + 40, y, 2, Texture.TIER_2_FILTER_ICON, searchQuery));
-        qualityTierButtons.add(new QualityTierButton(x + 60, y, 3, Texture.TIER_3_FILTER_ICON, searchQuery));
+        getProvider();
+        rebuildWidgets(searchQuery);
     }
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        FontRenderer.getInstance()
+                .renderText(
+                        guiGraphics,
+                        StyledText.fromComponent(Component.literal("Quality Tier")
+                                .withStyle(Style.EMPTY.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT))),
+                        getX(),
+                        getY(),
+                        CommonColors.WHITE,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
+                        TextShadow.NORMAL);
+
         qualityTierButtons.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
     }
 
@@ -47,9 +66,39 @@ public class QualityTierFilterWidget extends GuideFilterWidget {
             }
         }
 
-        guideScreen.updateSearchFromQuickFilters();
+        containerWidget.updateSearchFromQuickFilters();
 
         return clicked;
+    }
+
+    @Override
+    protected void rebuildWidgets(ItemSearchQuery searchQuery) {
+        qualityTierButtons.clear();
+
+        qualityTierButtons.add(new QualityTierButton(0, Texture.TIER_0_FILTER_ICON, searchQuery));
+        qualityTierButtons.add(new QualityTierButton(1, Texture.TIER_1_FILTER_ICON, searchQuery));
+        qualityTierButtons.add(new QualityTierButton(2, Texture.TIER_2_FILTER_ICON, searchQuery));
+        qualityTierButtons.add(new QualityTierButton(3, Texture.TIER_3_FILTER_ICON, searchQuery));
+
+        updateWidgetPositions();
+    }
+
+    @Override
+    protected void updateWidgetPositions() {
+        if (qualityTierButtons == null) return;
+
+        int renderX = getX();
+        int renderY = getY() + 10;
+        for (int i = 0; i < qualityTierButtons.size(); i++) {
+            qualityTierButtons.get(i).setPosition(renderX, renderY);
+
+            if (i % 2 == 0) {
+                renderX = getX() + 65;
+            } else {
+                renderX = getX();
+                renderY += 20;
+            }
+        }
     }
 
     @Override
@@ -77,17 +126,46 @@ public class QualityTierFilterWidget extends GuideFilterWidget {
     }
 
     public void updateFromQuery(ItemSearchQuery searchQuery) {
-        qualityTierButtons.forEach(classTypeButton -> classTypeButton.updateStateFromQuery(searchQuery));
+        qualityTierButtons.forEach(qualityTierButton -> qualityTierButton.updateStateFromQuery(searchQuery));
     }
 
     private static class QualityTierButton extends GuideFilterButton<QualityTierStatProvider> {
         private final int tier;
 
-        protected QualityTierButton(int x, int y, int tier, Texture texture, ItemSearchQuery searchQuery) {
-            super(x, y, texture);
+        protected QualityTierButton(int tier, Texture texture, ItemSearchQuery searchQuery) {
+            super(0, 0, 64, 16, texture);
 
             this.tier = tier;
             updateStateFromQuery(searchQuery);
+        }
+
+        @Override
+        protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+            RenderUtils.drawTexturedRect(guiGraphics, texture, getX(), getY());
+
+            FontRenderer.getInstance()
+                    .renderText(
+                            guiGraphics,
+                            StyledText.fromComponent(Component.literal("Tier " + tier)
+                                    .withStyle(Style.EMPTY.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT))),
+                            getX() + 18,
+                            getY() + 8,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.LEFT,
+                            VerticalAlignment.MIDDLE,
+                            TextShadow.NORMAL);
+
+            if (!isHovered && !state) return;
+
+            RenderUtils.drawRect(
+                    guiGraphics,
+                    (state && !isHovered ? CommonColors.ORANGE : CommonColors.WHITE).withAlpha(isHovered ? 0.7f : 0.5f),
+                    getX(),
+                    getY(),
+                    state && !isHovered ? 16 : getWidth(),
+                    16);
+
+            handleCursor(guiGraphics);
         }
 
         @Override
@@ -108,11 +186,6 @@ public class QualityTierFilterWidget extends GuideFilterWidget {
             return statFilterOpt
                     .map(stringStatFilter -> new StatProviderAndFilterPair(provider, stringStatFilter))
                     .orElse(null);
-        }
-
-        @Override
-        protected String getFilterName() {
-            return I18n.get("service.wynntils.itemFilter.stat.qualityTier.name") + " " + tier;
         }
     }
 }

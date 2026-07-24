@@ -12,7 +12,7 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.mc.event.CommandSentEvent;
-import com.wynntils.mc.event.CommandSuggestionFillEvent;
+import com.wynntils.mc.event.CommandSuggestionEvent;
 import java.util.List;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -70,7 +70,7 @@ public class CommandAliasesFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onCommandSuggestions(CommandSuggestionFillEvent.Modify event) {
+    public void onCommandSuggestions(CommandSuggestionEvent.Modify event) {
         String input = event.getInput();
 
         if (!event.getInput().contains(" ")) {

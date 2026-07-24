@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.itemfilter;
@@ -22,6 +22,8 @@ import com.wynntils.services.itemfilter.filters.PercentageStatFilter;
 import com.wynntils.services.itemfilter.filters.RangedStatFilters;
 import com.wynntils.services.itemfilter.filters.StringStatFilter;
 import com.wynntils.services.itemfilter.statproviders.ActualStatProvider;
+import com.wynntils.services.itemfilter.statproviders.AttackSpeedStatProvider;
+import com.wynntils.services.itemfilter.statproviders.AverageDpsStatProvider;
 import com.wynntils.services.itemfilter.statproviders.ChargesModifierStatProvider;
 import com.wynntils.services.itemfilter.statproviders.ClassStatProvider;
 import com.wynntils.services.itemfilter.statproviders.CountedItemStatProvider;
@@ -516,6 +518,8 @@ public class ItemFilterService extends Service {
         registerStatProvider(new GearRestrictionStatProvider());
         registerStatProvider(new MajorIdStatProvider());
         registerStatProvider(new PowderSlotsStatProvider());
+        registerStatProvider(new AttackSpeedStatProvider());
+        registerStatProvider(new AverageDpsStatProvider());
         registerStatProvider(new HealthStatProvider());
         registerStatProvider(new TargetStatProvider());
         registerStatProvider(new TomeTypeStatProvider());

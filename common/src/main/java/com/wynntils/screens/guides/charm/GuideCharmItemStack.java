@@ -44,8 +44,6 @@ public class GuideCharmItemStack extends GuideItemStack {
         List<Component> tooltipLines = new ArrayList<>(generatedTooltip);
 
         appendObtainInfo(tooltipLines, charmInfo.metaInfo().obtainInfo());
-        appendFavoriteInfo(tooltipLines);
-        appendWebGuideInfo(tooltipLines);
 
         return tooltipLines;
     }

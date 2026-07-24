@@ -43,6 +43,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
@@ -228,6 +229,10 @@ public final class ProfessionModel extends Model {
         return gatheringToolInfo;
     }
 
+    public Stream<GatheringToolInfo> getAllGatheringToolInfos() {
+        return gatheringToolInfoRegistry.getGatheringToolInfoStream();
+    }
+
     public MaterialInfo getMaterialInfoFromName(String name) {
         MaterialInfo materialInfo = materialInfoRegistry.getFromDisplayName(name);
 
@@ -237,6 +242,10 @@ public final class ProfessionModel extends Model {
         }
 
         return materialInfo;
+    }
+
+    public Stream<MaterialInfo> getAllMaterialInfos() {
+        return materialInfoRegistry.getMaterialInfoStream();
     }
 
     public Optional<MaterialInfo> findMaterialInfoFromSourceAndResource(
@@ -321,5 +330,17 @@ public final class ProfessionModel extends Model {
 
     public Set<ProfessionGatheringNodeLabelInfo> getNodesSet() {
         return Collections.unmodifiableSet(nodesSet);
+    }
+
+    public List<ProfessionType> getIngredientProfessionOrder() {
+        return List.of(
+                ProfessionType.WEAPONSMITHING,
+                ProfessionType.WOODWORKING,
+                ProfessionType.ARMOURING,
+                ProfessionType.TAILORING,
+                ProfessionType.ALCHEMISM,
+                ProfessionType.JEWELING,
+                ProfessionType.SCRIBING,
+                ProfessionType.COOKING);
     }
 }

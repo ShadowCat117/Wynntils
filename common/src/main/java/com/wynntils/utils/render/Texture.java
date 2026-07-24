@@ -76,13 +76,9 @@ public enum Texture {
     TAG_SEARCH("content_book/tag_search.png", 140, 30),
     // endregion
 
-    // region Emote Wheel
-    EMOTE_CONFIG_GUI("emote_wheel/config_gui.png", 149, 215),
-    EMOTE_CONFIG_BUTTON("emote_wheel/config_button.png", 58, 58),
-    EMOTE_WHEEL_STYLE_TOOLTIP("emote_wheel/tooltip.png", 64, 64),
-    EMOTE_WHEEL_STYLE_TOOLTIP_HOVERED("emote_wheel/tooltip_hovered.png", 64, 64),
-    EMOTE_WHEEL_STYLE_BUTTON("emote_wheel/button.png", 32, 32),
-    EMOTE_WHEEL_STYLE_BUTTON_HOVERED("emote_wheel/button_hovered.png", 32, 32),
+    // region Guide
+    GUIDE_BACKGROUND("guide/guide_background.png", 176, 78, 6, 13, 17, 0),
+    GUIDE_TITLE("guide/guide_title.png", 160, 32),
     // endregion
 
     // region Guild Log
@@ -472,12 +468,22 @@ public enum Texture {
     private final Identifier atlas;
     private final int width;
     private final int height;
+    private final boolean nineSliced;
+    private final int left;
+    private final int right;
+    private final int top;
+    private final int bottom;
 
     Texture(String name, int width, int height) {
         this.identifier = Identifier.fromNamespaceAndPath("wynntils", "textures/" + name);
         this.width = width;
         this.height = height;
         atlas = null;
+        this.nineSliced = false;
+        this.left = 0;
+        this.right = 0;
+        this.top = 0;
+        this.bottom = 0;
     }
 
     Texture(String atlas, String name, int width, int height) {
@@ -485,6 +491,23 @@ public enum Texture {
         this.atlas = Identifier.fromNamespaceAndPath("wynntils", atlas);
         this.width = width;
         this.height = height;
+        this.nineSliced = false;
+        this.left = 0;
+        this.right = 0;
+        this.top = 0;
+        this.bottom = 0;
+    }
+
+    Texture(String name, int width, int height, int left, int right, int top, int bottom) {
+        this.identifier = Identifier.fromNamespaceAndPath("wynntils", "textures/" + name);
+        this.width = width;
+        this.height = height;
+        atlas = null;
+        this.nineSliced = true;
+        this.left = left;
+        this.right = right;
+        this.top = top;
+        this.bottom = bottom;
     }
 
     public Identifier atlas() {
@@ -501,5 +524,25 @@ public enum Texture {
 
     public int height() {
         return height;
+    }
+
+    public boolean isNineSliced() {
+        return nineSliced;
+    }
+
+    public int left() {
+        return left;
+    }
+
+    public int right() {
+        return right;
+    }
+
+    public int top() {
+        return top;
+    }
+
+    public int bottom() {
+        return bottom;
     }
 }

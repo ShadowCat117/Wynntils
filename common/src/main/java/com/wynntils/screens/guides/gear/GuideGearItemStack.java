@@ -44,9 +44,6 @@ public final class GuideGearItemStack extends GuideItemStack {
 
         appendObtainInfo(tooltipLines, Models.Gear.getObtainInfo(gearInfo));
 
-        appendFavoriteInfo(tooltipLines);
-        appendWebGuideInfo(tooltipLines);
-
         return tooltipLines;
     }
 

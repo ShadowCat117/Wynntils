@@ -11,6 +11,7 @@ import com.wynntils.models.items.items.game.PowderItem;
 import com.wynntils.screens.guides.GuideItemStack;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
+import com.wynntils.utils.mc.ComponentUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -59,8 +60,6 @@ public final class GuidePowderItemStack extends GuideItemStack {
         tooltip.add(getHoverName());
         tooltip.addAll(generatedTooltip);
 
-        appendFavoriteInfo(tooltip);
-
         return tooltip;
     }
 
@@ -82,7 +81,7 @@ public final class GuidePowderItemStack extends GuideItemStack {
         itemLore.add(Component.empty());
         itemLore.add(Component.literal("Effect on Weapons:").withStyle(element.getDarkColor()));
         itemLore.add(Component.empty()
-                .append(Component.literal(element.getDarkColor() + "— " + ChatFormatting.GRAY + "+"
+                .append(Component.literal(element.getDarkColor() + "- " + ChatFormatting.GRAY + "+"
                         + powderTierInfo.min() + "-" + powderTierInfo.max() + " " + element.getLightColor()))
                 .append(Component.literal(String.valueOf(element.getSymbol()))
                         .withStyle(Style.EMPTY
@@ -91,7 +90,7 @@ public final class GuidePowderItemStack extends GuideItemStack {
                 .append(Component.literal(
                         element.getLightColor() + " " + name + " " + ChatFormatting.GRAY + "Damage")));
         itemLore.add(Component.empty()
-                .append(Component.literal(element.getDarkColor() + "— " + ChatFormatting.GRAY + "+"
+                .append(Component.literal(element.getDarkColor() + "- " + ChatFormatting.GRAY + "+"
                         + powderTierInfo.convertedFromNeutral() + "% " + ChatFormatting.GOLD + "✣ Neutral"
                         + ChatFormatting.GRAY + " to " + element.getLightColor()))
                 .append(Component.literal(String.valueOf(element.getSymbol()))
@@ -101,10 +100,10 @@ public final class GuidePowderItemStack extends GuideItemStack {
                 .append(Component.literal(element.getLightColor() + " " + name)));
         itemLore.add(Component.empty());
         itemLore.add(Component.literal("Effect on Armour:").withStyle(element.getDarkColor()));
-        itemLore.add(
-                Component.literal("- +" + powderTierInfo.health() + " Health").withStyle(ChatFormatting.GRAY));
+        itemLore.add(Component.literal(
+                element.getDarkColor() + "- " + ChatFormatting.GRAY + "+" + powderTierInfo.health() + " Health"));
         itemLore.add(Component.empty()
-                .append(Component.literal(element.getDarkColor() + "— " + ChatFormatting.GRAY + "+"
+                .append(Component.literal(element.getDarkColor() + "- " + ChatFormatting.GRAY + "+"
                         + powderTierInfo.addedDefence() + " " + element.getLightColor()))
                 .append(Component.literal(String.valueOf(element.getSymbol()))
                         .withStyle(Style.EMPTY
@@ -113,7 +112,7 @@ public final class GuidePowderItemStack extends GuideItemStack {
                 .append(Component.literal(
                         element.getLightColor() + " " + name + " " + ChatFormatting.GRAY + "Defence")));
         itemLore.add(Component.empty()
-                .append(Component.literal(element.getDarkColor() + "— " + ChatFormatting.GRAY + "-"
+                .append(Component.literal(element.getDarkColor() + "- " + ChatFormatting.GRAY + "-"
                         + powderTierInfo.removedDefence() + " " + opposingElement.getLightColor()))
                 .append(Component.literal(String.valueOf(opposingElement.getSymbol()))
                         .withStyle(Style.EMPTY
@@ -122,19 +121,20 @@ public final class GuidePowderItemStack extends GuideItemStack {
                 .append(Component.literal(opposingElement.getLightColor() + " "
                         + StringUtils.capitalizeFirst(opposingElement.name().toLowerCase(Locale.ROOT)) + " "
                         + ChatFormatting.GRAY + "Defence")));
+        itemLore.add(
+                Component.literal(element.getDarkColor() + "Ingredient Effectiveness: " + ChatFormatting.GRAY + "50%"));
         itemLore.add(Component.empty());
         itemLore.add(Component.literal(
-                        "Add this powder to your items by holding the item in your cursor and right-clicking a piece of equipment with an available Powder Socket or use it as an ingredient when crafting.")
+                        "Hold this and right-click on a piece of equipment to socket it or use it as an ingredient when crafting. Powders are refunded when removed.")
                 .withStyle(ChatFormatting.DARK_GRAY));
 
         if (tier > 3) {
             itemLore.add(Component.empty());
-            itemLore.add(Component.literal(
-                            "Adding 2 powders of tier 4-6 at the powder master will unlock a special attack/effect.")
+            itemLore.add(Component.literal("Adding 2 powders of Tier 4 or higher will unlock a special attack/effect")
                     .withStyle(ChatFormatting.DARK_GRAY));
         }
 
-        return itemLore;
+        return ComponentUtils.wrapTooltips(itemLore, 200);
     }
 
     private static ItemStack getItemStack(PowderTierInfo profile) {

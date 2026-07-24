@@ -52,8 +52,7 @@ public abstract class GeneralSettingsButton extends WynntilsButton {
                 this.height,
                 1,
                 3,
-                4);
-        // outerRadius should usually be innerRadius + lineWidth
+                3);
 
         FontRenderer.getInstance()
                 .renderScrollingAlignedTextInBox(

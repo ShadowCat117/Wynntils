@@ -4,19 +4,24 @@
  */
 package com.wynntils.screens.guides.widgets.filters;
 
-import com.google.common.collect.Lists;
 import com.wynntils.core.components.Services;
+import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.fonts.CommonFonts;
 import com.wynntils.models.profession.type.ProfessionType;
-import com.wynntils.screens.guides.WynntilsGuideScreen;
+import com.wynntils.screens.guides.widgets.GuideContainerWidget;
 import com.wynntils.services.itemfilter.filters.BooleanStatFilter;
 import com.wynntils.services.itemfilter.statproviders.ProfessionStatProvider;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.services.itemfilter.type.StatProviderAndFilterPair;
+import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.mc.ComponentUtils;
+import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.TextShadow;
+import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.OptionalBoolean;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,35 +31,34 @@ import java.util.Optional;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import org.lwjgl.glfw.GLFW;
 
 public class ProfessionTypeFilterWidget extends GuideFilterWidget {
     private final List<ProfessionTypeButton> professionTypeButtons = new ArrayList<>();
     private Map<ProfessionType, ProfessionStatProvider> professionProviderMap;
 
-    public ProfessionTypeFilterWidget(int x, int y, WynntilsGuideScreen guideScreen, ItemSearchQuery searchQuery) {
-        super(x, y, 76, 36, guideScreen);
+    public ProfessionTypeFilterWidget(GuideContainerWidget<?> containerWidget, ItemSearchQuery searchQuery) {
+        super(90, containerWidget);
 
-        professionTypeButtons.add(
-                new ProfessionTypeButton(x, y, ProfessionType.ALCHEMISM, Texture.ALCHEMISM_FILTER_ICON, searchQuery));
-        professionTypeButtons.add(new ProfessionTypeButton(
-                x + 20, y, ProfessionType.ARMOURING, Texture.ARMOURING_FILTER_ICON, searchQuery));
-        professionTypeButtons.add(
-                new ProfessionTypeButton(x + 40, y, ProfessionType.COOKING, Texture.COOKING_FILTER_ICON, searchQuery));
-        professionTypeButtons.add(new ProfessionTypeButton(
-                x + 60, y, ProfessionType.JEWELING, Texture.JEWELING_FILTER_ICON, searchQuery));
-        professionTypeButtons.add(new ProfessionTypeButton(
-                x, y + 20, ProfessionType.SCRIBING, Texture.SCRIBING_FILTER_ICON, searchQuery));
-        professionTypeButtons.add(new ProfessionTypeButton(
-                x + 20, y + 20, ProfessionType.TAILORING, Texture.TAILORING_FILTER_ICON, searchQuery));
-        professionTypeButtons.add(new ProfessionTypeButton(
-                x + 40, y + 20, ProfessionType.WEAPONSMITHING, Texture.WEAPONSMITHING_FILTER_ICON, searchQuery));
-        professionTypeButtons.add(new ProfessionTypeButton(
-                x + 60, y + 20, ProfessionType.WOODWORKING, Texture.WOODWORKING_FILTER_ICON, searchQuery));
+        getProvider();
+        rebuildWidgets(searchQuery);
     }
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        FontRenderer.getInstance()
+                .renderText(
+                        guiGraphics,
+                        StyledText.fromComponent(Component.literal("Profession Type")
+                                .withStyle(Style.EMPTY.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT))),
+                        getX(),
+                        getY(),
+                        CommonColors.WHITE,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
+                        TextShadow.NORMAL);
+
         professionTypeButtons.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
     }
 
@@ -69,9 +73,50 @@ public class ProfessionTypeFilterWidget extends GuideFilterWidget {
             }
         }
 
-        guideScreen.updateSearchFromQuickFilters();
+        containerWidget.updateSearchFromQuickFilters();
 
         return clicked;
+    }
+
+    @Override
+    protected void rebuildWidgets(ItemSearchQuery searchQuery) {
+        professionTypeButtons.clear();
+
+        professionTypeButtons.add(
+                new ProfessionTypeButton(ProfessionType.ALCHEMISM, Texture.ALCHEMISM_FILTER_ICON, searchQuery));
+        professionTypeButtons.add(
+                new ProfessionTypeButton(ProfessionType.ARMOURING, Texture.ARMOURING_FILTER_ICON, searchQuery));
+        professionTypeButtons.add(
+                new ProfessionTypeButton(ProfessionType.COOKING, Texture.COOKING_FILTER_ICON, searchQuery));
+        professionTypeButtons.add(
+                new ProfessionTypeButton(ProfessionType.JEWELING, Texture.JEWELING_FILTER_ICON, searchQuery));
+        professionTypeButtons.add(
+                new ProfessionTypeButton(ProfessionType.SCRIBING, Texture.SCRIBING_FILTER_ICON, searchQuery));
+        professionTypeButtons.add(
+                new ProfessionTypeButton(ProfessionType.TAILORING, Texture.TAILORING_FILTER_ICON, searchQuery));
+        professionTypeButtons.add(new ProfessionTypeButton(
+                ProfessionType.WEAPONSMITHING, Texture.WEAPONSMITHING_FILTER_ICON, searchQuery));
+        professionTypeButtons.add(
+                new ProfessionTypeButton(ProfessionType.WOODWORKING, Texture.WOODWORKING_FILTER_ICON, searchQuery));
+        updateWidgetPositions();
+    }
+
+    @Override
+    protected void updateWidgetPositions() {
+        if (professionTypeButtons == null) return;
+
+        int renderX = getX();
+        int renderY = getY() + 10;
+        for (int i = 0; i < professionTypeButtons.size(); i++) {
+            professionTypeButtons.get(i).setPosition(renderX, renderY);
+
+            if (i % 2 == 0) {
+                renderX = getX() + 65;
+            } else {
+                renderX = getX();
+                renderY += 20;
+            }
+        }
     }
 
     @Override
@@ -103,17 +148,17 @@ public class ProfessionTypeFilterWidget extends GuideFilterWidget {
                 });
     }
 
+    @Override
     public void updateFromQuery(ItemSearchQuery searchQuery) {
-        professionTypeButtons.forEach(classTypeButton -> classTypeButton.updateStateFromQuery(searchQuery));
+        professionTypeButtons.forEach(professionTypeButton -> professionTypeButton.updateStateFromQuery(searchQuery));
     }
 
     private static class ProfessionTypeButton extends GuideFilterButton<ProfessionStatProvider> {
         private final ProfessionType professionType;
         private OptionalBoolean state;
 
-        protected ProfessionTypeButton(
-                int x, int y, ProfessionType professionType, Texture texture, ItemSearchQuery searchQuery) {
-            super(x, y, texture);
+        protected ProfessionTypeButton(ProfessionType professionType, Texture texture, ItemSearchQuery searchQuery) {
+            super(0, 0, 64, 16, texture);
 
             this.professionType = professionType;
             updateStateFromQuery(searchQuery);
@@ -123,7 +168,17 @@ public class ProfessionTypeFilterWidget extends GuideFilterWidget {
         protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
             RenderUtils.drawTexturedRect(guiGraphics, texture, getX(), getY());
 
-            handleCursor(guiGraphics);
+            FontRenderer.getInstance()
+                    .renderText(
+                            guiGraphics,
+                            StyledText.fromComponent(Component.literal(EnumUtils.toNiceString(professionType))
+                                    .withStyle(Style.EMPTY.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT))),
+                            getX() + 18,
+                            getY() + 8,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.LEFT,
+                            VerticalAlignment.MIDDLE,
+                            TextShadow.NORMAL);
 
             if (!isHovered && state == OptionalBoolean.NULL) return;
 
@@ -138,18 +193,7 @@ public class ProfessionTypeFilterWidget extends GuideFilterWidget {
             RenderUtils.drawRect(
                     guiGraphics, color.withAlpha(isHovered ? 0.7f : 0.5f), getX(), getY(), getWidth(), getHeight());
 
-            if (isHovered) {
-                guiGraphics.setTooltipForNextFrame(
-                        Lists.transform(
-                                ComponentUtils.wrapTooltips(
-                                        List.of(Component.translatable(
-                                                "screens.wynntils.wynntilsGuides.filterWidget.tooltip",
-                                                getFilterName())),
-                                        200),
-                                Component::getVisualOrderText),
-                        mouseX,
-                        mouseY);
-            }
+            handleCursor(guiGraphics);
         }
 
         @Override
@@ -197,11 +241,6 @@ public class ProfessionTypeFilterWidget extends GuideFilterWidget {
             return new StatProviderAndFilterPair(
                     provider,
                     new BooleanStatFilter.BooleanStatFilterFactory().fromBoolean(state == OptionalBoolean.TRUE));
-        }
-
-        @Override
-        protected String getFilterName() {
-            return professionType.getDisplayName();
         }
     }
 }

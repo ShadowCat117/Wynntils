@@ -43,8 +43,6 @@ public class GuideTomeItemStack extends GuideItemStack {
         List<Component> tooltipLines = new ArrayList<>(generatedTooltip);
 
         appendObtainInfo(tooltipLines, tomeInfo.metaInfo().obtainInfo());
-        appendFavoriteInfo(tooltipLines);
-        appendWebGuideInfo(tooltipLines);
 
         return tooltipLines;
     }
