@@ -13,6 +13,7 @@ import com.wynntils.mc.event.ServerResourcePackEvent;
 import com.wynntils.mc.event.SetCameraEntityEvent;
 import com.wynntils.mc.event.TickAlwaysEvent;
 import com.wynntils.mc.event.TickEvent;
+import com.wynntils.utils.TaskUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.InteractionHand;
@@ -85,5 +86,10 @@ public abstract class MinecraftMixin {
         MixinHelper.post(event);
 
         return !event.isCanceled();
+    }
+
+    @Inject(method = "close()V", at = @At("HEAD"))
+    private void closePre(CallbackInfo callbackInfo) {
+        TaskUtils.close();
     }
 }
