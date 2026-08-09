@@ -19,6 +19,7 @@ import com.wynntils.services.athena.type.ChangelogMap;
 import com.wynntils.services.athena.type.ModUpdateInfo;
 import com.wynntils.services.athena.type.UpdateResult;
 import com.wynntils.utils.FileUtils;
+import com.wynntils.utils.TaskUtils;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -30,7 +31,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executors;
 import net.minecraft.SharedConstants;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -153,7 +153,7 @@ public final class UpdateService extends Service {
                 }
             }
 
-            Executors.newSingleThreadExecutor().submit(() -> tryFetchNewUpdate(modUpdateInfo, future));
+            TaskUtils.runAsync(() -> tryFetchNewUpdate(modUpdateInfo, future));
         }
 
         return future;
