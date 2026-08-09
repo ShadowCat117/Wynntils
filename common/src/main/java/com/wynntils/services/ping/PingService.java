@@ -8,9 +8,9 @@ import com.wynntils.core.components.Service;
 import com.wynntils.mc.event.PongReceivedEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
+import com.wynntils.utils.TaskUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.util.List;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import net.minecraft.network.protocol.ping.ServerboundPingRequestPacket;
@@ -19,7 +19,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 public class PingService extends Service {
     private static final int MS_PER_PING = 1000;
-    private ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+    private ScheduledExecutorService executor = TaskUtils.createSingleThreadScheduledExecutor("Wynntils-ping-%d");
 
     private int lastPing = 0;
 
@@ -33,7 +33,7 @@ public class PingService extends Service {
             executor.scheduleAtFixedRate(this::sendPingPacket, 0, MS_PER_PING, TimeUnit.MILLISECONDS);
         } else {
             executor.shutdownNow();
-            executor = Executors.newSingleThreadScheduledExecutor();
+            executor = TaskUtils.createSingleThreadScheduledExecutor("Wynntils-ping-%d");
         }
     }
 
