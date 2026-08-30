@@ -157,15 +157,13 @@ public class ItemScreenshotFeature extends Feature {
     private static CompletableFuture<NativeImage> screenshotTooltip(
             Screen screen, List<ClientTooltipComponent> tooltip, Identifier tooltipStyle, int width, int height) {
         TextureTarget framebuffer =
-                new TextureTarget("Wynntils Item Screenshot", width * 2, height * 2, true, GpuFormat.RGBA8_UNORM);
+                new TextureTarget("Wynntils Item Screenshot", width * 2, height * 2, GpuFormat.RGBA8_UNORM, null);
         RenderSystem.getDevice()
                 .createCommandEncoder()
                 .clearColorAndDepthTextures(
                         framebuffer.getColorTexture(), new Vector4f(), framebuffer.getDepthTexture(), 1.0);
 
         ((GameRendererExtension) McUtils.mc().gameRenderer).setOverridenRenderTarget(framebuffer);
-        RenderSystem.outputColorTextureOverride = framebuffer.getColorTextureView();
-        RenderSystem.outputDepthTextureOverride = framebuffer.getDepthTextureView();
 
         Minecraft mc = McUtils.mc();
 
@@ -187,8 +185,6 @@ public class ItemScreenshotFeature extends Feature {
         guiRenderer.render();
         guiRenderer.close();
 
-        RenderSystem.outputColorTextureOverride = null;
-        RenderSystem.outputDepthTextureOverride = null;
         ((GameRendererExtension) McUtils.mc().gameRenderer).setOverridenRenderTarget(null);
         GpuTexture texture = cloneColorAttachment(framebuffer);
 
