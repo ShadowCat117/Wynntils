@@ -139,7 +139,7 @@ public final class TerritoryModel extends Model {
             if (advancement.display().isEmpty()) continue;
 
             DisplayInfo displayInfo = advancement.display().get();
-            String territoryName = StyledText.fromComponent(displayInfo.getTitle())
+            String territoryName = StyledText.fromComponent(displayInfo.title())
                     .replaceAll("\\[", "")
                     .replaceAll("\\]", "")
                     .trim()
@@ -152,10 +152,10 @@ public final class TerritoryModel extends Model {
             if (territoryName.isEmpty()) continue;
 
             // headquarters frame is challenge
-            boolean headquarters = displayInfo.getType() == AdvancementType.CHALLENGE;
+            boolean headquarters = displayInfo.type() == AdvancementType.CHALLENGE;
 
             // description is a raw string with \n, so we have to split
-            StyledText description = StyledText.fromComponent(displayInfo.getDescription());
+            StyledText description = StyledText.fromComponent(displayInfo.description());
             StyledText[] colored = description.split("\n");
             String[] raw = description.getStringWithoutFormatting().split("\n");
 
