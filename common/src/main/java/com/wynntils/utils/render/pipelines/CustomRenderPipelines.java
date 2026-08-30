@@ -17,7 +17,8 @@ import net.minecraft.client.renderer.RenderPipelines;
 public class CustomRenderPipelines extends RenderPipelines {
     private static final RenderPipeline.Snippet POSITION_COLOR_QUAD_SNIPPET = RenderPipeline.builder(
                     RenderPipelines.GLOBALS_SNIPPET)
-            .withBindGroupLayout(BindGroupLayouts.MATRICES_PROJECTION)
+            .withBindGroupLayout(BindGroupLayouts.PROJECTION)
+            .withBindGroupLayout(BindGroupLayouts.DYNAMIC_TRANSFORMS)
             .withVertexShader("core/position_color")
             .withFragmentShader("core/position_color")
             .withColorTargetState(new ColorTargetState(CustomBlendFunction.SEMI_TRANSPARENT_BLEND_FUNCTION))
@@ -28,7 +29,8 @@ public class CustomRenderPipelines extends RenderPipelines {
 
     public static final RenderPipeline LOOTRUN_QUAD_PIPELINE =
             register(RenderPipeline.builder(RenderPipelines.GLOBALS_SNIPPET)
-                    .withBindGroupLayout(BindGroupLayouts.MATRICES_PROJECTION)
+                    .withBindGroupLayout(BindGroupLayouts.PROJECTION)
+                    .withBindGroupLayout(BindGroupLayouts.DYNAMIC_TRANSFORMS)
                     .withLocation("pipeline/wynntils_lootrun_quad")
                     .withVertexShader("core/position_tex_color")
                     .withFragmentShader("core/position_tex_color")
@@ -48,7 +50,8 @@ public class CustomRenderPipelines extends RenderPipelines {
 
     public static final RenderPipeline PROGRESS_BAR_PIPELINE =
             register(RenderPipeline.builder(RenderPipelines.GLOBALS_SNIPPET)
-                    .withBindGroupLayout(BindGroupLayouts.MATRICES_PROJECTION)
+                    .withBindGroupLayout(BindGroupLayouts.PROJECTION)
+                    .withBindGroupLayout(BindGroupLayouts.DYNAMIC_TRANSFORMS)
                     .withLocation("pipeline/wynntils_progress_bar")
                     .withVertexShader("core/position_tex_color")
                     .withFragmentShader("core/position_tex_color")
