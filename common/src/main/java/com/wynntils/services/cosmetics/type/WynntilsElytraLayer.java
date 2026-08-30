@@ -12,6 +12,7 @@ import com.wynntils.features.embellishments.WynntilsCosmeticsFeature;
 import com.wynntils.mc.event.RenderTranslucentCheckEvent;
 import com.wynntils.mc.extension.EntityRenderStateExtension;
 import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.render.pipelines.CustomRenderTypes;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.model.object.equipment.ElytraModel;
 import net.minecraft.client.model.player.PlayerModel;
@@ -62,7 +63,7 @@ public final class WynntilsElytraLayer extends WynntilsLayer {
 
         RenderType renderType = translucentCheckEvent.getTranslucence() == 1.0f
                 ? RenderTypes.armorCutoutNoCull(texture)
-                : RenderTypes.armorTranslucent(texture);
+                : CustomRenderTypes.armorTranslucent(texture);
 
         nodeCollector.submitModel(
                 elytraModel,
@@ -75,8 +76,7 @@ public final class WynntilsElytraLayer extends WynntilsLayer {
                         .withAlpha(translucentCheckEvent.getTranslucence())
                         .asInt(),
                 null,
-                renderState.outlineColor,
-                null);
+                renderState.outlineColor);
 
         poseStack.popPose();
     }

@@ -59,4 +59,13 @@ public class CustomRenderPipelines extends RenderPipelines {
                     .withDepthStencilState(new DepthStencilState(CompareOp.ALWAYS_PASS, false))
                     .withCull(false)
                     .build());
+
+    public static final RenderPipeline ARMOR_TRANSLUCENT = register(RenderPipeline.builder(ENTITY_SNIPPET)
+            .withLocation("pipeline/armor_translucent")
+            .withShaderDefine("ALPHA_CUTOUT", 0.1F)
+            .withShaderDefine("NO_OVERLAY")
+            .withShaderDefine("PER_FACE_LIGHTING")
+            .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
+            .withCull(false)
+            .build());
 }
