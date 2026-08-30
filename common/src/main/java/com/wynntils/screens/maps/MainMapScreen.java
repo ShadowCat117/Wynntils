@@ -42,7 +42,8 @@ import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLMouse;
+import org.lwjgl.sdl.SDLScancode;
 
 public final class MainMapScreen extends AbstractMapScreen {
     private MarkerInfo focusedMarker;
@@ -371,7 +372,7 @@ public final class MainMapScreen extends AbstractMapScreen {
 
     @Override
     public boolean keyPressed(KeyEvent event) {
-        if (event.key() == GLFW.GLFW_KEY_LEFT_CONTROL) {
+        if (event.key() == SDLScancode.SDL_SCANCODE_LCTRL) {
             if (Managers.Feature.getFeatureInstance(MainMapFeature.class)
                     .holdGuildMapOpen
                     .get()) {
@@ -386,7 +387,7 @@ public final class MainMapScreen extends AbstractMapScreen {
 
     @Override
     public boolean keyReleased(KeyEvent event) {
-        if (event.key() == GLFW.GLFW_KEY_LEFT_CONTROL) {
+        if (event.key() == SDLScancode.SDL_SCANCODE_LCTRL) {
             if (Managers.Feature.getFeatureInstance(MainMapFeature.class)
                     .holdGuildMapOpen
                     .get()) {
@@ -407,7 +408,7 @@ public final class MainMapScreen extends AbstractMapScreen {
             }
         }
 
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+        if (event.button() == SDLMouse.SDL_BUTTON_RIGHT) {
             List<MarkerInfo> markers =
                     Models.Marker.USER_WAYPOINTS_PROVIDER.getMarkerInfos().toList();
             if (KeyboardUtils.isShiftDown() && !markers.isEmpty()) {
@@ -421,7 +422,7 @@ public final class MainMapScreen extends AbstractMapScreen {
             }
 
             centerMapAroundPlayer();
-        } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        } else if (event.button() == SDLMouse.SDL_BUTTON_LEFT) {
             if (hovered instanceof WaypointPoi) {
                 Models.Marker.USER_WAYPOINTS_PROVIDER.removeLocation(
                         hovered.getLocation().asLocation());
@@ -462,7 +463,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                 }
                 return true;
             }
-        } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+        } else if (event.button() == SDLMouse.SDL_BUTTON_MIDDLE) {
             if (KeyboardUtils.isShiftDown()) {
                 if (hovered instanceof CustomPoi customPoi && !Services.Poi.isPoiProvided(customPoi)) {
                     McUtils.setScreen(PoiCreationScreen.create(this, customPoi));
@@ -496,9 +497,9 @@ public final class MainMapScreen extends AbstractMapScreen {
 
         String target = null;
 
-        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        if (button == SDLMouse.SDL_BUTTON_LEFT) {
             target = "guild";
-        } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+        } else if (button == SDLMouse.SDL_BUTTON_RIGHT) {
             target = "party";
         }
 

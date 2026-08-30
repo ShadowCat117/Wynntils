@@ -21,7 +21,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLMouse;
 
 public class ItemSearchHelperWidget extends BasicTexturedButton {
     private static final int ELEMENTS_PER_PAGE = 4;
@@ -71,12 +71,12 @@ public class ItemSearchHelperWidget extends BasicTexturedButton {
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (!isMouseOver(event.x(), event.y())) return false;
 
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        if (event.button() == SDLMouse.SDL_BUTTON_LEFT) {
             page = MathUtils.overflowInRange(page, -1, 0, tooltipPages.size() - 1);
             return true;
         }
 
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+        if (event.button() == SDLMouse.SDL_BUTTON_RIGHT) {
             page = MathUtils.overflowInRange(page, +1, 0, tooltipPages.size() - 1);
             return true;
         }

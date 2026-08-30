@@ -20,7 +20,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLMouse;
 
 public class PresetButton extends WynntilsButton implements TooltipProvider {
     private final int presetId;
@@ -43,14 +43,14 @@ public class PresetButton extends WynntilsButton implements TooltipProvider {
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (!isMouseOver(event.x(), event.y())) return false;
 
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        if (event.button() == SDLMouse.SDL_BUTTON_LEFT) {
             String lastSearchFilter =
                     tradeMarketSearchResultScreen.getSearchQuery().queryString();
             if (lastSearchFilter.isEmpty()) return true;
 
             Models.TradeMarket.setPresetFilter(presetId, lastSearchFilter);
             return true;
-        } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+        } else if (event.button() == SDLMouse.SDL_BUTTON_RIGHT) {
             Optional<String> presetFilterOpt = Models.TradeMarket.getPresetFilter(presetId);
             if (presetFilterOpt.isEmpty()) return true;
 

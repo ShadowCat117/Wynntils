@@ -47,7 +47,7 @@ import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLMouse;
 
 @ConfigCategory(Category.UI)
 public class BulkBuyFeature extends Feature {
@@ -173,7 +173,7 @@ public class BulkBuyFeature extends Feature {
         ContainerUtils.clickOnSlot(
                 bulkBoughtSlotNumber,
                 bulkBoughtContainer.containerId,
-                GLFW.GLFW_MOUSE_BUTTON_RIGHT,
+                SDLMouse.SDL_BUTTON_RIGHT,
                 bulkBoughtContainer.getItems());
         --bulkBoughtAmount;
 

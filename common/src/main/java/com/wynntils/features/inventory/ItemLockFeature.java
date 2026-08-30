@@ -40,7 +40,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomModelData;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLMouse;
 
 @ConfigCategory(Category.INVENTORY)
 public class ItemLockFeature extends Feature {
@@ -117,7 +117,7 @@ public class ItemLockFeature extends Feature {
         // We want to allow opening emerald pouches and deleting potions even if locked
         // Right click is used to perform these actions, left click picks them up
         // So only allow right click actions
-        if (event.getMouseButton() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+        if (event.getMouseButton() == SDLMouse.SDL_BUTTON_RIGHT) {
             if (allowClickOnEmeraldPouchInBlockingMode.get()
                     && Models.Emerald.isEmeraldPouch(slotOptional.get().getItem())) {
                 return;

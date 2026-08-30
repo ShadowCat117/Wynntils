@@ -34,7 +34,7 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.ICancellableEvent;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLScancode;
 
 @ConfigCategory(Category.UTILITIES)
 public class EnhancedStreamerModeFeature extends Feature {
@@ -102,7 +102,7 @@ public class EnhancedStreamerModeFeature extends Feature {
     public void onRenderTooltip(ItemTooltipRenderEvent.Pre event) {
         if (!Models.StreamerMode.isInStream()) return;
         if (!hideGearTooltips.get()) return;
-        if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_SPACE)) return;
+        if (KeyboardUtils.isKeyDown(SDLScancode.SDL_SCANCODE_SPACE)) return;
         if (!McUtils.inventory().contains(event.getItemStack())) return;
 
         Optional<GearTypeItemProperty> gearItemOpt =

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.guildlog;
@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLMouse;
 
 public class GuildLogHolder extends WrappedScreenHolder<GuildLogScreen> {
     private static final Pattern TITLE_PATTERN = Pattern.compile(".+'s? Log: (.+)");
@@ -93,7 +93,7 @@ public class GuildLogHolder extends WrappedScreenHolder<GuildLogScreen> {
         ContainerUtils.clickOnSlot(
                 NEXT_PAGE_SLOT,
                 wrappedScreen.getWrappedScreenInfo().containerId(),
-                GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                SDLMouse.SDL_BUTTON_LEFT,
                 wrappedScreen.getWrappedScreenInfo().containerMenu().getItems());
 
         loadedLogs = 0;

@@ -29,7 +29,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLMouse;
 
 public class ProviderButton extends WynntilsButton {
     private static final CustomColor ENABLED_COLOR = new CustomColor(0, 220, 0, 255);
@@ -112,17 +112,17 @@ public class ProviderButton extends WynntilsButton {
         }
 
         if (filterScreen.inSortMode()) {
-            if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+            if (event.button() == SDLMouse.SDL_BUTTON_LEFT) {
                 filterScreen.addSort(new SortInfo(SortDirection.ASCENDING, provider));
-            } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            } else if (event.button() == SDLMouse.SDL_BUTTON_RIGHT) {
                 filterScreen.removeSort(provider);
             }
         } else {
-            if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+            if (event.button() == SDLMouse.SDL_BUTTON_LEFT) {
                 filterScreen.setSelectedProvider(provider);
-            } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            } else if (event.button() == SDLMouse.SDL_BUTTON_RIGHT) {
                 filterScreen.setFiltersForProvider(provider, null);
-            } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+            } else if (event.button() == SDLMouse.SDL_BUTTON_MIDDLE) {
                 AnyStatFilters.AbstractAnyStatFilter anyFilter = ANY_MAP.getOrDefault(provider.getType(), null);
 
                 if (anyFilter != null) {

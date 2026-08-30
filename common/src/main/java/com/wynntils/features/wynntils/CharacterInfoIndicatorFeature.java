@@ -56,7 +56,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLMouse;
 
 @ConfigCategory(Category.WYNNTILS)
 public class CharacterInfoIndicatorFeature extends Feature {
@@ -125,7 +125,7 @@ public class CharacterInfoIndicatorFeature extends Feature {
 
         @Override
         public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-            if (event.button() != GLFW.GLFW_MOUSE_BUTTON_LEFT) return false;
+            if (event.button() != SDLMouse.SDL_BUTTON_LEFT) return false;
 
             this.playDownSound(McUtils.mc().getSoundManager());
 

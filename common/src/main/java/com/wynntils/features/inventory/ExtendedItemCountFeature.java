@@ -21,7 +21,7 @@ import com.wynntils.models.items.properties.UsesItemProperty;
 import com.wynntils.utils.mc.KeyboardUtils;
 import java.util.Optional;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLScancode;
 
 @ConfigCategory(Category.INVENTORY)
 public class ExtendedItemCountFeature extends Feature {
@@ -62,7 +62,7 @@ public class ExtendedItemCountFeature extends Feature {
 
         if (showLevel.get()
                 && wynnItem instanceof LeveledItemProperty leveledItem
-                && KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL)
+                && KeyboardUtils.isKeyDown(SDLScancode.SDL_SCANCODE_LCTRL)
                 && isInventory) {
             event.setCountString(String.valueOf(leveledItem.getLevel()));
         } else if (wynnItem instanceof UsesItemProperty usesItem && usesItem.hasCount()) {

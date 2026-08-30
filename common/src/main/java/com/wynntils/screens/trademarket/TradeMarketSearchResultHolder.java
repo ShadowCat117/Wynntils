@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.trademarket;
@@ -29,7 +29,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLMouse;
 
 public class TradeMarketSearchResultHolder extends WrappedScreenHolder<TradeMarketSearchResultScreen> {
     // Patterns
@@ -158,7 +158,7 @@ public class TradeMarketSearchResultHolder extends WrappedScreenHolder<TradeMark
                 ContainerUtils.clickOnSlot(
                         entry.getIntKey(),
                         wrappedScreenInfo.containerId(),
-                        GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                        SDLMouse.SDL_BUTTON_LEFT,
                         wrappedScreenInfo.containerMenu().getItems());
 
                 return;
@@ -196,7 +196,7 @@ public class TradeMarketSearchResultHolder extends WrappedScreenHolder<TradeMark
         ContainerUtils.clickOnSlot(
                 BACK_TO_SEARCH_SLOT,
                 wrappedScreenInfo.containerId(),
-                GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                SDLMouse.SDL_BUTTON_LEFT,
                 wrappedScreenInfo.containerMenu().getItems());
     }
 
@@ -363,7 +363,7 @@ public class TradeMarketSearchResultHolder extends WrappedScreenHolder<TradeMark
             ContainerUtils.clickOnSlot(
                     slot,
                     wrappedScreenInfo.containerId(),
-                    GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                    SDLMouse.SDL_BUTTON_LEFT,
                     wrappedScreenInfo.containerMenu().getItems());
 
             startNextQueuedAction();
@@ -401,7 +401,7 @@ public class TradeMarketSearchResultHolder extends WrappedScreenHolder<TradeMark
         ContainerUtils.clickOnSlot(
                 clickSlot,
                 wrappedScreenInfo.containerId(),
-                GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                SDLMouse.SDL_BUTTON_LEFT,
                 wrappedScreenInfo.containerMenu().getItems());
     }
 

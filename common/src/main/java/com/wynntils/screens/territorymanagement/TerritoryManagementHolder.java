@@ -44,7 +44,7 @@ import java.util.stream.Collectors;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLMouse;
 
 public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryManagementScreen> {
     private static final String SELECT_TERRITORIES_TITLE = "Select Territories";
@@ -419,7 +419,7 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
             ContainerUtils.clickOnSlot(
                     NEXT_PAGE_SLOT,
                     wrappedScreen.getWrappedScreenInfo().containerId(),
-                    GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                    SDLMouse.SDL_BUTTON_LEFT,
                     items);
             return;
         }
@@ -439,7 +439,7 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
             ContainerUtils.clickOnSlot(
                     PREVIOUS_PAGE_SLOT,
                     wrappedScreen.getWrappedScreenInfo().containerId(),
-                    GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                    SDLMouse.SDL_BUTTON_LEFT,
                     items);
             return;
         }
@@ -515,7 +515,7 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
         ContainerUtils.clickOnSlot(
                 slot,
                 wrappedScreen.getWrappedScreenInfo().containerId(),
-                GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                SDLMouse.SDL_BUTTON_LEFT,
                 wrappedScreen.getWrappedScreenInfo().containerMenu().getItems());
     }
 

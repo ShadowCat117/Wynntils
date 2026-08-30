@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.character;
@@ -30,7 +30,7 @@ import java.util.List;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLMouse;
 
 public final class CharacterSelectionModel extends Model {
     private static final List<Integer> CHARACTER_SLOTS =
@@ -94,7 +94,7 @@ public final class CharacterSelectionModel extends Model {
         // ContainerClickEvent will get the air item and not parse the character properly so pass it the correct item
         Models.Character.handleSelectedCharacter(selectionScreenItems.get(slot));
         ContainerUtils.clickOnSlot(
-                slot, characterContainer.getContainerId(), GLFW.GLFW_MOUSE_BUTTON_LEFT, selectionScreenItems);
+                slot, characterContainer.getContainerId(), SDLMouse.SDL_BUTTON_LEFT, selectionScreenItems);
     }
 
     public List<Integer> getValidCharacterSlots() {

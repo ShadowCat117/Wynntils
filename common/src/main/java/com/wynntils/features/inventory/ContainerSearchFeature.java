@@ -66,7 +66,8 @@ import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLMouse;
+import org.lwjgl.sdl.SDLScancode;
 
 @ConfigCategory(Category.INVENTORY)
 public class ContainerSearchFeature extends Feature {
@@ -264,7 +265,8 @@ public class ContainerSearchFeature extends Feature {
     @SubscribeEvent
     public void onInventoryKeyPress(InventoryKeyPressEvent event) {
         // Don't want to be able to search whilst the edit widget is open
-        if ((event.getKeyCode() == GLFW.GLFW_KEY_ENTER || event.getKeyCode() == GLFW.GLFW_KEY_KP_ENTER)
+        if ((event.getKeyCode() == SDLScancode.SDL_SCANCODE_RETURN
+                        || event.getKeyCode() == SDLScancode.SDL_SCANCODE_KP_ENTER)
                 && !Models.Bank.isEditingMode()) {
             if (lastSearchWidget == null
                     || lastSearchWidget.getTextBoxInput().isEmpty()
@@ -346,7 +348,7 @@ public class ContainerSearchFeature extends Feature {
         ContainerUtils.clickOnSlot(
                 slot,
                 abstractContainerScreen.getMenu().containerId,
-                GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                SDLMouse.SDL_BUTTON_LEFT,
                 abstractContainerScreen.getMenu().getItems());
         awaitingAutoSearchUpdate = true;
     }

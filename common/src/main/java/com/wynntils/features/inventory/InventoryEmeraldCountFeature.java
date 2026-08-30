@@ -37,7 +37,7 @@ import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLScancode;
 
 @ConfigCategory(Category.INVENTORY)
 public class InventoryEmeraldCountFeature extends Feature {
@@ -164,7 +164,7 @@ public class InventoryEmeraldCountFeature extends Feature {
         final int emeraldTextOffsetX = textDisplaySide.get() == TextDisplaySide.LEFT ? 1 : -1;
 
         String emeraldText;
-        if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
+        if (KeyboardUtils.isKeyDown(SDLScancode.SDL_SCANCODE_LSHIFT)) {
             emeraldText = emeralds + EmeraldUnits.EMERALD.getSymbol();
         } else {
             emeraldText = Models.Emerald.getFormattedString(emeralds, showZerosInEmeraldCount.get());
@@ -234,7 +234,7 @@ public class InventoryEmeraldCountFeature extends Feature {
 
     private String[] getRenderableEmeraldAmounts(int emeralds) {
         String[] emeraldAmounts = new String[4];
-        if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
+        if (KeyboardUtils.isKeyDown(SDLScancode.SDL_SCANCODE_LSHIFT)) {
             emeraldAmounts[0] = StringUtils.formatAmount(emeralds);
             emeraldAmounts[1] = StringUtils.formatAmount(emeralds / 64d);
             emeraldAmounts[2] = StringUtils.formatAmount(emeralds / 4096d);

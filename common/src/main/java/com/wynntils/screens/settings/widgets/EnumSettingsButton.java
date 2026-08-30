@@ -12,7 +12,7 @@ import java.util.List;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLMouse;
 
 public class EnumSettingsButton<E extends Enum<E>> extends GeneralSettingsButton {
     private final Config<E> config;
@@ -38,9 +38,9 @@ public class EnumSettingsButton<E extends Enum<E>> extends GeneralSettingsButton
 
         int addToIndex;
 
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        if (event.button() == SDLMouse.SDL_BUTTON_LEFT) {
             addToIndex = 1;
-        } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+        } else if (event.button() == SDLMouse.SDL_BUTTON_RIGHT) {
             addToIndex = -1;
         } else {
             return false;

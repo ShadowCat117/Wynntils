@@ -32,15 +32,16 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLEvents;
+import org.lwjgl.sdl.SDLScancode;
 
 @ConfigCategory(Category.WYNNTILS)
 public class WynntilsTelemetryFeature extends Feature {
     private static final int TELEMETRY_PROMPT_DELAY_LAUNCHES = 3;
     private static final long TELEMETRY_PROMPT_DISPLAY_TIME = 15000L;
     private static final long TELEMETRY_CONFIRMATION_DISPLAY_TIME = 1000L;
-    private static final int TELEMETRY_ENABLE_KEY = GLFW.GLFW_KEY_LEFT_BRACKET;
-    private static final int TELEMETRY_DISABLE_KEY = GLFW.GLFW_KEY_RIGHT_BRACKET;
+    private static final int TELEMETRY_ENABLE_KEY = SDLScancode.SDL_SCANCODE_LEFTBRACKET;
+    private static final int TELEMETRY_DISABLE_KEY = SDLScancode.SDL_SCANCODE_RIGHTBRACKET;
 
     @Persisted
     private final Config<OptionalBoolean> crashReports = new Config<>(OptionalBoolean.NULL);
@@ -115,7 +116,7 @@ public class WynntilsTelemetryFeature extends Feature {
 
     @SubscribeEvent
     public void onKeyInput(KeyInputEvent event) {
-        if (event.getAction() != GLFW.GLFW_PRESS) return;
+        if (event.getAction() != SDLEvents.SDL_EVENT_KEY_DOWN) return;
         if (McUtils.screen() != null) return;
         if (crashReports.get() != OptionalBoolean.NULL) return;
         if (!isPromptActive()) return;

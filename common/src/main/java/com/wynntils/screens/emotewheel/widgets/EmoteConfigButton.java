@@ -20,7 +20,7 @@ import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLMouse;
 
 public class EmoteConfigButton extends WynntilsButton {
     private static final CustomColor ENABLED_COLOR = new CustomColor(130, 101, 76, 255);
@@ -86,7 +86,7 @@ public class EmoteConfigButton extends WynntilsButton {
             return false;
         }
 
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        if (event.button() == SDLMouse.SDL_BUTTON_LEFT) {
             Models.Emote.toggleFavorite(emote);
         }
 

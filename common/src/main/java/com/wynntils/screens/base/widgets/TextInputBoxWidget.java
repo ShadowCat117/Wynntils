@@ -33,7 +33,8 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLMouse;
+import org.lwjgl.sdl.SDLScancode;
 
 public class TextInputBoxWidget extends AbstractWidget {
     private static final Component DEFAULT_TEXT =
@@ -289,7 +290,7 @@ public class TextInputBoxWidget extends AbstractWidget {
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (this.isHovered) {
             McUtils.playSoundUI(SoundEvents.UI_BUTTON_CLICK.value());
-            if (event.button() == GLFW.GLFW_MOUSE_BUTTON_2) {
+            if (event.button() == SDLMouse.SDL_BUTTON_RIGHT) {
                 setTextBoxInput("");
                 setCursorAndHighlightPositions(0);
             } else {
@@ -381,7 +382,7 @@ public class TextInputBoxWidget extends AbstractWidget {
 
     @Override
     public boolean keyPressed(KeyEvent event) {
-        if (event.key() == GLFW.GLFW_KEY_ESCAPE) {
+        if (event.key() == SDLScancode.SDL_SCANCODE_ESCAPE) {
             removeFocus();
             return true;
         }
@@ -416,7 +417,7 @@ public class TextInputBoxWidget extends AbstractWidget {
             return true;
         }
 
-        if (event.key() == GLFW.GLFW_KEY_BACKSPACE) {
+        if (event.key() == SDLScancode.SDL_SCANCODE_BACKSPACE) {
             if (textBoxInput.isEmpty()) {
                 return true;
             }
@@ -439,7 +440,7 @@ public class TextInputBoxWidget extends AbstractWidget {
             return true;
         }
 
-        if (event.key() == GLFW.GLFW_KEY_DELETE) {
+        if (event.key() == SDLScancode.SDL_SCANCODE_DELETE) {
             if (textBoxInput.isEmpty()) {
                 return true;
             }
@@ -460,7 +461,7 @@ public class TextInputBoxWidget extends AbstractWidget {
             return true;
         }
 
-        if (event.key() == GLFW.GLFW_KEY_LEFT) {
+        if (event.key() == SDLScancode.SDL_SCANCODE_LEFT) {
             if (hasHighlighted() && !event.hasShiftDown() && !event.hasControlDown()) {
                 setCursorAndHighlightPositions(Math.min(cursorPosition, highlightPosition));
                 return true;
@@ -487,7 +488,7 @@ public class TextInputBoxWidget extends AbstractWidget {
             return true; // no need to call onUpdateConsumer here because we aren't changing the text
         }
 
-        if (event.key() == GLFW.GLFW_KEY_RIGHT) {
+        if (event.key() == SDLScancode.SDL_SCANCODE_RIGHT) {
             if (event.hasControlDown() && event.hasShiftDown()) {
                 // this should move the cursor all the way right and highlight everything
                 setCursorPosition(textBoxInput.length());
@@ -509,12 +510,12 @@ public class TextInputBoxWidget extends AbstractWidget {
             return true; // no need to call onUpdateConsumer here because we aren't changing the text
         }
 
-        if (event.key() == GLFW.GLFW_KEY_HOME) {
+        if (event.key() == SDLScancode.SDL_SCANCODE_HOME) {
             setCursorAndHighlightPositions(0);
             return true;
         }
 
-        if (event.key() == GLFW.GLFW_KEY_END) {
+        if (event.key() == SDLScancode.SDL_SCANCODE_END) {
             setCursorAndHighlightPositions(textBoxInput.length());
             return true;
         }

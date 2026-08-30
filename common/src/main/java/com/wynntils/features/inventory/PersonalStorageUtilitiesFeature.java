@@ -35,7 +35,8 @@ import java.util.regex.Pattern;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLMouse;
+import org.lwjgl.sdl.SDLScancode;
 
 @ConfigCategory(Category.INVENTORY)
 public class PersonalStorageUtilitiesFeature extends Feature {
@@ -130,7 +131,7 @@ public class PersonalStorageUtilitiesFeature extends Feature {
 
     @SubscribeEvent
     public void onInventoryKeyPress(InventoryKeyPressEvent event) {
-        if (event.getKeyCode() != GLFW.GLFW_KEY_ENTER) return;
+        if (event.getKeyCode() != SDLScancode.SDL_SCANCODE_RETURN) return;
         if (!Models.Bank.isEditingMode()) return;
 
         this.saveEditModeChanges();
@@ -246,7 +247,7 @@ public class PersonalStorageUtilitiesFeature extends Feature {
         ContainerUtils.clickOnSlot(
                 storageContainer.getNextItemSlot(),
                 storageContainer.getContainerId(),
-                GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                SDLMouse.SDL_BUTTON_LEFT,
                 McUtils.containerMenu().getItems());
     }
 
@@ -255,7 +256,7 @@ public class PersonalStorageUtilitiesFeature extends Feature {
         ContainerUtils.clickOnSlot(
                 storageContainer.getPreviousItemSlot(),
                 storageContainer.getContainerId(),
-                GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                SDLMouse.SDL_BUTTON_LEFT,
                 McUtils.containerMenu().getItems());
     }
 

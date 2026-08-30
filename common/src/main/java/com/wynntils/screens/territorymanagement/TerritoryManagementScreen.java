@@ -72,7 +72,8 @@ import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLMouse;
+import org.lwjgl.sdl.SDLScancode;
 
 public class TerritoryManagementScreen extends AbstractMapScreen implements WrappedScreen {
     // Constants
@@ -391,9 +392,9 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
         infoTypeButton = new MapButton(
                 Texture.OVERLAY_EXTRA_ICON,
                 (b) -> {
-                    if (b == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+                    if (b == SDLMouse.SDL_BUTTON_LEFT) {
                         setInfoType(infoType.getNext());
-                    } else if (b == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+                    } else if (b == SDLMouse.SDL_BUTTON_RIGHT) {
                         setInfoType(infoType.getPrevious());
                     }
                 },
@@ -768,7 +769,7 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
                 }
             }
 
-            if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT
+            if (event.button() == SDLMouse.SDL_BUTTON_RIGHT
                     && hovered instanceof ManageTerritoryPoi manageTerritoryPoi) {
                 holder.saveMapPos();
                 manageTerritoryPoi.onClick();
@@ -818,11 +819,11 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
     public boolean keyPressed(KeyEvent event) {
         if (mapMode) {
             switch (event.key()) {
-                case GLFW.GLFW_KEY_1 -> setInfoType(TerritoryInfoType.DEFENSE);
-                case GLFW.GLFW_KEY_2 -> setInfoType(TerritoryInfoType.PRODUCTION);
-                case GLFW.GLFW_KEY_3 -> setInfoType(TerritoryInfoType.TREASURY);
-                case GLFW.GLFW_KEY_4 -> setInfoType(TerritoryInfoType.SEEKING);
-                case GLFW.GLFW_KEY_H -> centerOnHeadquarters();
+                case SDLScancode.SDL_SCANCODE_1 -> setInfoType(TerritoryInfoType.DEFENSE);
+                case SDLScancode.SDL_SCANCODE_2 -> setInfoType(TerritoryInfoType.PRODUCTION);
+                case SDLScancode.SDL_SCANCODE_3 -> setInfoType(TerritoryInfoType.TREASURY);
+                case SDLScancode.SDL_SCANCODE_4 -> setInfoType(TerritoryInfoType.SEEKING);
+                case SDLScancode.SDL_SCANCODE_H -> centerOnHeadquarters();
             }
         }
 

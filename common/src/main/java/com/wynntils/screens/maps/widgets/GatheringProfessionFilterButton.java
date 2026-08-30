@@ -17,7 +17,7 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLMouse;
 
 public class GatheringProfessionFilterButton extends AbstractWidget {
     private final GatheringNodeFilterScreen filterScreen;
@@ -85,7 +85,7 @@ public class GatheringProfessionFilterButton extends AbstractWidget {
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (event.hasAltDown()) {
-            Services.Poi.setAllGatheringNodeTypesVisible(materialType, event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT);
+            Services.Poi.setAllGatheringNodeTypesVisible(materialType, event.button() == SDLMouse.SDL_BUTTON_LEFT);
             return true;
         }
         selected = !selected;

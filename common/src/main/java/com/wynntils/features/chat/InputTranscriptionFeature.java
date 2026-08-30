@@ -29,7 +29,7 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLScancode;
 
 @ConfigCategory(Category.CHAT)
 public class InputTranscriptionFeature extends Feature {
@@ -95,7 +95,7 @@ public class InputTranscriptionFeature extends Feature {
 
     @SubscribeEvent
     public void onChatScreenKeyTyped(ChatScreenKeyTypedEvent event) {
-        if (event.getKeyCode() != GLFW.GLFW_KEY_BACKSPACE) return;
+        if (event.getKeyCode() != SDLScancode.SDL_SCANCODE_BACKSPACE) return;
         if (!(McUtils.screen() instanceof ChatScreen chatScreen)) return;
         if (!transcriptionButtons.get()) return;
         if (!chatScreen.input.getHighlighted().isBlank()) return;
