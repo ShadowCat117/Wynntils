@@ -6,6 +6,7 @@ package com.wynntils.utils.render;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import com.mojang.renderpearl.api.pipeline.RenderPipeline;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.text.StyledText;
@@ -1375,7 +1376,7 @@ public final class RenderUtils {
                 entityState.nameTagAttachment.x,
                 entityState.nameTagAttachment.y + 0.35f + customOffset,
                 entityState.nameTagAttachment.z);
-        poseStack.mulPose(cameraState.orientation);
+        poseStack.rotateDegrees(Axis.YP, cameraState.orientation.angle());
         poseStack.scale(0.025f, -0.025f, 0.025f);
 
         float halfWidth = width / 2f;

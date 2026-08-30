@@ -6,6 +6,7 @@ package com.wynntils.services.lootrunpaths;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
 import com.wynntils.core.components.Managers;
 import com.wynntils.features.LootrunFeature;
 import com.wynntils.services.lootrunpaths.type.BlockValidness;
@@ -101,7 +102,8 @@ public final class LootrunRenderer {
             Position position = note.position();
             poseStack.pushPose();
             poseStack.translate(position.x(), position.y() + 2, position.z());
-            poseStack.mulPose(McUtils.mc().gameRenderer.mainCamera().rotation());
+            poseStack.rotateDegrees(
+                    Axis.YP, McUtils.mc().gameRenderer.mainCamera().rotation().angle());
             poseStack.scale(0.025f, -0.025f, 0.025f);
             List<FormattedCharSequence> lines = font.split(note.component(), 200);
             int offsetY = -(font.lineHeight * lines.size()) / 2;
