@@ -131,7 +131,7 @@ public class PersonalStorageUtilitiesFeature extends Feature {
 
     @SubscribeEvent
     public void onInventoryKeyPress(InventoryKeyPressEvent event) {
-        if (event.getKeyCode() != SDLScancode.SDL_SCANCODE_RETURN) return;
+        if (event.getKey() != SDLScancode.SDL_SCANCODE_RETURN) return;
         if (!Models.Bank.isEditingMode()) return;
 
         this.saveEditModeChanges();
