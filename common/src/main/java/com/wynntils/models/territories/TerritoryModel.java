@@ -40,10 +40,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import net.minecraft.advancements.Advancement;
-import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementType;
 import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.core.Position;
+import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class TerritoryModel extends Model {
@@ -133,8 +133,8 @@ public final class TerritoryModel extends Model {
     public void onAdvancementUpdate(AdvancementUpdateEvent event) {
         Map<String, TerritoryInfo> tempMap = new HashMap<>();
 
-        for (AdvancementHolder added : event.getAdded()) {
-            Advancement advancement = added.value();
+        for (ClientboundUpdateAdvancementsPacket.PositionedAdvancement added : event.getAdded()) {
+            Advancement advancement = added.advancement().value();
 
             if (advancement.display().isEmpty()) continue;
 
