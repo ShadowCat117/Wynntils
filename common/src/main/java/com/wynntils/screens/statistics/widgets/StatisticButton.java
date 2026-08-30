@@ -28,7 +28,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLMouse;
 
 public class StatisticButton extends WynntilsButton implements TooltipProvider {
     private static final CustomColor BUTTON_COLOR = new CustomColor(181, 174, 151);
@@ -75,7 +75,7 @@ public class StatisticButton extends WynntilsButton implements TooltipProvider {
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        if (event.button() == SDLMouse.SDL_BUTTON_LEFT) {
             if (isSelected()) {
                 screen.setHighlightedStatisticKind(null);
             } else {
@@ -84,7 +84,7 @@ public class StatisticButton extends WynntilsButton implements TooltipProvider {
             return true;
         }
 
-        if (KeyboardUtils.isShiftDown() && event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+        if (KeyboardUtils.isShiftDown() && event.button() == SDLMouse.SDL_BUTTON_MIDDLE) {
             if (Services.Statistics.screenOverallMode.get()) {
                 Services.Statistics.resetStatisticOverall(statistic);
             } else {

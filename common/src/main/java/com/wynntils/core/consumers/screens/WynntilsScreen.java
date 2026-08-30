@@ -20,7 +20,7 @@ import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLScancode;
 
 public abstract class WynntilsScreen extends Screen implements TextboxScreen {
     private TextInputBoxWidget focusedTextInput;
@@ -106,7 +106,7 @@ public abstract class WynntilsScreen extends Screen implements TextboxScreen {
     @Override
     public boolean keyPressed(KeyEvent event) {
         // When tab is pressed, focus the next text box
-        if (event.key() == GLFW.GLFW_KEY_TAB) {
+        if (event.key() == SDLScancode.SDL_SCANCODE_TAB) {
             int index = getFocusedTextInput() == null ? 0 : children().indexOf(getFocusedTextInput());
             int actualIndex = Math.max(index, 0) + 1;
 

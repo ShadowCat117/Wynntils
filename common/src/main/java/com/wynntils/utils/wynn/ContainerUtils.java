@@ -17,7 +17,7 @@ import net.minecraft.network.protocol.game.ServerboundContainerClosePacket;
 import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLMouse;
 
 public final class ContainerUtils {
     private static final int INVENTORY_SLOTS = 36;
@@ -40,7 +40,7 @@ public final class ContainerUtils {
 
         NonNullList<ItemStack> items = McUtils.containerMenu().getItems();
         // We need to offset the slot number so that it corresponds to the correct slot in the inventory
-        clickOnSlot(INVENTORY_SLOTS + slotNum, containerId, GLFW.GLFW_MOUSE_BUTTON_LEFT, items);
+        clickOnSlot(INVENTORY_SLOTS + slotNum, containerId, SDLMouse.SDL_BUTTON_LEFT, items);
 
         return true;
     }

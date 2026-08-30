@@ -28,7 +28,8 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.core.Position;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Util;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLMouse;
+import org.lwjgl.sdl.SDLScancode;
 
 public class LootrunPathButton extends WynntilsButton {
     private static final CustomColor BUTTON_COLOR = new CustomColor(181, 174, 151);
@@ -75,7 +76,7 @@ public class LootrunPathButton extends WynntilsButton {
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        if (event.button() == SDLMouse.SDL_BUTTON_LEFT) {
             if (isLoaded()) {
                 Services.LootrunPaths.clearCurrentLootrun();
             } else {
@@ -84,14 +85,14 @@ public class LootrunPathButton extends WynntilsButton {
             return true;
         }
 
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+        if (event.button() == SDLMouse.SDL_BUTTON_MIDDLE) {
             Util.getPlatform().openFile(Services.LootrunPaths.LOOTRUNS);
             return true;
         }
 
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-            if ((KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)
-                            || KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_RIGHT_SHIFT))
+        if (event.button() == SDLMouse.SDL_BUTTON_RIGHT) {
+            if ((KeyboardUtils.isKeyDown(SDLScancode.SDL_SCANCODE_LSHIFT)
+                            || KeyboardUtils.isKeyDown(SDLScancode.SDL_SCANCODE_RSHIFT))
                     && !isLoaded()) {
                 tryDeleteLootrun();
                 return true;

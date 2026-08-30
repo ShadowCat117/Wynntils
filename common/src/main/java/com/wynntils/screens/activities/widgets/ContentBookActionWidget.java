@@ -14,7 +14,7 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLMouse;
 
 public class ContentBookActionWidget extends AbstractWidget implements TooltipProvider {
     private final Consumer<Integer> onClick;
@@ -37,7 +37,7 @@ public class ContentBookActionWidget extends AbstractWidget implements TooltipPr
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) return false;
+        if (event.button() == SDLMouse.SDL_BUTTON_MIDDLE) return false;
 
         onClick.accept(event.button());
         return true;

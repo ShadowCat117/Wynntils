@@ -19,7 +19,7 @@ import java.util.Optional;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLMouse;
 
 @ConfigCategory(Category.UI)
 public class ContainerScrollFeature extends Feature {
@@ -49,7 +49,7 @@ public class ContainerScrollFeature extends Feature {
             ContainerUtils.clickOnSlot(
                     slot.get(),
                     gui.getMenu().containerId,
-                    GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                    SDLMouse.SDL_BUTTON_LEFT,
                     gui.getMenu().getItems());
         }
     }

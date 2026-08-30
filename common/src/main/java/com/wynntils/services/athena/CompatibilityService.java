@@ -30,7 +30,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLScancode;
 
 public class CompatibilityService extends Service {
     private static final long TOAST_DISPLAY_TIME = 10000L;
@@ -86,7 +86,7 @@ public class CompatibilityService extends Service {
 
     @SubscribeEvent
     public void onTick(TickEvent event) {
-        if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_Y) && System.currentTimeMillis() <= toastExpire) {
+        if (KeyboardUtils.isKeyDown(SDLScancode.SDL_SCANCODE_Y) && System.currentTimeMillis() <= toastExpire) {
             warningToast.forceHide();
             toastExpire = 0L;
             warningToast = null;

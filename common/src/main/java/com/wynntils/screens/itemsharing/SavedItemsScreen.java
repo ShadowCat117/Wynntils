@@ -41,7 +41,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLMouse;
+import org.lwjgl.sdl.SDLScancode;
 
 public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMenu> {
     private static final int ITEMS_PER_ROW = 7;
@@ -85,7 +86,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
                 this.leftPos + 9,
                 this.topPos + 20,
                 (b) -> {
-                    if (b == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+                    if (b == SDLMouse.SDL_BUTTON_LEFT) {
                         if (!addingCategory && !editingCategory) {
                             addingCategory = true;
                             addCategoryInput();
@@ -122,9 +123,9 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
                 this.leftPos + 9,
                 this.topPos + 42,
                 (b) -> {
-                    if (b == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+                    if (b == SDLMouse.SDL_BUTTON_LEFT) {
                         moveSelectedItems();
-                    } else if (b == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+                    } else if (b == SDLMouse.SDL_BUTTON_RIGHT) {
                         selectedItems = new ArrayList<>();
                         selectedSlots = new ArrayList<>();
                     }
@@ -182,7 +183,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
         // Right click goes to sharing menu
         // Right+Shift deletes the item from storage
         // Left click toggles the selection of the item
-        if (mouseButton == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+        if (mouseButton == SDLMouse.SDL_BUTTON_RIGHT) {
             if (KeyboardUtils.isShiftDown()) {
                 deleteItem(encodedItems.get(slot.index).base64());
             } else {
@@ -195,7 +196,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
                             Component.translatable("screens.wynntils.savedItems.unableToShare"));
                 }
             }
-        } else if (mouseButton == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        } else if (mouseButton == SDLMouse.SDL_BUTTON_LEFT) {
             int rowOffset = ITEMS_PER_ROW * itemScrollOffset;
             int index = slot.index + rowOffset;
             dragSelectionStartIndex = index;
@@ -340,7 +341,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
     @Override
     public boolean keyPressed(KeyEvent event) {
         // Enter can also be used to submit name for new category title
-        if ((addingCategory || editingCategory) && event.key() == GLFW.GLFW_KEY_ENTER) {
+        if ((addingCategory || editingCategory) && event.key() == SDLScancode.SDL_SCANCODE_RETURN) {
             addCategory(KeyboardUtils.isShiftDown());
 
             if (addingCategory) {

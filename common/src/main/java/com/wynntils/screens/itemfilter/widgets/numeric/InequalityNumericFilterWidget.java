@@ -17,7 +17,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLMouse;
 
 public abstract class InequalityNumericFilterWidget<T> extends GeneralFilterWidget {
     private final Button removeButton;
@@ -69,10 +69,10 @@ public abstract class InequalityNumericFilterWidget<T> extends GeneralFilterWidg
         } else if (removeButton.isMouseOver(event.x(), event.y())) {
             return removeButton.mouseClicked(event, isDoubleClick);
         } else if (inequalityButton.isMouseOver(event.x(), event.y())) {
-            if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+            if (event.button() == SDLMouse.SDL_BUTTON_LEFT) {
                 cycleInequality(1);
                 return true;
-            } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            } else if (event.button() == SDLMouse.SDL_BUTTON_RIGHT) {
                 cycleInequality(-1);
                 return true;
             }

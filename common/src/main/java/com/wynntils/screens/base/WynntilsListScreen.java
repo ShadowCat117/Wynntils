@@ -26,7 +26,7 @@ import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLScancode;
 
 public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends WynntilsMenuScreenBase
         implements WynntilsPagedScreen {
@@ -156,7 +156,7 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
 
     @Override
     public boolean keyPressed(KeyEvent event) {
-        if (event.key() == GLFW.GLFW_KEY_ESCAPE && this.shouldCloseOnEsc()) {
+        if (event.key() == SDLScancode.SDL_SCANCODE_ESCAPE && this.shouldCloseOnEsc()) {
             onClose();
             return true;
         }

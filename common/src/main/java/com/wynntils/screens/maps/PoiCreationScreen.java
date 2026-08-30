@@ -40,7 +40,8 @@ import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLMouse;
+import org.lwjgl.sdl.SDLScancode;
 
 public final class PoiCreationScreen extends AbstractMapScreen {
     // Constants
@@ -528,7 +529,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
 
     @Override
     public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+        if (event.button() == SDLMouse.SDL_BUTTON_MIDDLE) {
             int gameX = (int) ((event.x() - centerX) / zoomRenderScale + mapCenterX);
             int gameZ = (int) ((event.y() - centerZ) / zoomRenderScale + mapCenterZ);
             xInput.setTextBoxInput(String.valueOf(gameX));
@@ -552,7 +553,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
     @Override
     public boolean keyPressed(KeyEvent event) {
         // When tab is pressed, focus the next text box
-        if (event.key() == GLFW.GLFW_KEY_TAB) {
+        if (event.key() == SDLScancode.SDL_SCANCODE_TAB) {
             int index = focusedTextInput == null ? 0 : children().indexOf(focusedTextInput);
             int actualIndex = Math.max(index, 0) + 1;
 

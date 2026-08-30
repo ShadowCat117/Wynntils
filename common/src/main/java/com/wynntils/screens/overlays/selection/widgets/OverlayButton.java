@@ -29,7 +29,8 @@ import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLMouse;
+import org.lwjgl.sdl.SDLScancode;
 
 public class OverlayButton extends WynntilsButton {
     private static final CustomColor ENABLED_COLOR = new CustomColor(0, 220, 0, 255);
@@ -176,7 +177,7 @@ public class OverlayButton extends WynntilsButton {
             return true;
         }
 
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        if (event.button() == SDLMouse.SDL_BUTTON_LEFT) {
             if (isSelected() && editInput != null) {
                 editInput.visible = true;
                 selectionScreen.setFocusedTextInput(editInput);
@@ -207,7 +208,7 @@ public class OverlayButton extends WynntilsButton {
 
     @Override
     public boolean keyPressed(KeyEvent event) {
-        if (event.key() == GLFW.GLFW_KEY_ENTER && editInput != null && editInput.visible) {
+        if (event.key() == SDLScancode.SDL_SCANCODE_RETURN && editInput != null && editInput.visible) {
             editInput.visible = false;
 
             if (overlay instanceof CustomNameProperty customNameOverlay) {

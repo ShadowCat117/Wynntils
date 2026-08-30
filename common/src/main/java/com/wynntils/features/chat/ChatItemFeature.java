@@ -61,7 +61,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLScancode;
 
 @ConfigCategory(Category.CHAT)
 public class ChatItemFeature extends Feature {
@@ -95,7 +95,8 @@ public class ChatItemFeature extends Feature {
 
         EditBox chatInput = ((ChatScreenAccessor) chatScreen).getChatInput();
 
-        if (!chatItems.isEmpty() && (e.getKey() == GLFW.GLFW_KEY_ENTER || e.getKey() == GLFW.GLFW_KEY_KP_ENTER)) {
+        if (!chatItems.isEmpty()
+                && (e.getKey() == SDLScancode.SDL_SCANCODE_RETURN || e.getKey() == SDLScancode.SDL_SCANCODE_KP_ENTER)) {
             // replace the placeholder strings with the actual encoded strings
             for (Map.Entry<String, String> item : chatItems.entrySet()) {
                 chatInput.setValue(chatInput.getValue().replace("<" + item.getKey() + ">", item.getValue()));

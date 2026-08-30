@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLMouse;
 
 @ConfigCategory(Category.UI)
 public class AutoExpandUseItems extends Feature {
@@ -55,6 +55,6 @@ public class AutoExpandUseItems extends Feature {
         if (!StyledText.fromComponent(items.get(USE_ITEM_SLOT).getHoverName()).matches(USE_ITEM_PATTERN)) return;
 
         shouldClick = false;
-        ContainerUtils.clickOnSlot(USE_ITEM_SLOT, event.getContainerId(), GLFW.GLFW_MOUSE_BUTTON_LEFT, items);
+        ContainerUtils.clickOnSlot(USE_ITEM_SLOT, event.getContainerId(), SDLMouse.SDL_BUTTON_LEFT, items);
     }
 }

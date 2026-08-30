@@ -15,7 +15,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLMouse;
 
 public class PersonalStorageEditModeButton extends WynntilsButton {
     private static final List<Component> CONFIRM_TOOLTIP = List.of(
@@ -62,7 +62,7 @@ public class PersonalStorageEditModeButton extends WynntilsButton {
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        if (event.button() == SDLMouse.SDL_BUTTON_LEFT) {
             if (Models.Bank.isEditingMode()) {
                 parent.saveEditModeChanges();
                 parent.updatePageName();
@@ -70,7 +70,7 @@ public class PersonalStorageEditModeButton extends WynntilsButton {
             } else {
                 parent.toggleEditMode(true);
             }
-        } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+        } else if (event.button() == SDLMouse.SDL_BUTTON_RIGHT) {
             if (Models.Bank.isEditingMode()) {
                 parent.toggleEditMode(false);
                 parent.updatePageIcons();

@@ -38,7 +38,7 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLMouse;
 
 public class ProfessionTypeFilterWidget extends GuideFilterWidget {
     private final boolean gatheringTypes;
@@ -254,13 +254,13 @@ public class ProfessionTypeFilterWidget extends GuideFilterWidget {
 
         @Override
         public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-            if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT || event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            if (event.button() == SDLMouse.SDL_BUTTON_LEFT || event.button() == SDLMouse.SDL_BUTTON_RIGHT) {
                 if (state != OptionalBoolean.TRUE) {
                     state = OptionalBoolean.TRUE;
                 } else if (state != OptionalBoolean.FALSE) {
                     state = OptionalBoolean.FALSE;
                 }
-            } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+            } else if (event.button() == SDLMouse.SDL_BUTTON_MIDDLE) {
                 state = OptionalBoolean.NULL;
             }
 

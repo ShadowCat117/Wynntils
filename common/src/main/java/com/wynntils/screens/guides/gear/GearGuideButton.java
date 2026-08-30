@@ -11,7 +11,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.Identifier;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLMouse;
 
 public class GearGuideButton extends GuideButton {
     private final GuideGearItemStack gearItemStack;
@@ -46,7 +46,7 @@ public class GearGuideButton extends GuideButton {
             return;
         }
 
-        if (input.input() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        if (input.input() == SDLMouse.SDL_BUTTON_LEFT) {
             gearItemStack.changePage();
         }
     }

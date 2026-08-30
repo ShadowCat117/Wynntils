@@ -25,7 +25,7 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.input.MouseButtonInfo;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLMouse;
 
 public abstract class TerritoryQuickSortWidget extends AbstractWidget {
     private final TerritoryManagementScreen screen;
@@ -76,11 +76,11 @@ public abstract class TerritoryQuickSortWidget extends AbstractWidget {
             if (clicked) {
                 this.playDownSound(Minecraft.getInstance().getSoundManager());
 
-                if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+                if (event.button() == SDLMouse.SDL_BUTTON_LEFT) {
                     forwardClick();
-                } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+                } else if (event.button() == SDLMouse.SDL_BUTTON_RIGHT) {
                     backwardClick();
-                } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+                } else if (event.button() == SDLMouse.SDL_BUTTON_MIDDLE) {
                     resetClick();
                 }
 
@@ -95,9 +95,9 @@ public abstract class TerritoryQuickSortWidget extends AbstractWidget {
 
     @Override
     protected boolean isValidClickButton(MouseButtonInfo buttonInfo) {
-        return buttonInfo.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT
-                || buttonInfo.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT
-                || buttonInfo.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE;
+        return buttonInfo.button() == SDLMouse.SDL_BUTTON_LEFT
+                || buttonInfo.button() == SDLMouse.SDL_BUTTON_RIGHT
+                || buttonInfo.button() == SDLMouse.SDL_BUTTON_MIDDLE;
     }
 
     public final String getItemSearchQuery() {

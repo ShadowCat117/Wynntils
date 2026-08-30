@@ -32,7 +32,7 @@ import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLScancode;
 
 public final class EmoteWheelConfigScreen extends EmoteWheelScreen {
     private static final int MAX_EMOTES_PER_PAGE = 8;
@@ -166,7 +166,7 @@ public final class EmoteWheelConfigScreen extends EmoteWheelScreen {
 
     @Override
     public boolean keyPressed(KeyEvent event) {
-        if (event.key() == GLFW.GLFW_KEY_ESCAPE) {
+        if (event.key() == SDLScancode.SDL_SCANCODE_ESCAPE) {
             onClose();
             McUtils.setScreen(previousScreen);
             return true;

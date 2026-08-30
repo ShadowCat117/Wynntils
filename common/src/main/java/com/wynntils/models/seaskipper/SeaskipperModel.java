@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.seaskipper;
@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Optional;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLMouse;
 
 public final class SeaskipperModel extends Model {
     private static final String BOAT_NAME = "Boat";
@@ -126,7 +126,7 @@ public final class SeaskipperModel extends Model {
         ContainerUtils.clickOnSlot(
                 boatSlot,
                 containerId,
-                GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                SDLMouse.SDL_BUTTON_LEFT,
                 McUtils.containerMenu().getItems());
     }
 
@@ -136,7 +136,7 @@ public final class SeaskipperModel extends Model {
         ContainerUtils.clickOnSlot(
                 destination.slot(),
                 containerId,
-                GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                SDLMouse.SDL_BUTTON_LEFT,
                 McUtils.containerMenu().getItems());
     }
 

@@ -39,7 +39,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.ItemStack;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLMouse;
 
 public class ContentBookWidget extends AbstractWidget implements TooltipProvider {
     private static final CustomColor UNAVAILABLE_COLOR = CustomColor.fromHexString("#AD976C");
@@ -155,7 +155,7 @@ public class ContentBookWidget extends AbstractWidget implements TooltipProvider
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         int button = event.button();
-        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        if (button == SDLMouse.SDL_BUTTON_LEFT) {
             if (canSetCompass()) {
                 Models.Activity.placeCompassOnActivity(activityInfo);
             } else {
@@ -166,9 +166,9 @@ public class ContentBookWidget extends AbstractWidget implements TooltipProvider
                     contentBookScreen.removeTrackedActivity();
                 }
             }
-        } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE && canOpenMap()) {
+        } else if (button == SDLMouse.SDL_BUTTON_MIDDLE && canOpenMap()) {
             Models.Activity.openMapOnActivity(activityInfo);
-        } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+        } else if (button == SDLMouse.SDL_BUTTON_RIGHT) {
             // Shift right clicking world events is used to fast travel to them
             if (activityInfo.type() == ActivityType.WORLD_EVENT
                     && activityInfo.status() == ActivityStatus.AVAILABLE

@@ -9,7 +9,7 @@ import com.wynntils.screens.guides.widgets.GuideButton;
 import com.wynntils.utils.colors.CustomColor;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.InputWithModifiers;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLMouse;
 
 public class TomeGuideButton extends GuideButton {
     private final GuideTomeItemStack tomeItemStack;
@@ -38,7 +38,7 @@ public class TomeGuideButton extends GuideButton {
             return;
         }
 
-        if (input.input() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        if (input.input() == SDLMouse.SDL_BUTTON_LEFT) {
             tomeItemStack.changePage();
         }
     }

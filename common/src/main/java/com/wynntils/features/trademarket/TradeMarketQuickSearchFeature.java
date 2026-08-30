@@ -49,7 +49,8 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLMouse;
+import org.lwjgl.sdl.SDLScancode;
 
 @ConfigCategory(Category.TRADEMARKET)
 public class TradeMarketQuickSearchFeature extends Feature {
@@ -114,7 +115,7 @@ public class TradeMarketQuickSearchFeature extends Feature {
         }
 
         if (Models.TradeMarket.inChatInput() && event.getScreen() instanceof ChatScreen) {
-            if (autoCancel.get() && KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_ESCAPE)) {
+            if (autoCancel.get() && KeyboardUtils.isKeyDown(SDLScancode.SDL_SCANCODE_ESCAPE)) {
                 McUtils.sendChat("cancel");
             }
             return;
@@ -183,7 +184,7 @@ public class TradeMarketQuickSearchFeature extends Feature {
         // would result in the same thing
         MouseButtonEvent mouseEvent = event.getMouseButtonEvent();
         int keycode = mouseEvent.buttonInfo().button();
-        if (keycode != GLFW.GLFW_MOUSE_BUTTON_1 && keycode != GLFW.GLFW_MOUSE_BUTTON_2) return;
+        if (keycode != SDLMouse.SDL_BUTTON_LEFT && keycode != SDLMouse.SDL_BUTTON_RIGHT) return;
         if (mouseEvent.hasControlDown()
                 || mouseEvent.hasControlDownWithQuirk()
                 || mouseEvent.hasShiftDown()
@@ -230,7 +231,7 @@ public class TradeMarketQuickSearchFeature extends Feature {
         if (!Models.TradeMarket.getTradeMarketState().isResults() || hoveredSlot == null || !hoveredSlot.hasItem())
             return;
 
-        boolean shouldInstantSearch = instantSearch.get() != KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT);
+        boolean shouldInstantSearch = instantSearch.get() != KeyboardUtils.isKeyDown(SDLScancode.SDL_SCANCODE_LSHIFT);
 
         ItemStack itemStack = hoveredSlot.getItem();
         Optional<GearBoxItem> gearBoxItemOpt = Models.Item.asWynnItem(itemStack, GearBoxItem.class);
@@ -345,7 +346,7 @@ public class TradeMarketQuickSearchFeature extends Feature {
         ContainerUtils.clickOnSlot(
                 SEARCH_SLOT,
                 McUtils.containerMenu().containerId,
-                GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                SDLMouse.SDL_BUTTON_LEFT,
                 McUtils.containerMenu().getItems());
     }
 }

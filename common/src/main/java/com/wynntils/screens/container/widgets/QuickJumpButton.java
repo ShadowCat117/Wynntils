@@ -24,7 +24,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLMouse;
 
 public class QuickJumpButton extends WynntilsButton {
     private static final Style NUMBER_STYLE =
@@ -96,9 +96,9 @@ public class QuickJumpButton extends WynntilsButton {
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (Models.Bank.isEditingMode()) {
-            if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+            if (event.button() == SDLMouse.SDL_BUTTON_LEFT) {
                 icon = icon.next();
-            } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            } else if (event.button() == SDLMouse.SDL_BUTTON_RIGHT) {
                 icon = icon.prev();
             }
         }
