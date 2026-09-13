@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.lootrunpaths.widgets;
 
+import com.mojang.blaze3d.Blaze3D;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsButton;
@@ -27,7 +28,6 @@ import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.core.Position;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.Util;
 import org.lwjgl.sdl.SDLMouse;
 import org.lwjgl.sdl.SDLScancode;
 
@@ -86,7 +86,7 @@ public class LootrunPathButton extends WynntilsButton {
         }
 
         if (event.button() == SDLMouse.SDL_BUTTON_MIDDLE) {
-            Util.getPlatform().openFile(Services.LootrunPaths.LOOTRUNS);
+            Blaze3D.openPath(Services.LootrunPaths.LOOTRUNS.toPath());
             return true;
         }
 
