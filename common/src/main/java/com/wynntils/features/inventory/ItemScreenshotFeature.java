@@ -151,45 +151,40 @@ public class ItemScreenshotFeature extends Feature {
         });
     }
 
-    /**
-     * Based on Isometric Renders <a href="https://github.com/gliscowo/isometric-renders"> code</a>.
-     */
     private static CompletableFuture<NativeImage> screenshotTooltip(
             Screen screen, List<ClientTooltipComponent> tooltip, Identifier tooltipStyle, int width, int height) {
         TextureTarget framebuffer =
-                new TextureTarget("Wynntils Item Screenshot", width * 2, height * 2, true, GpuFormat.RGBA8_UNORM);
+                new TextureTarget("Wynntils Item Screenshot", width * 2, height * 2, GpuFormat.RGBA8_UNORM, null);
         RenderSystem.getDevice()
                 .createCommandEncoder()
                 .clearColorAndDepthTextures(
                         framebuffer.getColorTexture(), new Vector4f(), framebuffer.getDepthTexture(), 1.0);
 
-        ((GameRendererExtension) McUtils.mc().gameRenderer).setOverridenRenderTarget(framebuffer);
-        RenderSystem.outputColorTextureOverride = framebuffer.getColorTextureView();
-        RenderSystem.outputDepthTextureOverride = framebuffer.getDepthTextureView();
-
         Minecraft mc = McUtils.mc();
 
-        GuiRenderState guiRenderState = new GuiRenderState();
+        ((GameRendererExtension) mc.gameRenderer).setOverridenRenderTarget(framebuffer);
+        try {
+            GuiRenderState guiRenderState = new GuiRenderState();
 
-        GuiRenderer guiRenderer = new GuiRenderer(guiRenderState, mc.gameRenderer.featureRenderDispatcher(), List.of());
+            GuiRenderer guiRenderer =
+                    new GuiRenderer(guiRenderState, mc.gameRenderer.featureRenderDispatcher(), List.of());
 
-        GuiGraphicsExtractor guiGraphics = new GuiGraphicsExtractor(mc, guiRenderState, 0, 0);
+            GuiGraphicsExtractor guiGraphics = new GuiGraphicsExtractor(mc, guiRenderState, 0, 0);
 
-        // calculate tooltip size to fit to framebuffer
-        float scaleh = (float) screen.height / height;
-        float scalew = (float) screen.width / width;
+            float scaleh = (float) screen.height / height;
+            float scalew = (float) screen.width / width;
 
-        guiGraphics.pose().pushMatrix();
-        guiGraphics.pose().scale(scalew, scaleh);
-        guiGraphics.tooltip(mc.font, tooltip, 0, 0, NO_POSITIONER, tooltipStyle, false);
-        guiGraphics.pose().popMatrix();
+            guiGraphics.pose().pushMatrix();
+            guiGraphics.pose().scale(scalew, scaleh);
+            guiGraphics.tooltip(mc.font, tooltip, 0, 0, NO_POSITIONER, tooltipStyle, false);
+            guiGraphics.pose().popMatrix();
 
-        guiRenderer.render();
-        guiRenderer.close();
+            guiRenderer.render();
+            guiRenderer.close();
+        } finally {
+            ((GameRendererExtension) mc.gameRenderer).setOverridenRenderTarget(null);
+        }
 
-        RenderSystem.outputColorTextureOverride = null;
-        RenderSystem.outputDepthTextureOverride = null;
-        ((GameRendererExtension) McUtils.mc().gameRenderer).setOverridenRenderTarget(null);
         GpuTexture texture = cloneColorAttachment(framebuffer);
 
         framebuffer.destroyBuffers();
