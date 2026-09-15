@@ -14,7 +14,6 @@ import com.wynntils.mc.event.RenderLevelEvent;
 import com.wynntils.mc.event.SubmitCustomGeometryEvent;
 import com.wynntils.mc.extension.EntityExtension;
 import com.wynntils.mc.extension.EntityRenderStateExtension;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
@@ -22,7 +21,6 @@ import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.state.level.LevelRenderState;
 import net.minecraft.world.entity.Entity;
-import org.joml.Matrix4fc;
 import org.joml.Vector4f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -34,36 +32,34 @@ public abstract class LevelRendererMixin {
     @Inject(
             at = @At("TAIL"),
             method =
-                    "render(Lcom/mojang/blaze3d/resource/GraphicsResourceAllocator;Lnet/minecraft/client/DeltaTracker;ZLnet/minecraft/client/renderer/state/level/CameraRenderState;Lorg/joml/Matrix4fc;Lcom/mojang/blaze3d/buffers/GpuBufferSlice;Lorg/joml/Vector4f;Z)V")
+                    "render(Lcom/mojang/blaze3d/resource/GraphicsResourceAllocator;ZLnet/minecraft/client/renderer/state/level/CameraRenderState;Lcom/mojang/renderpearl/api/buffers/GpuBufferSlice;Lorg/joml/Vector4f;ZZ)V")
     private void renderLevelPost(
             GraphicsResourceAllocator resourceAllocator,
-            DeltaTracker deltaTracker,
             boolean renderOutline,
             CameraRenderState cameraState,
-            Matrix4fc modelViewMatrix,
             GpuBufferSlice terrainFog,
             Vector4f fogColor,
             boolean shouldRenderSky,
+            boolean consistentDepthRequired,
             CallbackInfo ci) {
         // No PoseStack is provided here, as it'd be just an empty stack.
-        MixinHelper.post(new RenderLevelEvent.Post(deltaTracker, cameraState.projectionMatrix, cameraState));
+        MixinHelper.post(new RenderLevelEvent.Post(cameraState.projectionMatrix, cameraState));
     }
 
     @Inject(
             at = @At("HEAD"),
             method =
-                    "render(Lcom/mojang/blaze3d/resource/GraphicsResourceAllocator;Lnet/minecraft/client/DeltaTracker;ZLnet/minecraft/client/renderer/state/level/CameraRenderState;Lorg/joml/Matrix4fc;Lcom/mojang/blaze3d/buffers/GpuBufferSlice;Lorg/joml/Vector4f;Z)V")
+                    "render(Lcom/mojang/blaze3d/resource/GraphicsResourceAllocator;ZLnet/minecraft/client/renderer/state/level/CameraRenderState;Lcom/mojang/renderpearl/api/buffers/GpuBufferSlice;Lorg/joml/Vector4f;ZZ)V")
     private void renderLevelPre(
             GraphicsResourceAllocator resourceAllocator,
-            DeltaTracker deltaTracker,
             boolean renderOutline,
             CameraRenderState cameraState,
-            Matrix4fc modelViewMatrix,
             GpuBufferSlice terrainFog,
             Vector4f fogColor,
             boolean shouldRenderSky,
+            boolean consistentDepthRequired,
             CallbackInfo ci) {
-        MixinHelper.post(new RenderLevelEvent.Pre(deltaTracker, cameraState.projectionMatrix, cameraState));
+        MixinHelper.post(new RenderLevelEvent.Pre(cameraState.projectionMatrix, cameraState));
     }
 
     @Inject(

@@ -4,26 +4,18 @@
  */
 package com.wynntils.mc.event;
 
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.neoforged.bus.api.Event;
 import org.joml.Matrix4f;
 
 // Note: Neither of these events provide a PoseStack, as it'd be just an empty stack.
 public abstract class RenderLevelEvent extends Event {
-    private final DeltaTracker deltaTracker;
     private final Matrix4f projectionMatrix;
     private final CameraRenderState cameraRenderState;
 
-    protected RenderLevelEvent(
-            DeltaTracker deltaTracker, Matrix4f projectionMatrix, CameraRenderState cameraRenderState) {
-        this.deltaTracker = deltaTracker;
+    protected RenderLevelEvent(Matrix4f projectionMatrix, CameraRenderState cameraRenderState) {
         this.projectionMatrix = projectionMatrix;
         this.cameraRenderState = cameraRenderState;
-    }
-
-    public DeltaTracker getDeltaTracker() {
-        return this.deltaTracker;
     }
 
     public Matrix4f getProjectionMatrix() {
@@ -35,14 +27,14 @@ public abstract class RenderLevelEvent extends Event {
     }
 
     public static class Pre extends RenderLevelEvent {
-        public Pre(DeltaTracker deltaTracker, Matrix4f projectionMatrix, CameraRenderState cameraRenderState) {
-            super(deltaTracker, projectionMatrix, cameraRenderState);
+        public Pre(Matrix4f projectionMatrix, CameraRenderState cameraRenderState) {
+            super(projectionMatrix, cameraRenderState);
         }
     }
 
     public static class Post extends RenderLevelEvent {
-        public Post(DeltaTracker deltaTracker, Matrix4f projectionMatrix, CameraRenderState cameraRenderState) {
-            super(deltaTracker, projectionMatrix, cameraRenderState);
+        public Post(Matrix4f projectionMatrix, CameraRenderState cameraRenderState) {
+            super(projectionMatrix, cameraRenderState);
         }
     }
 }
