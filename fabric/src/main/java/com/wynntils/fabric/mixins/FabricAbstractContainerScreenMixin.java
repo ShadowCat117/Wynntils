@@ -36,7 +36,7 @@ public abstract class FabricAbstractContainerScreenMixin {
                     @At(
                             value = "INVOKE",
                             target =
-                                    "Lnet/minecraft/client/gui/GuiGraphicsExtractor;setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/resources/Identifier;)V"))
+                                    "Lnet/minecraft/client/gui/GuiGraphicsExtractor;setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/resources/Identifier;Z)V"))
     private void extractSlotTooltipPre(
             GuiGraphicsExtractor instance,
             Font font,
@@ -45,6 +45,7 @@ public abstract class FabricAbstractContainerScreenMixin {
             int mouseX,
             int mouseY,
             Identifier backgroundTexture,
+            boolean extraSpaceAfterFirstLine,
             Operation<Void> operation,
             @Local ItemStack itemStack) {
         ItemTooltipRenderEvent.Pre event =
@@ -59,7 +60,8 @@ public abstract class FabricAbstractContainerScreenMixin {
                 event.getItemStack().getTooltipImage(),
                 event.getMouseX(),
                 event.getMouseY(),
-                backgroundTexture);
+                backgroundTexture,
+                extraSpaceAfterFirstLine);
     }
 
     // See the NeoForgeAbstractContainerScreenMixin#renderSlotPreCount for the Forge mixin.
