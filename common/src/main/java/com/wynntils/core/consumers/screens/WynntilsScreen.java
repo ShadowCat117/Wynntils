@@ -11,7 +11,6 @@ import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
-import net.minecraft.CrashReport;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Options;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -82,10 +81,6 @@ public abstract class WynntilsScreen extends Screen implements TextboxScreen {
 
     public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         return super.mouseClicked(event, isDoubleClick);
-    }
-
-    public void wrapCurrentScreenError(CrashReport crashReport) {
-        failure(crashReport.getDetails(), crashReport.getException());
     }
 
     @Override

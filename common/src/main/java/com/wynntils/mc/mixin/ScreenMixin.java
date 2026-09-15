@@ -4,7 +4,6 @@
  */
 package com.wynntils.mc.mixin;
 
-import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.PauseMenuInitEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
@@ -12,8 +11,6 @@ import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.mc.event.TitleScreenRebuildEvent;
 import com.wynntils.mc.extension.ScreenExtension;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
-import com.wynntils.utils.mc.McUtils;
-import net.minecraft.CrashReport;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
@@ -88,18 +85,6 @@ public abstract class ScreenMixin implements ScreenExtension {
     private void onFirstScreenInitPost(CallbackInfo ci) {
         // This is called only once, when the screen is first initialized
         MixinHelper.post(new ScreenInitEvent.Post((Screen) (Object) this, true));
-    }
-
-    @Inject(
-            method = "Lnet/minecraft/client/gui/screens/Screen;fillCrashDetails(Lnet/minecraft/CrashReport;)V",
-            at = @At("HEAD"),
-            cancellable = true)
-    private void wrapScreenErrorPre(CrashReport crashReport, CallbackInfo ci) {
-        if (!(McUtils.screen() instanceof WynntilsScreen wynntilsScreen)) return;
-
-        // This is too involved in error handling to worth risk sending events
-        wynntilsScreen.wrapCurrentScreenError(crashReport);
-        ci.cancel();
     }
 
     @Override
