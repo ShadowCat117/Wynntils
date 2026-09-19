@@ -64,10 +64,6 @@ public abstract class ScreenMixin implements ScreenExtension {
         }
 
         MixinHelper.post(new ScreenInitEvent.Post((Screen) (Object) this, false));
-
-        if ((Object) this instanceof PauseScreen pauseScreen) {
-            MixinHelper.post(new PauseMenuInitEvent(pauseScreen));
-        }
     }
 
     @Inject(
@@ -88,10 +84,6 @@ public abstract class ScreenMixin implements ScreenExtension {
     private void onFirstScreenInitPost(CallbackInfo ci) {
         // This is called only once, when the screen is first initialized
         MixinHelper.post(new ScreenInitEvent.Post((Screen) (Object) this, true));
-
-        if ((Object) this instanceof PauseScreen pauseScreen) {
-            MixinHelper.post(new PauseMenuInitEvent(pauseScreen));
-        }
     }
 
     @Inject(

@@ -101,14 +101,6 @@ public final class McUtils {
         return mc().gui.toastManager();
     }
 
-    public static ChatComponent getChat() {
-        return mc().gui.getChat();
-    }
-
-    public static ToastManager toastManager() {
-        return mc().getToastManager();
-    }
-
     public static void playSoundUI(SoundEvent sound) {
         mc().getSoundManager().play(SimpleSoundInstance.forUI(sound, 1.0F));
     }
