@@ -106,7 +106,7 @@ public final class RaycastUtils {
         return Optional.ofNullable(best);
     }
 
-    public static Optional<BlockPos> getTargetedBlockPosition(double maxDistance, boolean colliderOnly) {
+    public static Optional<BlockHitResult> getTargetedBlockHitResult(double maxDistance, boolean colliderOnly) {
         LocalPlayer player = McUtils.player();
 
         if (player.level() == null) return Optional.empty();
@@ -121,9 +121,13 @@ public final class RaycastUtils {
                 player.level().clip(new ClipContext(start, end, blockType, ClipContext.Fluid.NONE, player));
 
         if (hitResult.getType() == HitResult.Type.BLOCK) {
-            return Optional.of(hitResult.getBlockPos());
+            return Optional.of(hitResult);
         }
 
         return Optional.empty();
+    }
+
+    public static Optional<BlockPos> getTargetedBlockPosition(double maxDistance, boolean colliderOnly) {
+        return getTargetedBlockHitResult(maxDistance, colliderOnly).map(BlockHitResult::getBlockPos);
     }
 }
