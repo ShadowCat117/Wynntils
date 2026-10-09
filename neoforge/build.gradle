@@ -38,9 +38,9 @@ dependencies {
 
     // Hades Protocol
     if (file("${rootDir}/../Hades/build/libs/HadesProtocol-${hades_version}.jar").exists()) {
-        shadowImplementation(files("${rootDir}/../Hades/build/libs/HadesProtocol-${hades_version}.jar"))
+        include(files("${rootDir}/../Hades/build/libs/HadesProtocol-${hades_version}.jar"))
     } else {
-        shadowImplementation("com.github.wynntils:hades:v${hades_version}") { transitive false }
+        include(forgeRuntimeLibrary("com.github.wynntils:hades:v${hades_version}"))
     }
     include(forgeRuntimeLibrary("com.github.wynntils:antiope:v${antiope_version}"))
 
