@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.containers;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
@@ -93,6 +94,8 @@ public final class ContainerModel extends Model {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onMenuOpened(MenuEvent.MenuOpenedEvent.Pre e) {
         currentContainer = null;
+
+        WynntilsMod.info("Menu opened");
 
         for (Container container : containerTypes) {
             if (container.matchesTitle(e.getTitle())) {
