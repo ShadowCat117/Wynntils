@@ -27,6 +27,7 @@ import com.wynntils.core.persisted.upfixers.config.HideDamageLabelsToHideLabelsU
 import com.wynntils.core.persisted.upfixers.config.HorseMountFeatureToMountKeybindFeatureUpfixer;
 import com.wynntils.core.persisted.upfixers.config.ItemHighlightFeatureCosmeticToStoreUpfixer;
 import com.wynntils.core.persisted.upfixers.config.ItemStatInfoConfigRenameUpfixer;
+import com.wynntils.core.persisted.upfixers.config.LootrunPathSettingsUpfixer;
 import com.wynntils.core.persisted.upfixers.config.MapToMainMapRenamedConfigsUpfixer;
 import com.wynntils.core.persisted.upfixers.config.MaxItensityToMaxIntensityUpfixer;
 import com.wynntils.core.persisted.upfixers.config.MobTotemTimerOverlayFeatureToBonusTotemTimerOverlayFeature;
@@ -47,6 +48,9 @@ import com.wynntils.core.persisted.upfixers.config.TowerAuraVignetteAndOverlayMo
 import com.wynntils.core.persisted.upfixers.config.TowerAuraVignetteNameUpfixer;
 import com.wynntils.core.persisted.upfixers.config.TradeMarketAutoOpenChatToTradeMarketQuickSearchUpfixer;
 import com.wynntils.core.persisted.upfixers.config.UniversalBarOverlayColorToColorTemplateUpfixer;
+import com.wynntils.core.persisted.upfixers.config.WorldMarkersFeatureRenamesUpfixer;
+import com.wynntils.core.persisted.upfixers.config.WorldMarkersRenameUpfixer;
+import com.wynntils.core.persisted.upfixers.config.WorldMarkersWaypointConfigsRenameUpfixer;
 import com.wynntils.core.persisted.upfixers.config.WynntilsContentBookReplaceToShiftBehaviourUpfixer;
 import com.wynntils.core.persisted.upfixers.storage.BankPageNameToBankPagePropertyUpfixer;
 import com.wynntils.core.persisted.upfixers.storage.BankToAccountBankUpfixer;
@@ -108,6 +112,10 @@ public class UpfixerManager extends Manager {
         registerConfigUpfixer(new CoordinateOverlayToCoordinatesOverlayUpfixer());
         registerConfigUpfixer(new SkillPointLoadoutsToBuildLoadoutsUpfixer());
         registerConfigUpfixer(new AbilityCooldownRedirectToFeatureUpfixer());
+        registerConfigUpfixer(new WorldMarkersRenameUpfixer());
+        registerConfigUpfixer(new WorldMarkersWaypointConfigsRenameUpfixer());
+        registerConfigUpfixer(new WorldMarkersFeatureRenamesUpfixer());
+        registerConfigUpfixer(new LootrunPathSettingsUpfixer());
 
         // Register storage upfixers here, in order of run priority
         registerStorageUpfixer(new BankToAccountBankUpfixer());

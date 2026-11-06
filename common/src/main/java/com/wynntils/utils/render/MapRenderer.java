@@ -4,17 +4,15 @@
  */
 package com.wynntils.utils.render;
 
-import com.wynntils.services.lootrunpaths.LootrunPathInstance;
 import com.wynntils.services.map.MapTexture;
-import com.wynntils.services.map.pois.Poi;
-import com.wynntils.utils.MathUtils;
-import com.wynntils.utils.VectorUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.pipelines.CustomRenderPipelines;
-import com.wynntils.utils.render.state.ColoredTrianglesRenderState;
+import com.wynntils.utils.render.state.CircleMaskRenderState;
+import com.wynntils.utils.render.state.ColoredLineBatchRenderState;
 import com.wynntils.utils.render.state.TexturedPolygonRenderState;
+import com.wynntils.utils.render.type.CircleMask;
 import com.wynntils.utils.render.type.PointerType;
 import com.wynntils.utils.render.type.Vertex;
 import com.wynntils.utils.type.BoundingBox;
@@ -22,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.render.TextureSetup;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.texture.AbstractTexture;
@@ -30,7 +27,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.ChunkPos;
 import org.joml.Matrix3x2f;
-import org.joml.Vector2d;
 import org.joml.Vector2f;
 
 public final class MapRenderer {
@@ -126,24 +122,16 @@ public final class MapRenderer {
 
     public static void renderCircularBackground(
             GuiGraphics guiGraphics, CustomColor color, float x, float y, float width, float height) {
-        Matrix3x2f pose = new Matrix3x2f(guiGraphics.pose());
-        CircleMask mask = CircleMask.fromBounds(x, y, width, height);
-        List<Vector2f> vertices = new ArrayList<>(CIRCLE_MASK_SEGMENTS * 3);
-        Vector2f center = new Vector2f(mask.centerX(), mask.centerY());
-
-        for (int i = 0; i < CIRCLE_MASK_SEGMENTS; i++) {
-            float startAngle = (float) (Math.PI * 2.0 * i / CIRCLE_MASK_SEGMENTS);
-            float endAngle = (float) (Math.PI * 2.0 * (i + 1) / CIRCLE_MASK_SEGMENTS);
-            vertices.add(center);
-            vertices.add(mask.point(startAngle));
-            vertices.add(mask.point(endAngle));
-        }
-
-        guiGraphics.guiRenderState.submitGuiElement(new ColoredTrianglesRenderState(
-                CustomRenderPipelines.POSITION_COLOR_QUAD_PIPELINE,
+        // The circle is rendered as a single quad; CIRCLE_MASK_PIPELINE's fragment shader masks it
+        // to an exact ellipse per-pixel.
+        guiGraphics.guiRenderState.submitGuiElement(new CircleMaskRenderState(
+                CustomRenderPipelines.CIRCLE_MASK_PIPELINE,
                 TextureSetup.noTexture(),
-                pose,
-                vertices,
+                new Matrix3x2f(guiGraphics.pose()),
+                x,
+                y,
+                x + width,
+                y + height,
                 color,
                 guiGraphics.scissorStack.peek()));
     }
@@ -252,6 +240,11 @@ public final class MapRenderer {
         ChunkPos bottomRight =
                 new ChunkPos(new BlockPos((int) renderedWorldBoundingBox.x2(), 0, (int) renderedWorldBoundingBox.z2()));
 
+        // Accumulate every grid line into a single batch, submitted once below, instead of one
+        // GuiElementRenderState submission per line (which is O(visible chunks) submissions/frame
+        // and was the dominant rendering cost under the 1.21.6+ GUI render state model).
+        List<ColoredLineBatchRenderState.Segment> segments = new ArrayList<>();
+
         // Render the chunk grid, with a 1px border around each chunk.
         for (int x = topLeft.x; x <= bottomRight.x; x++) {
             for (int z = topLeft.z; z <= bottomRight.z; z++) {
@@ -276,8 +269,9 @@ public final class MapRenderer {
                         mappedChunks.contains(new ChunkPos(x - 1, z).toLong()) ? CommonColors.GREEN : renderColor;
 
                 // Render the top and left borders of the chunk
-                RenderUtils.drawLine(guiGraphics, topRenderColor, x1, z1, x2, z1, CHUNK_LINE_WIDTH);
-                RenderUtils.drawLine(guiGraphics, leftRenderColor, x1, z1, x1, z2, CHUNK_LINE_WIDTH);
+                segments.add(new ColoredLineBatchRenderState.Segment(x1, z1, x2, z1, CHUNK_LINE_WIDTH, topRenderColor));
+                segments.add(
+                        new ColoredLineBatchRenderState.Segment(x1, z1, x1, z2, CHUNK_LINE_WIDTH, leftRenderColor));
 
                 // Render the right border, if the chunk is the rightmost chunk
                 if (x == bottomRight.x) {
@@ -285,7 +279,8 @@ public final class MapRenderer {
                     CustomColor rightRenderColor =
                             mappedChunks.contains(new ChunkPos(x + 1, z).toLong()) ? CommonColors.GREEN : renderColor;
 
-                    RenderUtils.drawLine(guiGraphics, rightRenderColor, x2, z1, x2, z2, CHUNK_LINE_WIDTH);
+                    segments.add(new ColoredLineBatchRenderState.Segment(
+                            x2, z1, x2, z2, CHUNK_LINE_WIDTH, rightRenderColor));
                 }
 
                 // Render the bottom border, if the chunk is the bottommost chunk
@@ -294,252 +289,25 @@ public final class MapRenderer {
                     CustomColor bottomRenderColor =
                             mappedChunks.contains(new ChunkPos(x, z + 1).toLong()) ? CommonColors.GREEN : renderColor;
 
-                    RenderUtils.drawLine(guiGraphics, bottomRenderColor, x1, z2, x2, z2, CHUNK_LINE_WIDTH);
+                    segments.add(new ColoredLineBatchRenderState.Segment(
+                            x1, z2, x2, z2, CHUNK_LINE_WIDTH, bottomRenderColor));
                 }
             }
         }
-    }
 
-    public static void renderLootrunLine(
-            GuiGraphics guiGraphics,
-            LootrunPathInstance lootrun,
-            float lootrunWidth,
-            float outlineWidth,
-            float centerX,
-            float centerZ,
-            float mapTextureX,
-            float mapTextureZ,
-            float currentZoom,
-            CustomColor lootrunColor,
-            CustomColor outlineColor) {
-        if (lootrun.simplifiedPath().size() < 3) return;
+        if (segments.isEmpty()) return;
 
-        List<Vector2f> points = new ArrayList<>();
-
-        List<Vector2f> middlePoints = new ArrayList<>();
-
-        Vector2f last = null;
-        for (Vector2d point : lootrun.simplifiedPath()) {
-            Vector2f screenPos = new Vector2f(
-                    getRenderX((int) point.x(), mapTextureX, centerX, currentZoom),
-                    getRenderZ((int) point.y(), mapTextureZ, centerZ, currentZoom));
-
-            if (last == null) {
-                last = screenPos;
-                points.add(screenPos);
-                continue;
-            }
-
-            if (new Vector2f(last).sub(screenPos).length() > 2) {
-                last = screenPos;
-                points.add(screenPos);
-            }
-        }
-
-        for (int i = 0; i < points.size() - 1; i++) {
-            if (i == 0) {
-                middlePoints.add(points.getFirst());
-            } else if (i == points.size() - 2) {
-                middlePoints.add(points.getLast());
-            } else {
-                middlePoints.add(
-                        new Vector2f(points.get(i)).add(points.get(i + 1)).mul(0.5f));
-            }
-        }
-
-        List<Vector2f> outlineVertices = new ArrayList<>();
-        List<Vector2f> lootrunVertices = new ArrayList<>();
-        Matrix3x2f pose = new Matrix3x2f(guiGraphics.pose());
-        ScreenRectangle scissor = guiGraphics.scissorStack.peek();
-
-        for (int i = 1; i < middlePoints.size(); i++) {
-            drawTriangles(outlineVertices, middlePoints.get(i - 1), points.get(i), middlePoints.get(i), outlineWidth);
-            drawTriangles(lootrunVertices, middlePoints.get(i - 1), points.get(i), middlePoints.get(i), lootrunWidth);
-        }
-
-        if (!outlineVertices.isEmpty()) {
-            guiGraphics.guiRenderState.submitGuiElement(new ColoredTrianglesRenderState(
-                    CustomRenderPipelines.POSITION_COLOR_QUAD_PIPELINE,
-                    TextureSetup.noTexture(),
-                    pose,
-                    outlineVertices,
-                    outlineColor,
-                    scissor));
-        }
-
-        if (!lootrunVertices.isEmpty()) {
-            guiGraphics.guiRenderState.submitGuiElement(new ColoredTrianglesRenderState(
-                    CustomRenderPipelines.POSITION_COLOR_QUAD_PIPELINE,
-                    TextureSetup.noTexture(),
-                    pose,
-                    lootrunVertices,
-                    lootrunColor,
-                    scissor));
-        }
-    }
-
-    private static void drawTriangles(List<Vector2f> vertices, Vector2f p0, Vector2f p1, Vector2f p2, float lineWidth) {
-        Vector2f t0 = new Vector2f();
-        Vector2f t2 = new Vector2f();
-
-        p1.sub(p0, t0);
-        p2.sub(p1, t2);
-
-        t0 = new Vector2f(-t0.y(), t0.x());
-        t2 = new Vector2f(-t2.y(), t2.x());
-
-        if (MathUtils.signedArea(p0, p1, p2) > 0) {
-            t0.mul(-1);
-            t2.mul(-1);
-        }
-
-        t0.normalize();
-        t2.normalize();
-        t0.mul(lineWidth);
-        t2.mul(lineWidth);
-
-        Vector2f lineIntersection = VectorUtils.lineIntersection(
-                new Vector2f(p0).add(t0), new Vector2f(p1).add(t0), new Vector2f(p2).add(t2), new Vector2f(p1).add(t2));
-
-        Vector2f anchor = new Vector2f();
-        float anchorLength = Float.MAX_VALUE;
-
-        if (lineIntersection != null) {
-            lineIntersection.sub(p1, anchor);
-            anchorLength = lineIntersection.length();
-        }
-
-        Vector2f p0p1 = new Vector2f(p0).sub(p1);
-        Vector2f p1p2 = new Vector2f(p1).sub(p2);
-
-        if (anchorLength > p0p1.length() || anchorLength > p1p2.length()) {
-            addVertex(vertices, new Vector2f(p0).add(t0));
-            addVertex(vertices, new Vector2f(p0).sub(t0));
-            addVertex(vertices, new Vector2f(p1).add(t0));
-
-            addVertex(vertices, new Vector2f(p0).sub(t0));
-            addVertex(vertices, new Vector2f(p1).add(t0));
-            addVertex(vertices, new Vector2f(p1).sub(t0));
-
-            drawRoundJoint(p1, new Vector2f(p1).add(t0), new Vector2f(p1).add(t2), p2, vertices);
-
-            addVertex(vertices, new Vector2f(p2).add(t2));
-            addVertex(vertices, new Vector2f(p1).sub(t2));
-            addVertex(vertices, new Vector2f(p1).add(t2));
-
-            addVertex(vertices, new Vector2f(p2).add(t2));
-            addVertex(vertices, new Vector2f(p1).sub(t2));
-            addVertex(vertices, new Vector2f(p2).sub(t2));
-        } else {
-            addVertex(vertices, new Vector2f(p0).add(t0));
-            addVertex(vertices, new Vector2f(p0).sub(t0));
-            addVertex(vertices, new Vector2f(p1).sub(anchor));
-
-            addVertex(vertices, new Vector2f(p0).add(t0));
-            addVertex(vertices, new Vector2f(p1).sub(anchor));
-            addVertex(vertices, new Vector2f(p1).add(t0));
-
-            Vector2f rP0 = new Vector2f(p1).add(t0);
-            Vector2f rP1 = new Vector2f(p1).add(t2);
-            Vector2f rP2 = new Vector2f(p1).sub(anchor);
-
-            addVertex(vertices, rP0);
-            addVertex(vertices, p1);
-            addVertex(vertices, rP2);
-
-            drawRoundJoint(p1, rP0, rP1, rP2, vertices);
-
-            addVertex(vertices, p1);
-            addVertex(vertices, rP1);
-            addVertex(vertices, rP2);
-
-            addVertex(vertices, new Vector2f(p2).add(t2));
-            addVertex(vertices, new Vector2f(p1).sub(anchor));
-            addVertex(vertices, new Vector2f(p1).add(t2));
-
-            addVertex(vertices, new Vector2f(p2).add(t2));
-            addVertex(vertices, new Vector2f(p1).sub(anchor));
-            addVertex(vertices, new Vector2f(p2).sub(t2));
-        }
-    }
-
-    private static void drawRoundJoint(
-            Vector2f center, Vector2f p0, Vector2f p1, Vector2f nextPointInLine, List<Vector2f> vertices) {
-        float radius = new Vector2f(center).sub(p0).length();
-
-        float angle0 = (float) Math.atan2((p1.y() - center.y()), (p1.x() - center.x()));
-        float angle1 = (float) Math.atan2((p0.y() - center.y()), (p0.x() - center.x()));
-        float orgAngle0 = angle0;
-
-        if (angle1 > angle0) {
-            while (angle1 - angle0 >= Math.PI - 0.001f) {
-                angle1 = (float) (angle1 - 2 * Math.PI);
-            }
-        } else {
-            while (angle0 - angle1 >= Math.PI - 0.001f) {
-                angle0 = (float) (angle0 - 2 * Math.PI);
-            }
-        }
-
-        float angleDiff = angle1 - angle0;
-
-        if (Math.abs(angleDiff) >= Math.PI - 0.001f && Math.abs(angleDiff) <= Math.PI + 0.001f) {
-            Vector2f r1 = new Vector2f(center).sub(nextPointInLine);
-
-            if (r1.x() == 0) {
-                if (r1.y() > 0) {
-                    angleDiff = -angleDiff;
-                }
-            } else if (r1.x() >= -0.001f) {
-                angleDiff = -angleDiff;
-            }
-        }
-
-        int nSegments = (int) Math.abs(angleDiff * radius / 2);
-        nSegments++;
-
-        float angleInc = angleDiff / nSegments;
-
-        for (int i = 0; i < nSegments; i++) {
-            addVertex(vertices, center);
-            addVertex(vertices, new Vector2f((float) (center.x() + radius * Math.cos(orgAngle0 + angleInc * i)), (float)
-                    (center.y() + radius * Math.sin(orgAngle0 + angleInc * i))));
-            addVertex(
-                    vertices,
-                    new Vector2f((float) (center.x() + radius * Math.cos(orgAngle0 + angleInc * (1 + i))), (float)
-                            (center.y() + radius * Math.sin(orgAngle0 + angleInc * (1 + i)))));
-        }
-    }
-
-    private static void addVertex(List<Vector2f> vertices, Vector2f pos) {
-        vertices.add(new Vector2f(pos));
-    }
-
-    /**
-     * {@param poi} POI that we get the render coordinate for
-     * {@param mapCenterX} center coordinates of map (in-game coordinates)
-     * {@param centerX} center coordinates of map (screen render coordinates)
-     * {@param currentZoom} the bigger, the more detailed the map is
-     */
-    public static float getRenderX(Poi poi, float mapCenterX, float centerX, float currentZoom) {
-        double distanceX = poi.getLocation().getX() - mapCenterX;
-        return (float) (centerX + distanceX * currentZoom);
+        guiGraphics.guiRenderState.submitGuiElement(new ColoredLineBatchRenderState(
+                RenderPipelines.GUI,
+                TextureSetup.noTexture(),
+                new Matrix3x2f(guiGraphics.pose()),
+                segments,
+                guiGraphics.scissorStack.peek()));
     }
 
     public static float getRenderX(int worldX, float mapCenterX, float centerX, float currentZoom) {
         double distanceX = worldX - mapCenterX;
         return (float) (centerX + distanceX * currentZoom);
-    }
-
-    /**
-     * {@param poi} POI that we get the render coordinate for
-     * {@param mapCenterZ} center coordinates of map (in-game coordinates)
-     * {@param centerZ} center coordinates of map (screen render coordinates)
-     * {@param currentZoom} the bigger, the more detailed the map is
-     */
-    public static float getRenderZ(Poi poi, float mapCenterZ, float centerZ, float currentZoom) {
-        double distanceZ = poi.getLocation().getZ() - mapCenterZ;
-        return (float) (centerZ + distanceZ * currentZoom);
     }
 
     public static float getRenderZ(int worldZ, float mapCenterZ, float centerZ, float currentZoom) {
@@ -662,16 +430,5 @@ public final class MapRenderer {
 
     private static Vector2f transform(Matrix3x2f matrix, float x, float y) {
         return matrix.transformPosition(new Vector2f(x, y));
-    }
-
-    private record CircleMask(float centerX, float centerY, float radiusX, float radiusY) {
-        private static CircleMask fromBounds(float x, float y, float width, float height) {
-            return new CircleMask(x + width / 2f, y + height / 2f, width / 2f, height / 2f);
-        }
-
-        private Vector2f point(float angle) {
-            return new Vector2f(
-                    centerX + (float) Math.cos(angle) * radiusX, centerY + (float) Math.sin(angle) * radiusY);
-        }
     }
 }

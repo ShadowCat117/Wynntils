@@ -13,11 +13,6 @@ import java.util.Optional;
 
 public abstract class AbstractMapPathAttributes extends AbstractMapAttributes implements MapPathAttributes {
     @Override
-    public final Optional<String> getIconId() {
-        return Optional.empty();
-    }
-
-    @Override
     public final Optional<MapVisibility> getIconVisibility() {
         return Optional.empty();
     }
@@ -39,21 +34,6 @@ public abstract class AbstractMapPathAttributes extends AbstractMapAttributes im
 
     @Override
     public final Optional<MapMarkerOptions> getMarkerOptions() {
-        return Optional.empty();
-    }
-
-    @Override
-    public final Optional<CustomColor> getFillColor() {
-        return Optional.empty();
-    }
-
-    @Override
-    public final Optional<CustomColor> getBorderColor() {
-        return Optional.empty();
-    }
-
-    @Override
-    public final Optional<Float> getBorderWidth() {
         return Optional.empty();
     }
 }

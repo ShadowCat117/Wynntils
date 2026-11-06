@@ -10,6 +10,7 @@ import com.wynntils.services.mapdata.attributes.type.MapMarkerOptions;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.type.TextShadow;
+import java.util.List;
 import java.util.Optional;
 
 public class MapAttributesImpl implements MapAttributes {
@@ -28,6 +29,10 @@ public class MapAttributesImpl implements MapAttributes {
     private final CustomColor fillColor;
     private final CustomColor borderColor;
     private final Float borderWidth;
+    private final Float pathWidth;
+    private final CustomColor pathColor;
+    private final Boolean hasPath;
+    private final Float pathCycleDistance;
 
     public MapAttributesImpl(
             Integer priority,
@@ -44,7 +49,11 @@ public class MapAttributesImpl implements MapAttributes {
             MapMarkerOptionsImpl markerOptions,
             CustomColor fillColor,
             CustomColor borderColor,
-            Float borderWidth) {
+            Float borderWidth,
+            Float pathWidth,
+            CustomColor pathColor,
+            Boolean hasPath,
+            Float pathCycleDistance) {
         this.priority = priority;
         this.level = level;
         this.label = label;
@@ -60,6 +69,10 @@ public class MapAttributesImpl implements MapAttributes {
         this.fillColor = fillColor;
         this.borderColor = borderColor;
         this.borderWidth = borderWidth;
+        this.pathWidth = pathWidth;
+        this.pathColor = pathColor;
+        this.hasPath = hasPath;
+        this.pathCycleDistance = pathCycleDistance;
     }
 
     public MapAttributesImpl(MapAttributesImpl attributes) {
@@ -78,7 +91,11 @@ public class MapAttributesImpl implements MapAttributes {
                 attributes.markerOptions,
                 attributes.fillColor,
                 attributes.borderColor,
-                attributes.borderWidth);
+                attributes.borderWidth,
+                attributes.pathWidth,
+                attributes.pathColor,
+                attributes.hasPath,
+                attributes.pathCycleDistance);
     }
 
     @Override
@@ -142,13 +159,13 @@ public class MapAttributesImpl implements MapAttributes {
     }
 
     @Override
-    public Optional<CustomColor> getFillColor() {
-        return Optional.ofNullable(fillColor);
+    public Optional<List<CustomColor>> getFillColors() {
+        return Optional.ofNullable(fillColor).map(List::of);
     }
 
     @Override
-    public Optional<CustomColor> getBorderColor() {
-        return Optional.ofNullable(borderColor);
+    public Optional<List<CustomColor>> getBorderColors() {
+        return Optional.ofNullable(borderColor).map(List::of);
     }
 
     @Override
@@ -157,8 +174,28 @@ public class MapAttributesImpl implements MapAttributes {
     }
 
     @Override
+    public Optional<Float> getPathWidth() {
+        return Optional.ofNullable(pathWidth);
+    }
+
+    @Override
     public Optional<MapDecoration> getIconDecoration() {
         // json files can never provide icon decorations; those are only for dynamic features
         return Optional.empty();
+    }
+
+    @Override
+    public Optional<CustomColor> getPathColor() {
+        return Optional.ofNullable(pathColor);
+    }
+
+    @Override
+    public Optional<Boolean> getHasPath() {
+        return Optional.ofNullable(hasPath);
+    }
+
+    @Override
+    public Optional<Float> getPathCycleDistance() {
+        return Optional.ofNullable(pathCycleDistance);
     }
 }

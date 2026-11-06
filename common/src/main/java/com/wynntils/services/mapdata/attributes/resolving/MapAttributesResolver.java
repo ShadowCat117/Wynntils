@@ -10,7 +10,11 @@ import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapMarkerOptions;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.services.mapdata.features.type.MapFeature;
+import com.wynntils.services.mapdata.features.type.MapPath;
+import com.wynntils.services.mapdata.paths.PathCategoriesProvider;
 import com.wynntils.services.mapdata.type.MapCategory;
+import com.wynntils.utils.colors.CommonColors;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -39,18 +43,38 @@ public final class MapAttributesResolver {
                 resolver.getResolvedMapVisibility(MapAttributes::getLabelVisibility),
                 resolver.getAttribute(MapAttributes::getLabelColor),
                 resolver.getAttribute(MapAttributes::getLabelShadow),
-                resolver.getAttribute(MapAttributes::getIconId),
+                resolver.getAttribute(
+                        MapAttributes::getIconId,
+                        feature instanceof MapPath
+                                ? PathCategoriesProvider.ARROW_ICON
+                                : DefaultMapAttributes.INSTANCE.getIconId().orElseThrow()),
                 resolver.getResolvedMapVisibility(MapAttributes::getIconVisibility),
                 resolver.getAttribute(MapAttributes::getIconColor),
                 resolver.getAttribute(MapAttributes::getIconDecoration),
                 resolver.getAttribute(MapAttributes::getHasMarker),
                 resolver.getResolvedMarkerOptions(MapAttributes::getMarkerOptions),
-                resolver.getAttribute(MapAttributes::getFillColor),
-                resolver.getAttribute(MapAttributes::getBorderColor),
-                resolver.getAttribute(MapAttributes::getBorderWidth));
+                resolver.getAttribute(MapAttributes::getFillColors),
+                resolver.getAttribute(
+                        MapAttributes::getBorderColors,
+                        feature instanceof MapPath
+                                ? List.of(CommonColors.BLACK)
+                                : DefaultMapAttributes.INSTANCE
+                                        .getBorderColors()
+                                        .get()),
+                resolver.getAttribute(MapAttributes::getBorderWidth),
+                resolver.getAttribute(MapAttributes::getPathWidth),
+                resolver.getAttribute(MapAttributes::getPathColor),
+                resolver.getAttribute(MapAttributes::getHasPath),
+                resolver.getAttribute(MapAttributes::getPathCycleDistance));
     }
 
     private <T> T getAttribute(Function<MapAttributes, Optional<T>> attributeGetter) {
+        return getAttribute(
+                attributeGetter,
+                attributeGetter.apply(DefaultMapAttributes.INSTANCE).get());
+    }
+
+    private <T> T getAttribute(Function<MapAttributes, Optional<T>> attributeGetter, T fallback) {
         // Check if there is a override provider for this feature or category
         // and if it has the attribute we're looking for, use it
         Optional<MapAttributes> overrideAttributes = Services.MapData.getOverrideAttributesForFeature(feature);
@@ -78,7 +102,7 @@ public final class MapAttributesResolver {
         }
 
         // Otherwise return the fallback default value
-        return attributeGetter.apply(DefaultMapAttributes.INSTANCE).get();
+        return fallback;
     }
 
     private ResolvedMarkerOptions getResolvedMarkerOptions(

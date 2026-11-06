@@ -6,6 +6,7 @@ package com.wynntils.services.mapdata.attributes.type;
 
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.type.TextShadow;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -76,14 +77,35 @@ public interface MapAttributes {
 
     // region Area & Border Attributes
 
-    // The color of the area on the map
-    Optional<CustomColor> getFillColor();
+    // The colors of the area or path interior on the map
+    Optional<List<CustomColor>> getFillColors();
 
-    // The color of the border on the map
-    Optional<CustomColor> getBorderColor();
+    // The colors of the border on the map
+    Optional<List<CustomColor>> getBorderColors();
 
     // The width of the border on the map
     Optional<Float> getBorderWidth();
 
+    // The full width of a path's colored stroke, excluding its border, in GUI pixels.
+    default Optional<Float> getPathWidth() {
+        return Optional.empty();
+    }
+
     // endregion
+
+    default Optional<CustomColor> getPathColor() {
+        return Optional.empty();
+    }
+
+    default Optional<Boolean> getHasPath() {
+        return Optional.empty();
+    }
+
+    default Optional<Float> getPathCycleDistance() {
+        return Optional.empty();
+    }
+
+    static Optional<CustomColor> firstColor(Optional<List<CustomColor>> colors) {
+        return colors.flatMap(list -> list.stream().findFirst());
+    }
 }

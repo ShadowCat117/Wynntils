@@ -14,6 +14,7 @@ public class MapIconsProvider extends BuiltInProvider {
     public static final String FALLBACK_ICON_ID = "wynntils:icon:symbols:waypoint";
 
     private static final List<MapIcon> PROVIDED_ICONS = List.of(
+            new BuiltInIcon("wynntils:icon:path:arrows", Texture.LOOTRUN_LINE),
             new BuiltInIcon("wynntils:icon:content:boss-altar", Texture.BOSS_ALTAR),
             new BuiltInIcon("wynntils:icon:content:cave", Texture.CAVE),
             new BuiltInIcon("wynntils:icon:content:discovery", Texture.DISCOVERY_ICON),
@@ -51,10 +52,12 @@ public class MapIconsProvider extends BuiltInProvider {
             new BuiltInIcon("wynntils:icon:service:merchant:emerald", Texture.EMERALD_MERCHANT),
             new BuiltInIcon("wynntils:icon:service:merchant:exchange", Texture.EXCHANGE_MERCHANT),
             new BuiltInIcon("wynntils:icon:service:merchant:liquid-emerald", Texture.LIQUID_MERCHANT),
+            new BuiltInIcon("wynntils:icon:service:merchant:mount", Texture.MOUNT_MERCHANT),
             new BuiltInIcon("wynntils:icon:service:merchant:potion", Texture.POTION_MERCHANT),
             new BuiltInIcon("wynntils:icon:service:merchant:scroll", Texture.SCROLL_MERCHANT),
             new BuiltInIcon("wynntils:icon:service:merchant:tool", Texture.TOOL_MERCHANT),
             new BuiltInIcon("wynntils:icon:service:merchant:weapon", Texture.WEAPON_MERCHANT),
+            new BuiltInIcon("wynntils:icon:service:mount-enclosure", Texture.MOUNT_ENCLOSURE),
             new BuiltInIcon("wynntils:icon:service:party-finder", Texture.PARTY_FINDER),
             new BuiltInIcon("wynntils:icon:service:profession:alchemism", Texture.ALCHEMIST_STATION),
             new BuiltInIcon("wynntils:icon:service:profession:armoring", Texture.ARMORING_STATION),

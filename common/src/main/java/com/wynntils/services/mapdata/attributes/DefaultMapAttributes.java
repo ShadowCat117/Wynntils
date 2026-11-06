@@ -14,6 +14,7 @@ import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.type.TextShadow;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -99,17 +100,37 @@ public final class DefaultMapAttributes implements MapAttributes {
     }
 
     @Override
-    public Optional<CustomColor> getFillColor() {
-        return Optional.of(CommonColors.WHITE);
+    public Optional<List<CustomColor>> getFillColors() {
+        return Optional.of(List.of(CommonColors.WHITE));
     }
 
     @Override
-    public Optional<CustomColor> getBorderColor() {
-        return Optional.of(CommonColors.WHITE);
+    public Optional<List<CustomColor>> getBorderColors() {
+        return Optional.of(List.of(CommonColors.WHITE));
     }
 
     @Override
     public Optional<Float> getBorderWidth() {
         return Optional.of(1.0f);
+    }
+
+    @Override
+    public Optional<Float> getPathWidth() {
+        return Optional.of(3f);
+    }
+
+    @Override
+    public Optional<CustomColor> getPathColor() {
+        return Optional.of(CommonColors.LIGHT_BLUE);
+    }
+
+    @Override
+    public Optional<Boolean> getHasPath() {
+        return Optional.of(false);
+    }
+
+    @Override
+    public Optional<Float> getPathCycleDistance() {
+        return Optional.of(20f);
     }
 }

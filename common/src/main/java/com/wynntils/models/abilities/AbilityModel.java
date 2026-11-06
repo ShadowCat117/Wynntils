@@ -24,7 +24,6 @@ import com.wynntils.models.abilities.bossbars.MantraBar;
 import com.wynntils.models.abilities.bossbars.MirrorImageBar;
 import com.wynntils.models.abilities.bossbars.MomentumBar;
 import com.wynntils.models.abilities.bossbars.NightcloakKnivesBar;
-import com.wynntils.models.abilities.bossbars.OnTheBrinkBar;
 import com.wynntils.models.abilities.bossbars.OphanimBar;
 import com.wynntils.models.abilities.event.AbilityCooldownRefreshedEvent;
 import com.wynntils.models.abilities.event.AbilityCooldownsUpdatedEvent;
@@ -72,8 +71,6 @@ public final class AbilityModel extends Model {
 
     public static final NightcloakKnivesBar nightcloakKnivesBar = new NightcloakKnivesBar();
 
-    public static final OnTheBrinkBar onTheBrinkBar = new OnTheBrinkBar();
-
     public static final OphanimBar ophanimBar = new OphanimBar();
 
     private static final List<TrackedBar> ALL_BARS = Arrays.asList(
@@ -88,7 +85,6 @@ public final class AbilityModel extends Model {
             mirrorImageBar,
             momentumBar,
             nightcloakKnivesBar,
-            onTheBrinkBar,
             ophanimBar);
 
     @Persisted

@@ -16,7 +16,6 @@ import com.wynntils.features.DiscordRichPresenceFeature;
 import com.wynntils.features.ExtendedSeasonLeaderboardFeature;
 import com.wynntils.features.HideCrosshairInCutscenesFeature;
 import com.wynntils.features.HideTripwiresFeature;
-import com.wynntils.features.LootrunFeature;
 import com.wynntils.features.TerritoryDefenseMessageFeature;
 import com.wynntils.features.ValuableFoundFeature;
 import com.wynntils.features.chat.BombBellRelayFeature;
@@ -83,11 +82,10 @@ import com.wynntils.features.inventory.ItemTextOverlayFeature;
 import com.wynntils.features.inventory.LootchestTextFeature;
 import com.wynntils.features.inventory.PersonalStorageUtilitiesFeature;
 import com.wynntils.features.inventory.UnidentifiedItemIconFeature;
-import com.wynntils.features.map.BeaconBeamFeature;
 import com.wynntils.features.map.GuildMapFeature;
 import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.features.map.MinimapFeature;
-import com.wynntils.features.map.WorldWaypointDistanceFeature;
+import com.wynntils.features.map.WorldMarkersFeature;
 import com.wynntils.features.overlays.AbilityCooldownsOverlayFeature;
 import com.wynntils.features.overlays.AnnihilationSunOverlayFeature;
 import com.wynntils.features.overlays.ArcherBeastTrackerOverlayFeature;
@@ -246,9 +244,6 @@ public final class FeatureManager extends Manager {
         registerFeature(new PlayerInfoFooterDebuggerFeature());
         registerFeature(new TextureRecorderFeature());
 
-        // always on
-        registerFeature(new LootrunFeature());
-
         // region chat
         registerFeature(new BombBellRelayFeature());
         registerFeature(new ChatCoordinatesFeature());
@@ -320,11 +315,10 @@ public final class FeatureManager extends Manager {
         // endregion
 
         // region map
-        registerFeature(new BeaconBeamFeature());
         registerFeature(new GuildMapFeature());
         registerFeature(new MainMapFeature());
         registerFeature(new MinimapFeature());
-        registerFeature(new WorldWaypointDistanceFeature());
+        registerFeature(new WorldMarkersFeature());
         // endregion
 
         // region overlays

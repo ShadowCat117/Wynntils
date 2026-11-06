@@ -19,9 +19,9 @@ import com.wynntils.screens.crowdsourcing.WynntilsCrowdSourcingSettingsScreen;
 import com.wynntils.screens.downloads.DownloadScreen;
 import com.wynntils.screens.guides.WynntilsGuideScreen;
 import com.wynntils.screens.itemsharing.SavedItemsScreen;
-import com.wynntils.screens.lootrunpaths.WynntilsLootrunPathsScreen;
 import com.wynntils.screens.maps.MainMapScreen;
-import com.wynntils.screens.maps.WaypointManagementScreen;
+import com.wynntils.screens.maps.paths.PathSelectionScreen;
+import com.wynntils.screens.maps.waypoints.WaypointManagementScreen;
 import com.wynntils.screens.overlays.selection.OverlaySettingsScreen;
 import com.wynntils.screens.settings.WynntilsFeaturesSettingsScreen;
 import com.wynntils.screens.statistics.WynntilsStatisticsScreen;
@@ -138,15 +138,14 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                         y,
                         Texture.LOOTRUN_ICON,
                         true,
-                        WynntilsLootrunPathsScreen.create(this),
+                        new PathSelectionScreen(this),
                         List.of(
                                 Component.literal("[>] ")
                                         .withStyle(ChatFormatting.GOLD)
-                                        .append(Component.translatable(
-                                                        "screens.wynntils.wynntilsQuestBook.lootruns.name")
+                                        .append(Component.translatable("screens.wynntils.map.paths.stored")
                                                 .withStyle(ChatFormatting.BOLD)
                                                 .withStyle(ChatFormatting.GOLD)),
-                                Component.translatable("screens.wynntils.wynntilsQuestBook.lootruns.description")
+                                Component.translatable("screens.wynntils.map.paths.menuDescription")
                                         .withStyle(ChatFormatting.GRAY))));
 
         x += (BUTTON_SIZE + 5);
