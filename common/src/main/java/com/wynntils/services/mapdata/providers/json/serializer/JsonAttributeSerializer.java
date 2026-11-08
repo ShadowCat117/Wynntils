@@ -13,7 +13,6 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.reflect.TypeToken;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Managers;
 import com.wynntils.services.mapdata.attributes.impl.MapAreaAttributesImpl;
 import com.wynntils.services.mapdata.attributes.impl.MapAttributesImpl;
 import com.wynntils.services.mapdata.attributes.impl.MapLocationAttributesImpl;
@@ -77,20 +76,19 @@ public final class JsonAttributeSerializer
     public JsonElement serialize(MapAttributesImpl mapAttributes, Type type, JsonSerializationContext context) {
         // For the base class, we just serialize the attributes as is
         if (type.equals(MapAttributesImpl.class)) {
-            return Managers.Json.GSON.toJsonTree(mapAttributes);
+            return context.serialize(mapAttributes, MapAttributesImpl.class);
         }
 
         // For the specific implementations, we need to serialize the attributes that make sense,
         // explicitly skipping null and unsupported attributes
-        JsonObject attributesJson = Managers.Json.GSON
-                .toJsonTree(mapAttributes, MapAttributesImpl.class)
-                .getAsJsonObject();
+        JsonObject attributesJson =
+                context.serialize(mapAttributes, MapAttributesImpl.class).getAsJsonObject();
         JsonObject result = new JsonObject();
 
         attributesJson.entrySet().forEach(entry -> {
             String attribute = entry.getKey();
             JsonElement value = entry.getValue();
-            if (value != null) {
+            if (value != null && !value.isJsonNull()) {
                 result.add(attribute, value);
             }
         });

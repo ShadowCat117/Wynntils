@@ -18,6 +18,7 @@ import com.wynntils.services.mapdata.attributes.resolving.ResolvedMarkerOptions;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.features.type.MapArea;
 import com.wynntils.services.mapdata.features.type.MapFeature;
+import com.wynntils.services.mapdata.paths.PathCategoriesProvider;
 import com.wynntils.services.mapdata.providers.MapDataProviderInfo;
 import com.wynntils.services.mapdata.providers.builtin.BuiltInProvider;
 import com.wynntils.services.mapdata.providers.builtin.CategoriesProvider;
@@ -421,6 +422,7 @@ public class MapDataService extends Service {
         // Metadata, which all other providers depend on
         registerBuiltInProvider(CATEGORIES_PROVIDER, this, false);
         registerBuiltInProvider(MAP_ICONS_PROVIDER, this, false);
+        registerBuiltInProvider(new PathCategoriesProvider(), this, false);
 
         // Locations
         registerBuiltInProvider(SERVICE_LIST_PROVIDER, this, true);

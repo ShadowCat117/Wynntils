@@ -1540,13 +1540,50 @@ public final class RenderUtils {
         }
     }
 
+    public static void drawPath(
+            GuiGraphics guiGraphics,
+            List<CustomColor> colors,
+            float width,
+            List<CustomColor> borderColors,
+            float borderWidth,
+            List<Vector2f> vertices,
+            CircleMask circularMask) {
+        List<ColoredTriangleBatchRenderState.Triangle> triangles = PathStrokeGeometry.createTriangles(
+                vertices,
+                colors.isEmpty() ? CustomColor.NONE : CustomColor.blend(colors),
+                width,
+                borderColors.isEmpty() ? CustomColor.NONE : CustomColor.blend(borderColors),
+                borderWidth);
+        if (triangles.isEmpty()) return;
+
+        guiGraphics.guiRenderState.submitGuiElement(new ColoredTriangleBatchRenderState(
+                circularMask != null
+                        ? CustomRenderPipelines.CIRCLE_MASK_PIPELINE
+                        : CustomRenderPipelines.POSITION_COLOR_QUAD_PIPELINE,
+                TextureSetup.noTexture(),
+                new Matrix3x2f(guiGraphics.pose()),
+                triangles,
+                circularMask,
+                guiGraphics.scissorStack.peek()));
+    }
+
     public static void drawPolygon(
             GuiGraphics guiGraphics,
             CustomColor fillColor,
             CustomColor borderColor,
             float borderWidth,
             List<Vector2f> vertices) {
-        drawPolygon(guiGraphics, List.of(fillColor), List.of(borderColor), borderWidth, vertices);
+        drawPolygon(guiGraphics, fillColor, borderColor, borderWidth, vertices, null);
+    }
+
+    public static void drawPolygon(
+            GuiGraphics guiGraphics,
+            CustomColor fillColor,
+            CustomColor borderColor,
+            float borderWidth,
+            List<Vector2f> vertices,
+            CircleMask circularMask) {
+        drawPolygon(guiGraphics, List.of(fillColor), List.of(borderColor), borderWidth, vertices, circularMask);
     }
 
     public static void drawPolygon(
@@ -1555,6 +1592,16 @@ public final class RenderUtils {
             List<CustomColor> borderColors,
             float borderWidth,
             List<Vector2f> vertices) {
+        drawPolygon(guiGraphics, fillColors, borderColors, borderWidth, vertices, null);
+    }
+
+    public static void drawPolygon(
+            GuiGraphics guiGraphics,
+            List<CustomColor> fillColors,
+            List<CustomColor> borderColors,
+            float borderWidth,
+            List<Vector2f> vertices,
+            CircleMask circularMask) {
         if (vertices.size() < 3) {
             WynntilsMod.warn("Tried to draw a polygon with less than 3 vertices");
             return;
@@ -1569,10 +1616,13 @@ public final class RenderUtils {
                 PolygonGeometry.createFillTriangles(vertices, fillColors);
         if (!triangles.isEmpty()) {
             guiGraphics.guiRenderState.submitGuiElement(new ColoredTriangleBatchRenderState(
-                    CustomRenderPipelines.POSITION_COLOR_QUAD_PIPELINE,
+                    circularMask != null
+                            ? CustomRenderPipelines.CIRCLE_MASK_PIPELINE
+                            : CustomRenderPipelines.POSITION_COLOR_QUAD_PIPELINE,
                     TextureSetup.noTexture(),
                     pose,
                     triangles,
+                    circularMask,
                     scissorArea));
         }
 
@@ -1581,7 +1631,12 @@ public final class RenderUtils {
                 PolygonGeometry.createBorderSegments(vertices, borderColors, borderWidth);
         if (!segments.isEmpty()) {
             guiGraphics.guiRenderState.submitGuiElement(new ColoredLineBatchRenderState(
-                    RenderPipelines.GUI, TextureSetup.noTexture(), pose, segments, scissorArea));
+                    circularMask != null ? CustomRenderPipelines.CIRCLE_MASK_PIPELINE : RenderPipelines.GUI,
+                    TextureSetup.noTexture(),
+                    pose,
+                    segments,
+                    circularMask,
+                    scissorArea));
         }
     }
 }

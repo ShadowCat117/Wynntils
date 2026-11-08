@@ -9,7 +9,6 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import com.wynntils.core.components.Managers;
 import com.wynntils.services.mapdata.attributes.impl.MapAttributesImpl;
 import com.wynntils.services.mapdata.impl.MapCategoryImpl;
 import com.wynntils.utils.JsonUtils;
@@ -25,7 +24,7 @@ public final class JsonCategorySerializer implements JsonDeserializer<MapCategor
         String name = JsonUtils.getNullableJsonString(json, "name");
         JsonElement attributesJson = json.get("attributes");
         MapAttributesImpl attributes =
-                attributesJson == null ? null : Managers.Json.GSON.fromJson(attributesJson, MapAttributesImpl.class);
+                attributesJson == null ? null : context.deserialize(attributesJson, MapAttributesImpl.class);
 
         return new MapCategoryImpl(id, name, attributes);
     }
