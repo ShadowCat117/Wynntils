@@ -92,4 +92,19 @@ public final class MapPathFiles {
             Files.deleteIfExists(temporary);
         }
     }
+
+    public static void update(Path file, MapPathImpl path) throws IOException {
+        JsonObject json = read(file);
+        JsonArray paths = json.getAsJsonObject("features").getAsJsonArray("paths");
+        for (int i = 0; i < paths.size(); i++) {
+            if (paths.get(i).getAsJsonObject().get("featureId").getAsString().equals(path.getFeatureId())) {
+                paths.set(i, pathJson(path));
+                write(file, json, true);
+
+                return;
+            }
+        }
+
+        throw new IOException("Path no longer exists in provider");
+    }
 }

@@ -8,9 +8,15 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
+import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.commands.Command;
+import com.wynntils.screens.maps.managers.ProviderManagementScreen;
+import com.wynntils.screens.maps.paths.PathCreationScreen;
 import com.wynntils.services.mapdata.MapDataService;
+import com.wynntils.services.mapdata.attributes.MapAttributesBuilder;
+import com.wynntils.services.mapdata.paths.PathCategoriesProvider;
 import com.wynntils.services.mapdata.providers.MapDataProviderInfo;
 import com.wynntils.services.mapdata.providers.json.JsonProviderInfo;
 import com.wynntils.utils.mc.McUtils;
@@ -20,17 +26,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Supplier;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.util.Util;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 
 public class MapCommand extends Command {
     private static final SuggestionProvider<CommandSourceStack> PROVIDER_SUGGESTION_PROVIDER =
@@ -58,7 +69,9 @@ public class MapCommand extends Command {
     public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder(
             LiteralArgumentBuilder<CommandSourceStack> base, CommandBuildContext context) {
         return Commands.literal("map")
+                .then(buildPathCommand())
                 .then(Commands.literal("provider")
+                        .then(Commands.literal("browse").executes(context1 -> openProviderScreen()))
                         .then(Commands.literal("remote")
                                 .then(Commands.literal("add")
                                         .then(Commands.argument("name", StringArgumentType.string())
@@ -92,6 +105,7 @@ public class MapCommand extends Command {
 
     private int localProvidersFolder(CommandContext<CommandSourceStack> context) {
         Util.getPlatform().openFile(MapDataService.LOCAL_PROVIDERS);
+
         return 1;
     }
 
@@ -106,6 +120,7 @@ public class MapCommand extends Command {
             context.getSource()
                     .sendFailure(Component.translatable("command.wynntils.map.invalidUrl")
                             .withStyle(ChatFormatting.RED));
+
             return 0;
         }
 
@@ -114,6 +129,7 @@ public class MapCommand extends Command {
             context.getSource()
                     .sendFailure(Component.translatable("command.wynntils.map.invalidUrlScheme")
                             .withStyle(ChatFormatting.RED));
+
             return 0;
         }
 
@@ -123,6 +139,7 @@ public class MapCommand extends Command {
                         () -> Component.translatable("command.wynntils.map.providerAdded")
                                 .withStyle(ChatFormatting.GREEN),
                         false);
+
         return 1;
     }
 
@@ -136,6 +153,7 @@ public class MapCommand extends Command {
             context.getSource()
                     .sendFailure(Component.translatable("command.wynntils.map.jsonProviderNotFound")
                             .withStyle(ChatFormatting.RED));
+
             return 0;
         }
 
@@ -151,6 +169,7 @@ public class MapCommand extends Command {
                     .sendFailure(Component.translatable("command.wynntils.map.onlyRemoteRemovable")
                             .withStyle(ChatFormatting.RED)
                             .append(folderCommand));
+
             return 0;
         }
 
@@ -158,6 +177,7 @@ public class MapCommand extends Command {
             context.getSource()
                     .sendFailure(Component.translatable("command.wynntils.map.removeFailed")
                             .withStyle(ChatFormatting.RED));
+
             return 0;
         }
 
@@ -166,6 +186,7 @@ public class MapCommand extends Command {
                         () -> Component.translatable("command.wynntils.map.providerRemoved")
                                 .withStyle(ChatFormatting.GREEN),
                         false);
+
         return 1;
     }
 
@@ -203,24 +224,30 @@ public class MapCommand extends Command {
                     == 0) {
                 return 0;
             }
+
             firstSection = false;
         }
+
         if (!bundledProviders.isEmpty()) {
             if (appendProviderSection(
                             context, message, "command.wynntils.map.bundledHeader", bundledProviders, firstSection)
                     == 0) {
                 return 0;
             }
+
             firstSection = false;
         }
+
         if (!localProviders.isEmpty()) {
             if (appendProviderSection(
                             context, message, "command.wynntils.map.localHeader", localProviders, firstSection)
                     == 0) {
                 return 0;
             }
+
             firstSection = false;
         }
+
         if (!remoteProviders.isEmpty()) {
             if (appendProviderSection(
                             context, message, "command.wynntils.map.remoteHeader", remoteProviders, firstSection)
@@ -230,6 +257,7 @@ public class MapCommand extends Command {
         }
 
         context.getSource().sendSuccess(() -> message, false);
+
         return 1;
     }
 
@@ -279,6 +307,7 @@ public class MapCommand extends Command {
                 context.getSource()
                         .sendFailure(Component.translatable("command.wynntils.map.invalidUrl")
                                 .withStyle(ChatFormatting.RED));
+
                 return 0;
             }
 
@@ -312,6 +341,7 @@ public class MapCommand extends Command {
                                 .withHoverEvent(new HoverEvent.ShowText(
                                         Component.translatable("command.wynntils.map.openFile")))));
             }
+
             case REMOTE -> {
                 URI uri;
                 try {
@@ -327,6 +357,7 @@ public class MapCommand extends Command {
                                 .withHoverEvent(new HoverEvent.ShowText(
                                         Component.translatable("command.wynntils.map.openUrl")))));
             }
+
             default -> {
                 return Optional.of(Component.literal(path).withStyle(ChatFormatting.GRAY));
             }
@@ -348,6 +379,7 @@ public class MapCommand extends Command {
             context.getSource()
                     .sendFailure(Component.translatable("command.wynntils.map.providerNotFound")
                             .withStyle(ChatFormatting.RED));
+
             return 0;
         }
 
@@ -355,6 +387,7 @@ public class MapCommand extends Command {
             context.getSource()
                     .sendFailure(Component.translatable("command.wynntils.map.providerNotToggleable")
                             .withStyle(ChatFormatting.RED));
+
             return 0;
         }
 
@@ -374,12 +407,158 @@ public class MapCommand extends Command {
                     .append(statusComponent);
 
             context.getSource().sendSuccess(() -> message, false);
+
             return 1;
         }
 
         context.getSource()
                 .sendFailure(Component.translatable("command.wynntils.map.toggleFailed")
                         .withStyle(ChatFormatting.RED));
+
         return 0;
+    }
+
+    private static LiteralArgumentBuilder<CommandSourceStack> namedPath(String literal, PathAction action) {
+        return Commands.literal(literal)
+                .then(Commands.argument("name", StringArgumentType.string())
+                        .suggests((context, builder) -> SharedSuggestionProvider.suggest(
+                                Services.MapPaths.getStoredPaths().stream()
+                                        .map(path -> StringArgumentType.escapeIfRequired(path.label())),
+                                builder))
+                        .executes(context -> executePathAction(context, action)));
+    }
+
+    private static LiteralArgumentBuilder<CommandSourceStack> buildPathCommand() {
+        LiteralArgumentBuilder<CommandSourceStack> root =
+                Commands.literal("path").executes(context -> openPathScreen());
+        root.then(Commands.literal("screen").executes(context -> openPathScreen()));
+        root.then(Commands.literal("record").executes(MapCommand::recordPath));
+        root.then(Commands.literal("cancel")
+                .executes(context -> executePathAction(context, c -> Services.MapPaths.cancel())));
+        root.then(Commands.literal("save")
+                .then(Commands.argument("label", StringArgumentType.string())
+                        .executes(context -> executePathAction(
+                                context, c -> Services.MapPaths.save(StringArgumentType.getString(c, "label"))))));
+        root.then(namedPath("edit", c -> {
+            if (!Services.MapPaths.edit(Services.MapPaths.find(StringArgumentType.getString(c, "name")))) {
+                throw new IllegalStateException("Save or cancel your current path before editing another");
+            }
+
+            openPathScreen();
+        }));
+        root.then(Commands.literal("rename")
+                .then(Commands.argument("name", StringArgumentType.string())
+                        .then(Commands.argument("label", StringArgumentType.string())
+                                .executes(context -> executePathAction(
+                                        context,
+                                        c -> Services.MapPaths.rename(
+                                                Services.MapPaths.find(StringArgumentType.getString(c, "name")),
+                                                StringArgumentType.getString(c, "label")))))));
+        root.then(Commands.literal("highlight")
+                .then(Commands.literal("add")
+                        .executes(context -> executePathAction(context, c -> addHighlight(defaultHighlight())))
+                        .then(Commands.argument("pos", BlockPosArgument.blockPos())
+                                .executes(context -> executePathAction(
+                                        context, c -> addHighlight(BlockPosArgument.getBlockPos(c, "pos"))))))
+                .then(Commands.literal("remove")
+                        .then(Commands.argument("pos", BlockPosArgument.blockPos())
+                                .executes(context -> executePathAction(context, c -> {
+                                    if (!Services.MapPaths.removeHighlight(BlockPosArgument.getBlockPos(c, "pos")))
+                                        throw new IllegalArgumentException("Highlight not found");
+                                })))));
+        LiteralArgumentBuilder<CommandSourceStack> notes = Commands.literal("note");
+        notes.then(Commands.literal("add")
+                .then(Commands.argument("text", StringArgumentType.greedyString())
+                        .executes(context -> executePathAction(
+                                context, c -> addNote(Component.literal(StringArgumentType.getString(c, "text")))))));
+        notes.then(Commands.literal("list")
+                .executes(context -> executePathAction(
+                        context,
+                        c -> Services.MapPaths.getNotes()
+                                .forEach(note -> c.getSource()
+                                        .sendSuccess(
+                                                () -> Component.literal(
+                                                                BlockPos.containing(note.position())
+                                                                                .toShortString() + ": ")
+                                                        .append(note.component()),
+                                                false)))));
+        notes.then(Commands.literal("delete")
+                .then(Commands.argument("pos", BlockPosArgument.blockPos())
+                        .executes(context -> executePathAction(context, c -> {
+                            if (!Services.MapPaths.deleteNote(BlockPosArgument.getBlockPos(c, "pos")))
+                                throw new IllegalArgumentException("Note not found");
+                        }))));
+        root.then(notes);
+
+        return root;
+    }
+
+    private static void addNote(Component text) {
+        if (!Services.MapPaths.addNote(text))
+            throw new IllegalStateException("Start recording or edit a path before adding notes");
+    }
+
+    private static void addHighlight(BlockPos pos) {
+        if (!Services.MapPaths.addHighlight(Vec3.atLowerCornerOf(pos)))
+            throw new IllegalStateException("Start recording a path before adding highlights");
+    }
+
+    private static BlockPos defaultHighlight() {
+        return McUtils.mc().hitResult instanceof BlockHitResult hit
+                ? hit.getBlockPos()
+                : McUtils.player().blockPosition();
+    }
+
+    private static int recordPath(CommandContext<CommandSourceStack> context) {
+        if (!Services.MapPaths.hasDraft()) {
+            Services.MapPaths.configure(
+                    PathCategoriesProvider.PATH_CATEGORY,
+                    "",
+                    new MapAttributesBuilder().asPathAttributes().build(),
+                    true);
+        }
+
+        if (!Services.MapPaths.startRecording()) return 0;
+
+        context.getSource()
+                .sendSuccess(() -> Component.translatable("command.wynntils.map.path.recordingStarted"), false);
+
+        return 1;
+    }
+
+    private static int openPathScreen() {
+        Managers.TickScheduler.scheduleLater(() -> McUtils.setScreen(PathCreationScreen.create(null)), 2);
+
+        return 1;
+    }
+
+    private static int openProviderScreen() {
+        Managers.TickScheduler.scheduleLater(() -> McUtils.setScreen(ProviderManagementScreen.create(null)), 2);
+
+        return 1;
+    }
+
+    private static int executePathAction(CommandContext<CommandSourceStack> context, PathAction action) {
+        return executePathAction(context, action, () -> Component.translatable("command.wynntils.map.path.success"));
+    }
+
+    private static int executePathAction(
+            CommandContext<CommandSourceStack> context, PathAction action, Supplier<Component> success) {
+        try {
+            action.run(context);
+            context.getSource().sendSuccess(success, false);
+
+            return 1;
+        } catch (Exception e) {
+            WynntilsMod.warn("Could not complete map path command", e);
+            context.getSource().sendFailure(Component.translatable("command.wynntils.map.path.error", e.getMessage()));
+
+            return 0;
+        }
+    }
+
+    @FunctionalInterface
+    private interface PathAction {
+        void run(CommandContext<CommandSourceStack> context) throws Exception;
     }
 }

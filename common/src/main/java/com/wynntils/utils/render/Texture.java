@@ -373,7 +373,7 @@ public enum Texture {
             "map/managers/provider_manager/scroll_list_top_button_red.png", 40, 18, 13, 13, 10, 2),
 
     // Map Managers
-    MANAGER_BACKGROUND("map/managers/manager_background.png", 576, 320),
+    MANAGER_BACKGROUND("map/managers/manager_background.png", 576, 320, 15, 15, 18, 18),
     MANAGER_WIDGET_BORDER("map/managers/widget_border.png", 34, 19, 6, 6, 6, 6),
     MANAGER_WIDGET_BACKGROUND("map/managers/widget_background.png", 34, 19, 6, 6, 6, 6),
     MANAGER_WIDGET_BACKGROUND_RED("map/managers/widget_background_red.png", 34, 19, 6, 6, 6, 6),
