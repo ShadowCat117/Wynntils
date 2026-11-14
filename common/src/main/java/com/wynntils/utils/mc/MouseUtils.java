@@ -10,22 +10,12 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.component.SwingAnimation;
 
 public final class MouseUtils {
-    public static void sendAttackInput(boolean reversed) {
-        if (reversed) {
-            McUtils.sendSequencedPacket(id -> new ServerboundUseItemPacket(
-                    InteractionHand.MAIN_HAND,
-                    id,
-                    McUtils.player().getYRot(),
-                    McUtils.player().getXRot()));
+    public static void sendLeftClickInput(boolean weaponSwing) {
+        if (weaponSwing) {
+            McUtils.player().swing(InteractionHand.MAIN_HAND, SwingAnimation.DEFAULT, false);
         } else {
-            SwingAnimation swingAnimation =
-                    McUtils.player().getItemInHand(InteractionHand.MAIN_HAND).getAttackAnimation();
-            McUtils.player().swing(InteractionHand.MAIN_HAND, swingAnimation, false);
+            McUtils.sendPacket(new ServerboundPunchPacket());
         }
-    }
-
-    public static void sendLeftClickInput() {
-        McUtils.sendPacket(new ServerboundPunchPacket());
     }
 
     public static void sendRightClickInput() {
@@ -34,14 +24,6 @@ public final class MouseUtils {
                 id,
                 McUtils.player().getYRot(),
                 McUtils.player().getXRot()));
-    }
-
-    public static void sendDirectAttackInput(boolean reversed) {
-        if (reversed) {
-            sendDirectRightClickInput();
-        } else {
-            sendLeftClickInput();
-        }
     }
 
     public static void sendDirectRightClickInput() {

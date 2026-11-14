@@ -46,6 +46,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.INVENTORY)
 public class ItemLockFeature extends Feature {
     private static final String INTERACT_MODEL_DATA_KEY = "interact";
+    private static final int INVENTORY_SLOTS = 46;
 
     @RegisterKeyBind
     private final KeyBind lockSlotKeyBind = KeyBindDefinition.LOCK_SLOT.create(this::tryChangeLockStateOnHoveredSlot);
@@ -61,6 +62,9 @@ public class ItemLockFeature extends Feature {
 
     @Persisted
     private final Config<Boolean> allowClickOnMultiHealthPotionsInBlockingMode = new Config<>(true);
+
+    @Persisted
+    private final Config<Boolean> preventClicksInCutscene = new Config<>(true);
 
     public ItemLockFeature() {
         super(ProfileDefault.ENABLED);
@@ -93,6 +97,12 @@ public class ItemLockFeature extends Feature {
         if (!(McUtils.screen() instanceof AbstractContainerScreen<?> abstractContainerScreen)
                 || Models.Container.getCurrentContainer() instanceof FullscreenContainerProperty) return;
         if (Models.Container.getCurrentContainer() instanceof MountFeederContainer) return;
+        if (preventClicksInCutscene.get()
+                && Models.Cutscene.isCutsceneActive()
+                && event.getContainerMenu().slots.size() == INVENTORY_SLOTS) {
+            event.setCanceled(true);
+            return;
+        }
         if (!blockAllActionsOnLockedItems.get() && event.getContainerInput() != ContainerInput.THROW) return;
         if (Models.Housing.isInEditMode()) return;
 
