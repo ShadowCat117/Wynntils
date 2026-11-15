@@ -48,7 +48,7 @@ public class TomeTypeFilterWidget extends GuideFilterWidget {
                 .renderText(
                         guiGraphics,
                         StyledText.fromComponent(Component.literal("Tome Type")
-                                .withStyle(Style.EMPTY.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT))),
+                                .withStyle(Style.EMPTY.withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT))),
                         getX(),
                         getY(),
                         CommonColors.WHITE,
@@ -160,7 +160,7 @@ public class TomeTypeFilterWidget extends GuideFilterWidget {
                             guiGraphics,
                             StyledText.fromComponent(Component.literal(
                                             EnumUtils.toNiceString(tomeType).replace(" Tome", ""))
-                                    .withStyle(Style.EMPTY.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT))),
+                                    .withStyle(Style.EMPTY.withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT))),
                             getX() + 18,
                             getY() + 8,
                             getWidth() - 20,

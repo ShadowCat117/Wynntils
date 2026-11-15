@@ -48,7 +48,7 @@ public class GearTierFilterWidget extends GuideFilterWidget {
                 .renderText(
                         guiGraphics,
                         StyledText.fromComponent(Component.literal("Rarity")
-                                .withStyle(Style.EMPTY.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT))),
+                                .withStyle(Style.EMPTY.withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT))),
                         getX(),
                         getY(),
                         CommonColors.WHITE,
@@ -156,7 +156,7 @@ public class GearTierFilterWidget extends GuideFilterWidget {
                     .renderScrollingText(
                             guiGraphics,
                             StyledText.fromComponent(Component.literal(gearTier.getName())
-                                    .withStyle(Style.EMPTY.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT))),
+                                    .withStyle(Style.EMPTY.withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT))),
                             getX() + 18,
                             getY() + 8,
                             getWidth() - 20,

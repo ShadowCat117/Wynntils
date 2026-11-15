@@ -21,7 +21,7 @@ public enum GearTier {
     LEGENDARY(TextColor.AQUA, 12, 4.5f, CustomColor.fromInt(0xcff9f9)),
     FABLED(TextColor.RED, 16, 8.0f, CustomColor.fromInt(0xf2c2c2)),
     MYTHIC(TextColor.DARK_PURPLE, 90, 18.0f, CustomColor.fromInt(0xe0b3e6)),
-    CRAFTED(TextColor.DARK_AQUA, 0, 0.0f, CustomColor.NONE);
+    CRAFTED(TextColor.DARK_AQUA, 0, 0.0f, CustomColor.fromInt(0xaed4d4));
 
     private final TextColor textColor;
     private final int baseCost;

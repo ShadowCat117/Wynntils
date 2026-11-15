@@ -61,7 +61,7 @@ public class ProfessionTypeFilterWidget extends GuideFilterWidget {
                 .renderText(
                         guiGraphics,
                         StyledText.fromComponent(Component.literal("Profession Type")
-                                .withStyle(Style.EMPTY.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT))),
+                                .withStyle(Style.EMPTY.withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT))),
                         getX(),
                         getY(),
                         CommonColors.WHITE,
@@ -202,7 +202,7 @@ public class ProfessionTypeFilterWidget extends GuideFilterWidget {
                     .renderScrollingText(
                             guiGraphics,
                             StyledText.fromComponent(Component.literal(EnumUtils.toNiceString(professionType))
-                                    .withStyle(Style.EMPTY.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT))),
+                                    .withStyle(Style.EMPTY.withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT))),
                             getX() + 18,
                             getY() + 8,
                             getWidth() - 20,
@@ -231,7 +231,7 @@ public class ProfessionTypeFilterWidget extends GuideFilterWidget {
                         .append(WynnFont.asFont("left_click", WynncraftKeybindsFont.class))
                         .append(" ")
                         .append(Component.literal("/")
-                                .withStyle(Style.EMPTY.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT)))
+                                .withStyle(Style.EMPTY.withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT)))
                         .append(" ")
                         .append(WynnFont.asFont("right_click", WynncraftKeybindsFont.class))
                         .append(" ")

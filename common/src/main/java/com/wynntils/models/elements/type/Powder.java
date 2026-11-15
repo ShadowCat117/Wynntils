@@ -12,38 +12,33 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 
 public enum Powder {
-    EARTH(Element.EARTH, Items.DYE.lime(), Items.DYE.green(), TextColor.DARK_GREEN, TextColor.GREEN, "Quake"),
-    THUNDER(
-            Element.THUNDER,
-            Items.DYE.yellow(),
-            Items.DYE.orange(),
-            TextColor.YELLOW,
-            TextColor.GOLD,
-            "Chain Lightning"),
-    WATER(Element.WATER, Items.DYE.lightBlue(), Items.DYE.cyan(), TextColor.AQUA, TextColor.DARK_AQUA, "Curse"),
-    FIRE(Element.FIRE, Items.DYE.pink(), Items.DYE.red(), TextColor.RED, TextColor.DARK_RED, "Courage"),
-    AIR(Element.AIR, Items.DYE.gray(), Items.DYE.lightGray(), TextColor.WHITE, TextColor.GRAY, "Wind Prison");
+    EARTH(Element.EARTH, Items.DYE.lime(), Items.DYE.green(), TextColor.DARK_GREEN, TextColor.GREEN),
+    THUNDER(Element.THUNDER, Items.DYE.yellow(), Items.DYE.orange(), TextColor.YELLOW, TextColor.GOLD),
+    WATER(Element.WATER, Items.DYE.lightBlue(), Items.DYE.cyan(), TextColor.AQUA, TextColor.DARK_AQUA),
+    FIRE(Element.FIRE, Items.DYE.pink(), Items.DYE.red(), TextColor.RED, TextColor.DARK_RED),
+    AIR(Element.AIR, Items.DYE.gray(), Items.DYE.lightGray(), TextColor.WHITE, TextColor.GRAY);
 
     private final Element element;
     private final Item lowTierItem;
     private final Item highTierItem;
     private final TextColor lightColor;
     private final TextColor darkColor;
-    private final String specialName;
 
-    Powder(
-            Element element,
-            Item lowTierItem,
-            Item highTierItem,
-            TextColor lightColor,
-            TextColor darkColor,
-            String specialName) {
+    Powder(Element element, Item lowTierItem, Item highTierItem, TextColor lightColor, TextColor darkColor) {
         this.element = element;
         this.lowTierItem = lowTierItem;
         this.highTierItem = highTierItem;
         this.lightColor = lightColor;
         this.darkColor = darkColor;
-        this.specialName = specialName;
+    }
+
+    public static Powder fromName(String name) {
+        for (Powder powder : Powder.values()) {
+            if (powder.getName().equals(name)) {
+                return powder;
+            }
+        }
+        return null;
     }
 
     public static Powder fromElement(Element element) {
@@ -86,10 +81,6 @@ public enum Powder {
 
     public TextColor getDarkColor() {
         return darkColor;
-    }
-
-    public String getSpecialName() {
-        return specialName;
     }
 
     public String getName() {

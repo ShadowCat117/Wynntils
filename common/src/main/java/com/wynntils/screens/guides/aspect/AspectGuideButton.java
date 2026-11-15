@@ -18,7 +18,6 @@ public class AspectGuideButton extends GuideButton {
     private static final CustomColor TIER_4_HIGHLIGHT_COLOR = new CustomColor(255, 215, 0);
 
     private final GuideAspectItemStack aspectItemStack;
-    private boolean builtTooltip = false;
 
     private final CustomColor textColor;
 
@@ -49,17 +48,10 @@ public class AspectGuideButton extends GuideButton {
                 HorizontalAlignment.CENTER);
 
         renderFavoriteIcon(guiGraphics);
-        renderTooltipIfHovered(guiGraphics, mouseX, mouseY);
-    }
 
-    @Override
-    protected void renderTooltip(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
-        if (!builtTooltip) {
-            aspectItemStack.buildTooltip();
-            builtTooltip = true;
+        if (isHovered) {
+            renderTooltip(guiGraphics, mouseX, mouseY);
         }
-
-        itemStack.queueGuideTooltip(guiGraphics, mouseX, mouseY);
     }
 
     @Override

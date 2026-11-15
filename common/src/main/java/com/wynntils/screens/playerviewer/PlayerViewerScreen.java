@@ -4,11 +4,13 @@
  */
 package com.wynntils.screens.playerviewer;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.tooltip.type.ItemSourceType;
 import com.wynntils.models.inventory.type.InventoryAccessory;
 import com.wynntils.models.inventory.type.InventoryArmor;
 import com.wynntils.models.items.FakeItemStack;
@@ -138,7 +140,7 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
             // a default texture
             if (craftedGearItem.getGearType().isArmor()) {
                 itemStack = new ArrayList<>(
-                                player.getInventory().equipment.items.values())
+                        player.getInventory().equipment.items.values())
                         .get(InventoryArmor.fromString(
                                         craftedGearItem.getGearType().name())
                                 .getArmorSlot());
@@ -154,7 +156,7 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
             }
         }
 
-        return new FakeItemStack(wynnItem, itemStack, "From " + player.getScoreboardName());
+        return new FakeItemStack(wynnItem, itemStack, ItemSourceType.ENCODED, "From " + player.getScoreboardName());
     }
 
     @Override
@@ -213,9 +215,9 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
                 }));
 
         settingsButton = new Button.Builder(
-                        Component.translatable("screens.wynntils.playerViewer.sharingSettings"), (b) -> {
-                            McUtils.setScreen(GearSharingSettingsScreen.create(this));
-                        })
+                Component.translatable("screens.wynntils.playerViewer.sharingSettings"), (b) -> {
+            McUtils.setScreen(GearSharingSettingsScreen.create(this));
+        })
                 .pos(leftPos + 1, topPos - 21)
                 .size(Texture.PLAYER_VIEWER_BACKGROUND.width() - 23, 20)
                 .tooltip(Tooltip.create(Component.translatable("screens.wynntils.playerViewer.sharingSettingsTooltip")))
@@ -282,6 +284,15 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (event.button() == InputConstants.MOUSE_BUTTON_LEFT
+                || event.button() == InputConstants.MOUSE_BUTTON_MIDDLE) {
+            Slot slot = getHoveredSlot(event.x(), event.y());
+            if (slot != null && slot.getItem() instanceof FakeItemStack fakeItemStack) {
+                fakeItemStack.cyclePage();
+                return true;
+            }
+        }
+
         for (PlayerInteractionButton interactionButton : interactionButtons) {
             if (interactionButton.mouseClicked(event, isDoubleClick)) {
                 return true;
@@ -293,7 +304,12 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
 
     @Override
     protected void slotClicked(Slot slot, int slotId, int mouseButton, ContainerInput containerInput) {
-        // do nothing here, because we don't want the user interacting with slots at all
+        if (containerInput == ContainerInput.SWAP
+                && mouseButton == 40
+                && slot != null
+                && slot.getItem() instanceof FakeItemStack fakeItemStack) {
+            fakeItemStack.cyclePage();
+        }
     }
 
     @Override

@@ -6,16 +6,22 @@ package com.wynntils.mc.mixin;
 
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.ItemSwapHandsEvent;
+import com.wynntils.mc.event.SetCarriedItemEvent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerInput;
+import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(AbstractContainerMenu.class)
 public class AbstractContainerMenuMixin {
+    @Shadow
+    private ItemStack carried;
+
     @Inject(
             method =
                     "doClick(IILnet/minecraft/world/inventory/ContainerInput;Lnet/minecraft/world/entity/player/Player;)V",
@@ -30,5 +36,10 @@ public class AbstractContainerMenuMixin {
                 return;
             }
         }
+    }
+
+    @Inject(method = "setCarried(Lnet/minecraft/world/item/ItemStack;)V", at = @At("HEAD"))
+    private void setCarriedPre(ItemStack stack, CallbackInfo ci) {
+        MixinHelper.post(new SetCarriedItemEvent(carried, stack));
     }
 }
