@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.itemsharing;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Models;
@@ -157,7 +158,7 @@ public final class ItemSharingScreen extends WynntilsScreen {
 
     @Override
     public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-        if (event.button() == 0
+        if (event.button() == InputConstants.MOUSE_BUTTON_LEFT
                 && !isInsideOptionsPanel(event.x(), event.y())
                 && previewItemStack instanceof FakeItemStack fakeItemStack
                 && fakeItemStack.cyclePage()) {

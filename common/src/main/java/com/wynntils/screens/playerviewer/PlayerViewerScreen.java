@@ -140,7 +140,7 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
             // a default texture
             if (craftedGearItem.getGearType().isArmor()) {
                 itemStack = new ArrayList<>(
-                        player.getInventory().equipment.items.values())
+                                player.getInventory().equipment.items.values())
                         .get(InventoryArmor.fromString(
                                         craftedGearItem.getGearType().name())
                                 .getArmorSlot());
@@ -215,9 +215,9 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
                 }));
 
         settingsButton = new Button.Builder(
-                Component.translatable("screens.wynntils.playerViewer.sharingSettings"), (b) -> {
-            McUtils.setScreen(GearSharingSettingsScreen.create(this));
-        })
+                        Component.translatable("screens.wynntils.playerViewer.sharingSettings"), (b) -> {
+                            McUtils.setScreen(GearSharingSettingsScreen.create(this));
+                        })
                 .pos(leftPos + 1, topPos - 21)
                 .size(Texture.PLAYER_VIEWER_BACKGROUND.width() - 23, 20)
                 .tooltip(Tooltip.create(Component.translatable("screens.wynntils.playerViewer.sharingSettingsTooltip")))

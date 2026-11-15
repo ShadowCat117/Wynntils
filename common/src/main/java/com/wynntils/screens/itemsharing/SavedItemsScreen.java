@@ -256,12 +256,12 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
                 && !editingCategory
                 && !addingCategory
                 && MathUtils.isInside(
-                (int) event.x(),
-                (int) event.y(),
-                (int) categoryRenderX,
-                (int) (categoryRenderX + 97),
-                (int) categoryRenderY,
-                (int) (categoryRenderY + 8))) {
+                        (int) event.x(),
+                        (int) event.y(),
+                        (int) categoryRenderX,
+                        (int) (categoryRenderX + 97),
+                        (int) categoryRenderY,
+                        (int) (categoryRenderY + 8))) {
             editingCategory = true;
             addCategoryInput();
 
@@ -293,8 +293,8 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
             int endIndex = endSlot == null ? dragSelectionStartIndex : endSlot.index + ITEMS_PER_ROW * itemScrollOffset;
 
             for (int i = Math.min(dragSelectionStartIndex, endIndex);
-                 i <= Math.max(dragSelectionStartIndex, endIndex) && i < encodedItems.size();
-                 i++) {
+                    i <= Math.max(dragSelectionStartIndex, endIndex) && i < encodedItems.size();
+                    i++) {
                 Pair<String, String> selectedItem =
                         new Pair<>(currentCategory, encodedItems.get(i).base64());
                 if (!selectedItems.remove(selectedItem)) {
@@ -526,9 +526,9 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
         int maxItemOffset = Math.max(
                 0,
                 Services.ItemRecord.savedItems.get().stream()
-                        .filter(savedItem -> savedItem.categories().contains(currentCategory))
-                        .toList()
-                        .size()
+                                .filter(savedItem -> savedItem.categories().contains(currentCategory))
+                                .toList()
+                                .size()
                         - MAX_ITEMS);
         return maxItemOffset / ITEMS_PER_ROW + (maxItemOffset % ITEMS_PER_ROW > 0 ? 1 : 0);
     }

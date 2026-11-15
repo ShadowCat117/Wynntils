@@ -15,7 +15,6 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.network.HashedStack;
 import net.minecraft.network.protocol.game.ServerboundContainerClickPacket;
 import net.minecraft.network.protocol.game.ServerboundContainerClosePacket;
-import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -91,15 +90,20 @@ public final class ContainerUtils {
     }
 
     public static void pressSwapHandsOnSlot(int containerId, int stateId, int slotIndex, ItemStack carriedItem) {
-        pressKeyOnSlot(containerId, stateId, slotIndex, 40, ClickType.SWAP, carriedItem);
+        pressKeyOnSlot(containerId, stateId, slotIndex, 40, ContainerInput.SWAP, carriedItem);
     }
 
     public static void pressKeyOnSlot(int clickedSlot, int containerId, int buttonNum, List<ItemStack> items) {
-        pressKeyOnSlot(containerId, 0, clickedSlot, buttonNum, ClickType.SWAP, items.get(clickedSlot));
+        pressKeyOnSlot(containerId, 0, clickedSlot, buttonNum, ContainerInput.SWAP, items.get(clickedSlot));
     }
 
     public static void pressKeyOnSlot(
-            int containerId, int stateId, int slotIndex, int buttonNum, ContainerInput containerInput, ItemStack carriedItem) {
+            int containerId,
+            int stateId,
+            int slotIndex,
+            int buttonNum,
+            ContainerInput containerInput,
+            ItemStack carriedItem) {
         Int2ObjectMap<HashedStack> changedSlots = new Int2ObjectOpenHashMap<>();
         changedSlots.put(slotIndex, ItemUtils.createHashedItem(new ItemStack(Items.AIR)));
 

@@ -41,6 +41,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
 
 public abstract class TooltipBuilder {
     protected static final CustomColor RESTRICTION_BACKGROUND_COLOR = CustomColor.fromInt(0xff4242);
@@ -239,8 +240,8 @@ public abstract class TooltipBuilder {
                         ? sources.getFirst()
                         : String.join(", ", sources.subList(0, sources.size() - 1)) + " and " + sources.getLast();
                 String prefix = type == ItemObtainType.INTERACTION
-                        && entry.getValue().stream()
-                        .anyMatch(info -> info.name().isPresent())
+                                && entry.getValue().stream()
+                                        .anyMatch(info -> info.name().isPresent())
                         ? "This item can be obtained by interacting with "
                         : "This item can be obtained from ";
                 description = Component.literal(prefix)
@@ -264,9 +265,9 @@ public abstract class TooltipBuilder {
 
             description = switch (type) {
                 case LOOTRUN ->
-                        name.equals("Lootrun Rewards")
-                                ? type.getDisplayName()
-                                : "the " + name + " " + type.getDisplayName();
+                    name.equals("Lootrun Rewards")
+                            ? type.getDisplayName()
+                            : "the " + name + " " + type.getDisplayName();
                 case QUEST -> {
                     SimpleQuestInfo questInfo = Models.Quest.getQuestInfo(name);
                     String questName = questInfo == SimpleQuestInfo.UNKNOWN ? name : questInfo.displayName();
@@ -288,7 +289,7 @@ public abstract class TooltipBuilder {
         Component sourceLine = Component.empty()
                 .withStyle(Style.EMPTY
                         .withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT)
-                        .applyFormat(getSourceColor()))
+                        .withColor(getSourceColor()))
                 .append(Component.literal("\uE004").withStyle(Style.EMPTY.withFont(CommonFonts.WYNNTILS_TOOLTIP_ICONS)))
                 .append(Component.literal("\uDB00\uDC02"))
                 .append(Component.literal(source)
@@ -298,8 +299,8 @@ public abstract class TooltipBuilder {
         return TooltipLine.left(sourceLine);
     }
 
-    protected ChatFormatting getSourceColor() {
-        return ChatFormatting.WHITE;
+    protected TextColor getSourceColor() {
+        return TextColor.WHITE;
     }
 
     protected static List<Component> extractHeader(List<Component> tooltips) {

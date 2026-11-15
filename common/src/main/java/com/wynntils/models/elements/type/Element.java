@@ -5,8 +5,8 @@
 package com.wynntils.models.elements.type;
 
 import com.wynntils.utils.StringUtils;
-import net.minecraft.network.chat.TextColor;
 import java.util.Locale;
+import net.minecraft.network.chat.TextColor;
 
 public enum Element {
     EARTH("\uE001", "\uE000", TextColor.DARK_GREEN, 0),
